@@ -188,6 +188,41 @@ COMMON_STYLES = '''
         border-left: 4px solid #e74c3c;
         margin: 20px 0;
     }
+    .routes-list {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        margin: 25px 0;
+    }
+    .routes-list h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.4em;
+    }
+    .route-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        margin: 8px 0;
+        background: white;
+        border-radius: 8px;
+        border-left: 4px solid #4a90e2;
+        transition: all 0.3s ease;
+    }
+    .route-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .route-path {
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .route-desc {
+        color: #5a6c7d;
+        font-size: 0.95em;
+    }
 </style>
 '''
 
@@ -352,7 +387,139 @@ def lab1():
             <a href="/lab1/server_error">Тест 500 ошибки</a>
         </div>
 
-        <div style="text-align: center; margin-top: 30px;">
+        <h2>Список роутов</h2>
+        
+        <div class="routes-list">
+            <h3>Основные роуты лабораторной работы 1:</h3>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/" class="route-path">/</a>
+                    <div class="route-desc">Главная страница со списком лабораторных работ</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/index" class="route-path">/index</a>
+                    <div class="route-desc">Альтернативный адрес главной страницы</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1" class="route-path">/lab1</a>
+                    <div class="route-desc">Основная страница лабораторной работы 1</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/author" class="route-path">/lab1/author</a>
+                    <div class="route-desc">Страница с информацией об авторе</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/web" class="route-path">/lab1/web</a>
+                    <div class="route-desc">Демонстрация работы веб-сервера с кастомными заголовками</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/image" class="route-path">/lab1/image</a>
+                    <div class="route-desc">Страница с изображением океана и дополнительными заголовками</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/counter" class="route-path">/lab1/counter</a>
+                    <div class="route-desc">Счётчик посещений с информацией о клиенте</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/reset_counter" class="route-path">/lab1/reset_counter</a>
+                    <div class="route-desc">Сброс счётчика посещений</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/info" class="route-path">/lab1/info</a>
+                    <div class="route-desc">Редирект на страницу автора</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/http_codes" class="route-path">/lab1/http_codes</a>
+                    <div class="route-desc">Тестирование различных HTTP кодов ответов</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/bad_request" class="route-path">/lab1/bad_request</a>
+                    <div class="route-desc">Тест кода 400 - Bad Request</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/unauthorized" class="route-path">/lab1/unauthorized</a>
+                    <div class="route-desc">Тест кода 401 - Unauthorized</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/payment_required" class="route-path">/lab1/payment_required</a>
+                    <div class="route-desc">Тест кода 402 - Payment Required</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/forbidden" class="route-path">/lab1/forbidden</a>
+                    <div class="route-desc">Тест кода 403 - Forbidden</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/method_not_allowed" class="route-path">/lab1/method_not_allowed</a>
+                    <div class="route-desc">Тест кода 405 - Method Not Allowed</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/teapot" class="route-path">/lab1/teapot</a>
+                    <div class="route-desc">Тест кода 418 - I'm a teapot</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/lab1/server_error" class="route-path">/lab1/server_error</a>
+                    <div class="route-desc">Тест кода 500 - Internal Server Error</div>
+                </div>
+            </div>
+            
+            <div class="route-item">
+                <div>
+                    <a href="/created" class="route-path">/created</a>
+                    <div class="route-desc">Тест кода 201 - Created</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
             <a href="/" class="button">На главную</a>
         </div>
     </div>
