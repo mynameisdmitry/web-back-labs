@@ -248,7 +248,7 @@ def not_found(err):
             .error-code {{
             
                 color: #4a90e2;
-
+                
             }}
         </style>
     </head>
@@ -481,8 +481,13 @@ def image():
         {FOOTER}
     </body>
 </html>
-'''
-
+''', 200, {
+    'Content-Type': 'text/html; charset=utf-8',
+    'Content-Language': 'ru',
+    'X-Image-Description': 'Great Ocean View',
+    'X-Server-Info': 'Flask Web Server v1.0',
+    'Cache-Control': 'no-cache'
+}
 
 count = 0
 
