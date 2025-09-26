@@ -16,15 +16,15 @@ def lab1():
             <body>
                 <ul>
                     <h1>Лабораторная работа 1</h1>
-                    <li><a href="/author">author</a></li>
-                    <li><a href="/web">web</a></li>
-                    <li><a href="/image">image</a></li>
-                    <li><a href="/counter">counter</a></li>
+                    <li><a href="/lab1/author">author</a></li>
+                    <li><a href="/lab1/web">web</a></li>
+                    <li><a href="/lab1/image">image</a></li>
+                    <li><a href="/lab1/counter">counter</a></li>
                 </ul>
             </body>
         </html>"""    
 
-@app.route("/web")
+@app.route("/lab1/web")
 def web():
     return """<!doctype html>
         <html>
@@ -37,7 +37,7 @@ def web():
             'Content-Type': 'text/plain; charset=utf-8'
         }
 
-@app.route("/author")
+@app.route("/lab1/author")
 def author():
     name = "Игуменшев Дмитрий Евгеньевич"
     group = "ФБИ-33"
@@ -53,7 +53,7 @@ def author():
             </body>
         </html>"""
 
-@app.route('/image') 
+@app.route('/lab1/image') 
 def image():
     path = url_for("static", filename="ocean.jpg")
     css_path = url_for("static", filename="lab1.css")
@@ -72,7 +72,7 @@ def image():
 
 count = 0
 
-@app.route('/counter') 
+@app.route('/lab1/counter') 
 def counter():
     global count
     count += 1
@@ -94,9 +94,9 @@ def counter():
 '''
 
 
-@app.route("/info")
+@app.route("/lab1/info")
 def info():
-    return redirect("/author")
+    return redirect("/lab1/author")
 
 @app.route("/created")
 def created():
