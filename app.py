@@ -43,26 +43,38 @@ def index():
 
 @app.route("/lab1")
 def lab1():
-    return f"""<!doctype html>
-<html lang="ru">
-    <head>
-        <meta charset="utf-8">
-        <title>Лабораторная 1</title>
-        <style>body {{ margin:0; font-family: Arial, sans-serif; }}</style>
-    </head>
-    <body>
-        <main style="padding:20px;">
-            <h1>Лабораторная работа 1</h1>
-            <ul>
-                <li><a href="/lab1/author">author</a></li>
-                <li><a href="/lab1/web">web</a></li>
-                <li><a href="/lab1/image">image</a></li>
-                <li><a href="/lab1/counter">counter</a></li>
-            </ul>
-        </main>
-        {FOOTER}
-    </body>
-</html>"""
+    return f'''
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Лабораторная 1</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; text-align:center; margin:0; padding:20px; }}
+        a {{ text-decoration: none; color: blue; margin: 0 10px; }}
+    </style>
+</head>
+<body>
+    <h1>Лабораторная работа 1</h1>
+    <p>
+        Flask — фреймворк для создания веб-приложений на языке программирования Python,
+        использующий набор инструментов Werkzeug, а также шаблонизатор Jinja2.
+        Относится к категории так называемых микрофреймворков — минималистичных каркасов
+        веб-приложений, сознательно предоставляющих лишь самые базовые возможности.
+    </p>
+    
+    <nav>
+        <a href="/lab1/author">Author</a> |
+        <a href="/lab1/web">Web</a> |
+        <a href="/lab1/image">Image</a> |
+        <a href="/lab1/counter">Counter</a>
+    </nav>
+
+    <p><a href="/">На главную</a></p>
+    {FOOTER}
+</body>
+</html>
+'''
 
 
 @app.route("/lab1/web")
