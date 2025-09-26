@@ -3,7 +3,7 @@ import datetime
 
 app = Flask(__name__)
 
-# Универсальный подвал — будет добавлен внизу каждой страницы
+
 FOOTER = '''
 <footer style="position:fixed; left:0; bottom:0; width:100%; padding:10px 0; background-color:#f0f0f0; color:#333; text-align:center; box-shadow:0 -1px 4px rgba(0,0,0,0.08);">
     Игуменшев Дмитрий Евгеньевич, ФБИ-33, 3 курс, 2025 год
@@ -67,7 +67,8 @@ def lab1():
         <a href="/lab1/author">Author</a> |
         <a href="/lab1/web">Web</a> |
         <a href="/lab1/image">Image</a> |
-        <a href="/lab1/counter">Counter</a>
+        <a href="/lab1/counter">Counter</a> |
+        <a href="/lab1/http_codes">HTTP коды</a>
     </nav>
 
     <p><a href="/">На главную</a></p>
@@ -192,6 +193,155 @@ def reset_counter():
     </body>
 </html>
 '''
+
+
+# Новые маршруты для HTTP кодов ответов
+@app.route('/lab1/http_codes')
+def http_codes():
+    return f'''
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>HTTP коды ответов</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; padding: 20px; padding-bottom: 80px; }}
+            .code-list {{ list-style-type: none; padding: 0; }}
+            .code-list li {{ margin: 10px 0; }}
+            .code-list a {{ text-decoration: none; color: #0066cc; font-weight: bold; }}
+            .code-list a:hover {{ text-decoration: underline; }}
+        </style>
+    </head>
+    <body>
+        <h1>Тестирование HTTP кодов ответов</h1>
+        <p>Выберите код для тестирования:</p>
+        <ul class="code-list">
+            <li><a href="/lab1/bad_request">400 - Bad Request</a> - Неверный запрос</li>
+            <li><a href="/lab1/unauthorized">401 - Unauthorized</a> - Неавторизован</li>
+            <li><a href="/lab1/payment_required">402 - Payment Required</a> - Необходима оплата</li>
+            <li><a href="/lab1/forbidden">403 - Forbidden</a> - Запрещено</li>
+            <li><a href="/lab1/method_not_allowed">405 - Method Not Allowed</a> - Метод не разрешен</li>
+            <li><a href="/lab1/teapot">418 - I'm a teapot</a> - Я - чайник</li>
+        </ul>
+        <p><a href="/lab1">← Назад к лабораторной работе 1</a></p>
+        {FOOTER}
+    </body>
+</html>
+'''
+
+
+@app.route('/lab1/bad_request')
+def bad_request():
+    return '''
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>400 Bad Request</title>
+    </head>
+    <body>
+        <h1>400 Bad Request</h1>
+        <p>Неверный запрос</p>
+        <hr>
+        <p><a href="/">На главную</a></p>
+    </body>
+</html>
+''', 400
+
+
+@app.route('/lab1/unauthorized')
+def unauthorized():
+    return '''
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>401 Unauthorized</title>
+    </head>
+    <body>
+        <h1>401 Unauthorized</h1>
+        <p>Требуется аутентификация для доступа к ресурсу.</p>
+        <hr>
+        <p><a href="/">На главную</a></p>
+    </body>
+</html>
+''', 401
+
+
+@app.route('/lab1/payment_required')
+def payment_required():
+    return '''
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>402 Payment Required</title>
+    </head>
+    <body>
+        <h1>402 Payment Required</h1>
+        <p>Необходима оплата</p>
+        <hr>
+        <p><a href="/">На главную</a></p>
+    </body>
+</html>
+''', 402
+
+
+@app.route('/lab1/forbidden')
+def forbidden():
+    return '''
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>403 Forbidden</title>
+    </head>
+    <body>
+        <h1>403 Forbidden</h1>
+        <p>Доступ запрещен</p>
+        <hr>
+        <p><a href="/">На главную</a></p>
+    </body>
+</html>
+''', 403
+
+
+@app.route('/lab1/method_not_allowed')
+def method_not_allowed():
+    return '''
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>405 Method Not Allowed</title>
+    </head>
+    <body>
+        <h1>405 Method Not Allowed</h1>
+        <p>Метод не разрешен</p>
+        <hr>
+        <p><a href="/">На главную</a></p>
+    </body>
+</html>
+''', 405
+
+
+@app.route('/lab1/teapot')
+def teapot():
+    return '''
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>418 I'm a teapot</title>
+    </head>
+    <body>
+        <h1>418 I'm a teapot</h1>
+        <p>Я - чайник</p>
+        <hr>
+        <p><a href="/">На главную</a></p>
+    </body>
+</html>
+''', 418
 
 
 if __name__ == '__main__':
