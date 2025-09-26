@@ -79,18 +79,20 @@ def counter():
     time = datetime.datetime.today()
     url = request.url
     client_ip = request.remote_addr
-    return '''
+    return f'''
 <!doctype html>
 <html>
     <body>
-        Сколько раз вы сюда заходили: ''' + str(count) + '''
+        Сколько раз вы сюда заходили: {count}
         <hr>
-        Дата и время: ''' + str(time) + '''<br>
-        Запрошенный адрес: ''' + url + '''<br>
-        Ваш IP-адрес: ''' + client_ip + '''<br>
+        Дата и время: {time}<br>
+        Запрошенный адрес: {url}<br>
+        Ваш IP-адрес: {client_ip}<br>
+        <p><a href="/reset_counter">Очистить счётчик</a></p>
     </body>
 </html>
 '''
+
 
 @app.route("/info")
 def info():
@@ -107,3 +109,17 @@ def created():
     </body>
 </html>
 ''', 201
+
+@app.route('/reset_counter')
+def reset_counter():
+    global count
+    count = 0
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <h1>Счётчик очищен!</h1>
+        <a href="/counter">Вернуться на счётчик</a>
+    </body>
+</html>
+'''
