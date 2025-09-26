@@ -3,6 +3,8 @@ import datetime
 
 app = Flask(__name__)
 
+access_log = []
+
 COMMON_STYLES = '''
 <style>
     * {
@@ -223,6 +225,53 @@ COMMON_STYLES = '''
         color: #5a6c7d;
         font-size: 0.95em;
     }
+    .log-container {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 25px 0;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .log-header {
+        color: #4a90e2;
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        font-weight: 600;
+    }
+    .log-entry {
+        padding: 10px;
+        margin: 8px 0;
+        background: #34495e;
+        border-radius: 5px;
+        border-left: 3px solid #4a90e2;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+    }
+    .log-timestamp {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+    .log-ip {
+        color: #2ecc71;
+        font-weight: bold;
+    }
+    .log-path {
+        color: #f39c12;
+    }
+    .client-info {
+        background: #e8f4fd;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        border-left: 4px solid #3498db;
+    }
+    .client-info h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
 </style>
 '''
 
@@ -273,6 +322,30 @@ def internal_server_error(err):
 
 @app.errorhandler(404)
 def not_found(err):
+    client_ip = request.remote_addr
+    access_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    requested_path = request.path
+    
+    log_entry = {
+        'timestamp': access_date,
+        'ip': client_ip,
+        'path': requested_path
+    }
+    access_log.append(log_entry)
+    
+    if len(access_log) > 50:
+        access_log.pop(0)
+    
+    log_html = ''
+    for entry in reversed(access_log):
+        log_html += f'''
+        <div class="log-entry">
+            <span class="log-timestamp">[{entry['timestamp']}]</span> 
+            <span class="log-ip">IP: {entry['ip']}</span> 
+            посетил <span class="log-path">{entry['path']}</span>
+        </div>
+        '''
+    
     return f'''
 <!doctype html>
 <html>
@@ -283,7 +356,7 @@ def not_found(err):
             .error-code {{
             
                 color: #4a90e2;
-                
+
             }}
         </style>
     </head>
@@ -296,6 +369,13 @@ def not_found(err):
                 <img class="error-image" src="{url_for('static', filename='404.png')}" alt="Заблудившийся путешественник">
             </div>
             
+            <div class="client-info">
+                <h3>Информация о вашем посещении:</h3>
+                <p><strong>Ваш IP-адрес:</strong> {client_ip}</p>
+                <p><strong>Дата и время доступа:</strong> {access_date}</p>
+                <p><strong>Запрошенный адрес:</strong> {requested_path}</p>
+            </div>
+            
             <p>Кажется, эта страница отправилась в собственное приключение и не может найти дорогу назад.</p>
             
             <div class="quote">
@@ -304,8 +384,14 @@ def not_found(err):
             
             <p>Но не беспокойтесь! Пока страница ищет свой путь, вы можете вернуться в безопасную гавань главной страницы.</p>
             
-            <div style="text-align: center;">
-                <a href="/" class="button">Вернуться на главную</a>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="/" class="button">Вернуться на главную страницу</a>
+                <a href="/lab1" class="button">К лабораторным работам</a>
+            </div>
+            
+            <div class="log-container">
+                <div class="log-header">Журнал посещений (последние 50 записей)</div>
+                {log_html if log_html else '<div class="log-entry">Журнал посещений пуст</div>'}
             </div>
         </div>
         {FOOTER}
