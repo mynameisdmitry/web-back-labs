@@ -143,6 +143,51 @@ COMMON_STYLES = '''
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         margin: 20px 0;
     }
+    .error-code {
+        font-size: 100px;
+        color: #e74c3c;
+        text-align: center;
+        margin: 0;
+        text-shadow: 3px 3px 0 #e0e0e0;
+        font-weight: 800;
+    }
+    .error-message {
+        color: #2c3e50;
+        text-align: center;
+        margin: 10px 0 30px;
+        font-size: 28px;
+        font-weight: 600;
+    }
+    .image-container {
+        text-align: center;
+        margin: 30px 0;
+    }
+    .error-image {
+        max-width: 250px;
+        margin: 20px auto;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease;
+        display: block;
+    }
+    .error-image:hover {
+        transform: scale(1.05);
+    }
+    .quote {
+        font-style: italic;
+        color: #7f8c8d;
+        border-left: 4px solid #4a90e2;
+        padding-left: 15px;
+        margin: 25px auto;
+        text-align: center;
+    }
+    .technical-info {
+        background: #fff5f5;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+    }
 </style>
 '''
 
@@ -151,6 +196,45 @@ FOOTER = '''
     Игуменшев Дмитрий Евгеньевич, ФБИ-33, 3 курс, 2025 год
 </footer>
 '''
+
+@app.errorhandler(500)
+def internal_server_error(err):
+    return f'''
+<!doctype html>
+<html>
+    <head>
+        <title>500 - Ошибка сервера</title>
+        {COMMON_STYLES}
+    </head>
+    <body>
+        <div class="container">
+            <div class="error-code">500</div>
+            <div class="error-message">Внутренняя ошибка сервера</div>
+            
+            <div class="image-container">
+                <img class="error-image" src="{url_for('static', filename='500.png')}" alt="Ошибка сервера">
+            </div>
+            
+            <p>На сервере произошла непредвиденная ошибка. Наши инженеры уже работают над решением проблемы.</p>
+            
+            <div class="technical-info">
+                <h3>Что произошло?</h3>
+                <p>Сервер столкнулся с внутренней ошибкой и не может выполнить ваш запрос.</p>
+                <p>Это может быть связано с временными техническими неполадками или ошибкой в коде.</p>
+            </div>
+            
+            <div class="quote">
+                "Даже у серверов бывают плохие дни... Но мы уже исправляем ситуацию!"
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="/" class="button">Вернуться на главную</a>
+                <a href="/lab1" class="button">К лабораторным работам</a>
+            </div>
+        </div>
+        {FOOTER}
+    </body>
+</html>''', 500
 
 @app.errorhandler(404)
 def not_found(err):
@@ -162,49 +246,16 @@ def not_found(err):
         {COMMON_STYLES}
         <style>
             .error-code {{
-                font-size: 100px;
+            
                 color: #4a90e2;
-                text-align: center;
-                margin: 0;
-                text-shadow: 3px 3px 0 #e0e0e0;
-                font-weight: 800;
-            }}
-            .error-message {{
-                color: #2c3e50;
-                text-align: center;
-                margin: 10px 0 30px;
-                font-size: 28px;
-                font-weight: 600;
-            }}
-            .error-image {{
-                max-width: 250px;
-                margin: 20px auto;
-                border-radius: 15px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                transition: transform 0.3s ease;
-                display: block;
-            }}
-            .error-image:hover {{
-                transform: scale(1.05);
-            }}
-            .quote {{
-                font-style: italic;
-                color: #7f8c8d;
-                border-left: 4px solid #4a90e2;
-                padding-left: 15px;
-                margin: 25px auto;
-                text-align: center;
-            }}
-            .image-container {{
-                text-align: center;
-                margin: 30px 0;
+
             }}
         </style>
     </head>
     <body>
         <div class="container">
             <div class="error-code">404</div>
-            <div class="error-message">Страница потерялась в лабиринте <span class="emoji"></span></div>
+            <div class="error-message">Страница потерялась в лабиринте</div>
             
             <div class="image-container">
                 <img class="error-image" src="{url_for('static', filename='404.png')}" alt="Заблудившийся путешественник">
@@ -226,6 +277,11 @@ def not_found(err):
     </body>
 </html>''', 404
 
+@app.route('/lab1/server_error')
+def server_error():
+    result = 10 / 0
+    return "Эта строка никогда не выполнится"
+
 @app.route("/")
 @app.route("/index")
 def index():
@@ -239,8 +295,8 @@ def index():
     </head>
     <body>
         <div class="container">
-            <h1> НГТУ, ФБ, WEB-программирование, часть 2</h1>
-            <h2> Список лабораторных работ</h2>
+            <h1>НГТУ, ФБ, WEB-программирование, часть 2</h1>
+            <h2>Список лабораторных работ</h2>
             
             <div class="highlight">
                 <p>Добро пожаловать на платформу для выполнения лабораторных работ по WEB-программированию!</p>
@@ -248,15 +304,16 @@ def index():
             
             <div class="info-grid">
                 <div class="info-card">
-                    <h3> Лабораторная работа 1</h3>
+                    <h3>Лабораторная работа 1</h3>
                     <p>Знакомство с Flask и создание базового веб-приложения</p>
                     <a href="/lab1" class="button">Перейти к работе</a>
                 </div>
             </div>
             
             <div class="nav-menu">
-                <a href="/lab1/http_codes"> Тестирование HTTP кодов</a> |
-                <a href="/nonexistent-page"> Тест 404 ошибки</a>
+                <a href="/lab1/http_codes">Тестирование HTTP кодов</a> |
+                <a href="/nonexistent-page">Тест 404 ошибки</a> |
+                <a href="/lab1/server_error">Тест 500 ошибки</a>
             </div>
         </div>
         {FOOTER}
@@ -277,7 +334,7 @@ def lab1():
 </head>
 <body>
     <div class="container">
-        <h1> Лабораторная работа 1</h1>
+        <h1>Лабораторная работа 1</h1>
         
         <div class="highlight">
             <p><strong>Flask</strong> — фреймворк для создания веб-приложений на языке программирования Python,
@@ -287,15 +344,16 @@ def lab1():
         </div>
         
         <div class="nav-menu">
-            <a href="/lab1/author"> Author</a> |
-            <a href="/lab1/web"> Web</a> |
-            <a href="/lab1/image"> Image</a> |
-            <a href="/lab1/counter"> Counter</a> |
-            <a href="/lab1/http_codes"> HTTP коды</a>
+            <a href="/lab1/author">Author</a> |
+            <a href="/lab1/web">Web</a> |
+            <a href="/lab1/image">Image</a> |
+            <a href="/lab1/counter">Counter</a> |
+            <a href="/lab1/http_codes">HTTP коды</a> |
+            <a href="/lab1/server_error">Тест 500 ошибки</a>
         </div>
 
         <div style="text-align: center; margin-top: 30px;">
-            <a href="/" class="button"> На главную</a>
+            <a href="/" class="button">На главную</a>
         </div>
     </div>
     {FOOTER}
@@ -315,18 +373,18 @@ def author():
     </head>
     <body>
         <div class="container">
-            <h1> Об авторе</h1>
+            <h1>Об авторе</h1>
             
             <div class="info-grid">
                 <div class="info-card">
-                    <h3> Личная информация</h3>
+                    <h3>Личная информация</h3>
                     <p><strong>ФИО:</strong> Игуменшев Дмитрий Евгеньевич</p>
                     <p><strong>Группа:</strong> ФБИ-33</p>
                     <p><strong>Курс:</strong> 3 курс</p>
                 </div>
                 
                 <div class="info-card">
-                    <h3> Образование</h3>
+                    <h3>Образование</h3>
                     <p><strong>Учебное заведение:</strong> НГТУ</p>
                     <p><strong>Факультет:</strong> ФБ</p>
                     <p><strong>Год:</strong> 2025</p>
@@ -334,14 +392,14 @@ def author():
             </div>
             
             <div class="highlight">
-                <p><strong> О проекте:</strong> Данный веб-сайт разработан в рамках изучения 
+                <p><strong>О проекте:</strong> Данный веб-сайт разработан в рамках изучения 
                 WEB-программирования с использованием фреймворка Flask. Цель проекта — освоение 
                 принципов работы веб-серверов и создание динамических веб-приложений.</p>
             </div>
             
             <div style="text-align: center;">
-                <a href="/lab1" class="button"> Назад к лабораторной работе 1</a>
-                <a href="/" class="button"> На главную</a>
+                <a href="/lab1" class="button">Назад к лабораторной работе 1</a>
+                <a href="/" class="button">На главную</a>
             </div>
         </div>
         {FOOTER}
@@ -361,14 +419,14 @@ def web():
     </head>
     <body>
         <div class="container">
-            <h1> Web-сервер на Flask</h1>
+            <h1>Web-сервер на Flask</h1>
             
             <div class="highlight">
                 <p>Эта страница демонстрирует работу веб-сервера, построенного на фреймворке Flask.</p>
             </div>
             
             <div class="info-card">
-                <h3> Заголовки ответа</h3>
+                <h3>Заголовки ответа</h3>
                 <p>Сервер возвращает следующие заголовки:</p>
                 <div class="code">
                     X-Server: sample<br>
@@ -377,8 +435,8 @@ def web():
             </div>
             
             <div style="text-align: center;">
-                <a href="/lab1/author" class="button"> Перейти к автору</a>
-                <a href="/lab1" class="button"> Назад</a>
+                <a href="/lab1/author" class="button">Перейти к автору</a>
+                <a href="/lab1" class="button">Назад</a>
             </div>
         </div>
         {FOOTER}
@@ -568,6 +626,13 @@ def http_codes():
                 </div>
                 
                 <div class="info-card">
+                    <h3>5xx - Ошибки сервера</h3>
+                    <ul>
+                        <li><a href="/lab1/server_error">500 - Internal Server Error</a> - Внутренняя ошибка сервера</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
                     <h3>Специальные коды</h3>
                     <ul>
                         <li><a href="/lab1/teapot">418 - I'm a teapot</a> - Я - чайник</li>
@@ -700,4 +765,4 @@ def teapot():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
