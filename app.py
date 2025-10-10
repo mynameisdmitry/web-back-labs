@@ -1062,4 +1062,4 @@ def example():
     group = 'ФБИ-33'
     course = '3 курс'
     number = '2'
-    return render_template('example.html', name=name, group=group, course=course, number=number)
+    return render_template('example.html')

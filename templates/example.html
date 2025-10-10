@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        WEB-программирование, часть 2. Лабораторная работа {{ number }}
+        WEB-программирование, часть 2. {% if lab_num %}Лабораторная работа 2{% endif %}
     </header>
 
     <main>
@@ -20,7 +20,23 @@
     </main>
     
     <footer>
-        &copy; {{ name }}, {{ group }}, {{ course }}, 2025
+        &copy; 
+        {% if name %}
+            {{ name }}, 
+        {% else %}
+            Анонимус,
+        {% endif %}
+        {% if group %}
+            {{ group }}, 
+        {% else %}
+            Группа неизвестна,
+        {% endif %}
+        {% if course %}
+            {{ course }}, 
+        {% else %}
+            Курс неизвестен,
+        {% endif %}
+        2025
     </footer>
 </body>
 </html>
