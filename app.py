@@ -1034,27 +1034,86 @@ def a2():
     return 'со слэшем'
 
 flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашка']
+
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
-    if flower_id >= len(flower_list):
+    if flower_id >= len(flower_list) or flower_id < 0:
         abort(404)
     else:
-        return "цветок: " + flower_list[flower_id]
+        return f'''
+        <!doctype html>
+        <html>
+        <head>
+            <title>Цветок #{flower_id}</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 40px; }}
+                .flower-card {{ background: linear-gradient(135deg, #ffebee, #fce4ec); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0; }}
+                .flower-name {{ font-size: 2em; color: #d32f2f; margin: 20px 0; }}
+                .button {{ display: inline-block; padding: 10px 20px; background: #2196f3; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }}
+                .nav {{ margin: 20px 0; }}
+            </style>
+        </head>
+        <body>
+            <h1>Информация о цветке</h1>
+            
+            <div class="flower-card">
+                <div class="flower-name">{flower_list[flower_id]}</div>
+                <p><strong>ID:</strong> {flower_id}</p>
+                <p><strong>Позиция в списке:</strong> {flower_id + 1} из {len(flower_list)}</p>
+            </div>
+
+            <div class="nav">
+                {f'<a href="/lab2/flowers/{flower_id - 1}" class="button">← Предыдущий цветок</a>' if flower_id > 0 else ''}
+                {f'<a href="/lab2/flowers/{flower_id + 1}" class="button">Следующий цветок →</a>' if flower_id < len(flower_list) - 1 else ''}
+            </div>
+
+            <div>
+                <a href="/lab2/flowers" class="button">Посмотреть все цветы</a>
+                <a href="/lab2" class="button">Назад к лабораторной 2</a>
+            </div>
+        </body>
+        </html>
+        '''
     
 @app.route('/lab2/add_flower/<name>')
 def add_flower(name):
     flower_list.append(name)
     return f'''
-<doctype html>
-<html>
+    <!doctype html>
+    <html>
+    <head>
+        <title>Цветок добавлен</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 40px; }}
+            .success {{ background: #e8f5e8; padding: 20px; border-radius: 10px; color: #2e7d32; }}
+            .flower-list {{ background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }}
+            .button {{ display: inline-block; padding: 10px 20px; background: #4caf50; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }}
+        </style>
+    </head>
     <body>
-    <h1>Добавлен новый цветок</h1>
-    <p>Название нового цветка:  {name} </p>
-    <p>Всего цветов: {len(flower_list)}</p>
-    <p>Полный список: {flower_list}</p>
+        <h1>Цветок успешно добавлен!</h1>
+        
+        <div class="success">
+            <h2>Название нового цветка: <em>{name}</em></h2>
+            <p>Цветок был добавлен в коллекцию под ID: {len(flower_list) - 1}</p>
+        </div>
+
+        <div class="flower-list">
+            <h3>Текущая коллекция цветов:</h3>
+            <p><strong>Всего цветов:</strong> {len(flower_list)}</p>
+            <ol>
+                {''.join(f'<li>{flower}' + (' <strong>← новый!</strong>' if i == len(flower_list)-1 else '') + '</li>' for i, flower in enumerate(flower_list))}
+            </ol>
+        </div>
+
+        <div>
+            <a href="/lab2/flowers" class="button">Посмотреть все цветы</a>
+            <a href="/lab2/add_flower/роза" class="button">Добавить ещё цветок</a>
+            <a href="/lab2" class="button">Назад к лабораторной 2</a>
+        </div>
     </body>
-</html>
-'''
+    </html>
+    '''
 
 @app.route('/lab2/example')
 def example():
@@ -1081,3 +1140,102 @@ def lab2():
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
     return render_template('filter.html', phrase = phrase)
+
+@app.route('/lab2/add_flower/', methods=['GET'])
+def add_flower_empty():
+    return '''
+    <!doctype html>
+    <html>
+    <head>
+        <title>Ошибка 400</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; }
+            .error { color: #d32f2f; padding: 20px; background: #ffebee; border-radius: 5px; }
+            .button { display: inline-block; padding: 10px 20px; background: #2196f3; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }
+        </style>
+    </head>
+    <body>
+        <h1>Ошибка 400 - Неверный запрос</h1>
+        <div class="error">
+            <h2>Вы не задали имя цветка</h2>
+            <p>Для добавления цветка укажите его имя в URL: /lab2/add_flower/название_цветка</p>
+        </div>
+        <div>
+            <a href="/lab2/flowers" class="button">Посмотреть все цветы</a>
+            <a href="/lab2" class="button">Назад к лабораторной 2</a>
+        </div>
+    </body>
+    </html>
+    ''', 400
+
+@app.route('/lab2/flowers')
+def all_flowers():
+    return f'''
+    <!doctype html>
+    <html>
+    <head>
+        <title>Все цветы</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 40px; }}
+            .flower-list {{ background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }}
+            .flower-item {{ padding: 10px; margin: 5px 0; background: white; border-radius: 5px; }}
+            .stats {{ background: #e3f2fd; padding: 15px; border-radius: 10px; margin: 15px 0; }}
+            .button {{ display: inline-block; padding: 10px 20px; background: #4caf50; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }}
+            .danger {{ background: #f44336; }}
+        </style>
+    </head>
+    <body>
+        <h1>Все цветы в коллекции</h1>
+        
+        <div class="stats">
+            <h3>Статистика:</h3>
+            <p><strong>Общее количество цветов:</strong> {len(flower_list)}</p>
+        </div>
+
+        <div class="flower-list">
+            <h3>Список цветов:</h3>
+            {'<div class="flower-item">Список цветов пуст</div>' if not flower_list else ''}
+            {'<ol>' + ''.join(f'<li class="flower-item">{i+1}. {flower}</li>' for i, flower in enumerate(flower_list)) + '</ol>' if flower_list else ''}
+        </div>
+
+        <div>
+            <a href="/lab2/add_flower/роза" class="button">Добавить розу</a>
+            <a href="/lab2/add_flower/тюльпан" class="button">Добавить тюльпан</a>
+            <a href="/lab2/clear_flowers" class="button danger">Очистить список</a>
+            <a href="/lab2" class="button">Назад к лабораторной 2</a>
+        </div>
+    </body>
+    </html>
+    '''
+
+@app.route('/lab2/clear_flowers')
+def clear_flowers():
+    global flower_list
+    flower_list.clear()
+    return '''
+    <!doctype html>
+    <html>
+    <head>
+        <title>Список очищен</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; }
+            .success { background: #e8f5e8; padding: 20px; border-radius: 10px; color: #2e7d32; }
+            .button { display: inline-block; padding: 10px 20px; background: #2196f3; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }
+        </style>
+    </head>
+    <body>
+        <h1>Список цветов очищен</h1>
+        
+        <div class="success">
+            <h2>Все цветы были успешно удалены из коллекции</h2>
+            <p>Теперь список цветов пуст. Вы можете добавить новые цветы.</p>
+        </div>
+
+        <div>
+            <a href="/lab2/flowers" class="button">Посмотреть все цветы</a>
+            <a href="/lab2/add_flower/роза" class="button">Добавить новый цветок</a>
+            <a href="/lab2" class="button">Назад к лабораторной 2</a>
+        </div>
+    </body>
+    </html>
+    '''
