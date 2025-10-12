@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Игуменшев. Лабораторная работа {{ number }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-</head>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <body>
     <header>
         WEB-программирование, часть 2. {% if lab_num %}Лабораторная работа 2{% endif %}

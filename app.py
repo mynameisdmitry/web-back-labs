@@ -923,6 +923,7 @@ def bad_request():
     <head>
         <meta charset="utf-8">
         <title>400 Bad Request</title>
+        <link rel="icon" href="{url_for('static', filename='favicon.ico')}" type="image/x-icon">
     </head>
     <body>
         <h1>400 Bad Request</h1>
@@ -1052,6 +1053,7 @@ def flowers(flower_id):
         <html>
         <head>
             <title>Цветок #{flower_id}</title>
+            <link rel="icon" href="{url_for('static', filename='favicon.ico')}" type="image/x-icon">
             <style>
                 body {{ font-family: Arial, sans-serif; margin: 40px; }}
                 .flower-card {{ background: linear-gradient(135deg, #ffebee, #fce4ec); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0; }}
@@ -1090,6 +1092,7 @@ def add_flower(name):
     <html>
     <head>
         <title>Цветок добавлен</title>
+        <link rel="icon" href="{url_for('static', filename='favicon.ico')}" type="image/x-icon">
         <style>
             body {{ font-family: Arial, sans-serif; margin: 40px; }}
             .success {{ background: #e8f5e8; padding: 20px; border-radius: 10px; color: #2e7d32; }}
@@ -1155,6 +1158,7 @@ def add_flower_empty():
     <html>
     <head>
         <title>Ошибка 400</title>
+        <link rel="icon" href="{url_for('static', filename='favicon.ico')}" type="image/x-icon">
         <style>
             body { font-family: Arial, sans-serif; margin: 40px; }
             .error { color: #d32f2f; padding: 20px; background: #ffebee; border-radius: 5px; }
@@ -1182,6 +1186,7 @@ def all_flowers():
     <html>
     <head>
         <title>Все цветы</title>
+        <link rel="icon" href="{url_for('static', filename='favicon.ico')}" type="image/x-icon">
         <style>
             body {{ font-family: Arial, sans-serif; margin: 40px; }}
             .flower-list {{ background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }}
@@ -1224,6 +1229,7 @@ def clear_flowers():
     <html>
     <head>
         <title>Список очищен</title>
+        <link rel="icon" href="{url_for('static', filename='favicon.ico')}" type="image/x-icon">
         <style>
             body { font-family: Arial, sans-serif; margin: 40px; }
             .success { background: #e8f5e8; padding: 20px; border-radius: 10px; color: #2e7d32; }
