@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ягоды</title>
+    <style>
+        .berry-item {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .berry-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 8px;
+        }
+        .berry-info {
+            flex: 1;
+        }
+        .berry-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Каталог ягод</h1>
+    
+    {% for berry in berries %}
+    <div class="berry-item">
+        <img src="{{ url_for('static', filename=berry.image) }}" alt="{{ berry.name }}" class="berry-image">
+        <div class="berry-info">
+            <div class="berry-name">{{ berry.name }}</div>
+            <div class="berry-description">{{ berry.description }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>
