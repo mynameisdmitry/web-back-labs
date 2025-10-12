@@ -429,9 +429,16 @@ def index():
                     <p>Знакомство с Flask и создание базового веб-приложения</p>
                     <a href="/lab1" class="button">Перейти к работе</a>
                 </div>
+                <div class="info-card">
+                    <h3>Лабораторная работа 2</h3>
+                    <p>Работа с шаблонами и маршрутизацией</p>
+                    <a href="/lab2" class="button">Перейти к работе</a>
+                </div>
             </div>
             
             <div class="nav-menu">
+                <a href="/lab1">Лабораторная работа 1</a> |
+                <a href="/lab2">Лабораторная работа 2</a> |
                 <a href="/lab1/http_codes">Тестирование HTTP кодов</a> |
                 <a href="/nonexistent-page">Тест 404 ошибки</a> |
                 <a href="/lab1/server_error">Тест 500 ошибки</a>
