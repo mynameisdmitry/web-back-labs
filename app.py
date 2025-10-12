@@ -1239,3 +1239,18 @@ def clear_flowers():
     </body>
     </html>
     '''
+
+@app.route('/lab2/calc/')
+def calc_default():
+    """Перенаправление на /lab2/calc/1/1"""
+    return redirect('/lab2/calc/1/1')
+
+@app.route('/lab2/calc/<int:a>')
+def calc_single(a):
+    """Перенаправление на /lab2/calc/a/1"""
+    return redirect(f'/lab2/calc/{a}/1')
+
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def calc(a, b):
+    """Страница с математическими операциями над двумя числами"""
+    return render_template('calc.html', a=a, b=b)
