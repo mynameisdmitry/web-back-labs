@@ -793,10 +793,6 @@ def counter():
 </html>
 '''
 
-
-
-
-
 @app.route('/lab1/reset_counter')
 def reset_counter():
     global count
@@ -1050,11 +1046,93 @@ flower_list = [
     {'name': 'гладиолус', 'price': 310}
 ]
     
+@app.route('/lab2/flowers')
+def all_flowers():
+    """Страница со списком всех цветов"""
+    return render_template('flowers.html', flowers=flower_list)
+
 @app.route('/lab2/add_flower/<name>')
 def add_flower(name):
     """Добавление нового цветка с ценой по умолчанию"""
     flower_list.append({'name': name, 'price': 300})
-    return redirect('/lab2/flowers')
+    return f'''
+    <!doctype html>
+    <html>
+    <head>
+        <title>Цветок добавлен</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 40px; }}
+            .success {{ background: #e8f5e8; padding: 20px; border-radius: 10px; color: #2e7d32; }}
+            .flower-list {{ background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }}
+            .button {{ display: inline-block; padding: 10px 20px; background: #4caf50; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }}
+        </style>
+    </head>
+    <body>
+        <h1>Цветок успешно добавлен!</h1>
+        
+        <div class="success">
+            <h2>Название нового цветка: <em>{name}</em></h2>
+            <p>Цветок был добавлен в коллекцию под ID: {len(flower_list) - 1}</p>
+        </div>
+
+        <div class="flower-list">
+            <h3>Текущая коллекция цветов:</h3>
+            <p><strong>Всего цветов:</strong> {len(flower_list)}</p>
+            <ol>
+                {''.join(f'<li>{flower}' + (' <strong>← новый!</strong>' if i == len(flower_list)-1 else '') + '</li>' for i, flower in enumerate(flower_list))}
+            </ol>
+        </div>
+
+        <div>
+            <a href="/lab2/flowers" class="button">Посмотреть все цветы</a>
+            <a href="/lab2/add_flower/роза" class="button">Добавить ещё цветок</a>
+            <a href="/lab2" class="button">Назад к лабораторной 2</a>
+        </div>
+    </body>
+    </html>
+'''
+
+
+@app.route('/lab2/flowers/<int:flower_id>')
+def flowers(flower_id):
+    if flower_id >= len(flower_list) or flower_id < 0:
+        abort(404)
+    else:
+        return f'''
+        <!doctype html>
+        <html>
+        <head>
+            <title>Цветок #{flower_id}</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 40px; }}
+                .flower-card {{ background: linear-gradient(135deg, #ffebee, #fce4ec); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0; }}
+                .flower-name {{ font-size: 2em; color: #d32f2f; margin: 20px 0; }}
+                .button {{ display: inline-block; padding: 10px 20px; background: #2196f3; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }}
+                .nav {{ margin: 20px 0; }}
+            </style>
+        </head>
+        <body>
+            <h1>Информация о цветке</h1>
+            
+            <div class="flower-card">
+                <div class="flower-name">{flower_list[flower_id]}</div>
+                <p><strong>ID:</strong> {flower_id}</p>
+                <p><strong>Позиция в списке:</strong> {flower_id + 1} из {len(flower_list)}</p>
+            </div>
+
+            <div class="nav">
+                {f'<a href="/lab2/flowers/{flower_id - 1}" class="button">← Предыдущий цветок</a>' if flower_id > 0 else ''}
+                {f'<a href="/lab2/flowers/{flower_id + 1}" class="button">Следующий цветок →</a>' if flower_id < len(flower_list) - 1 else ''}
+            </div>
+
+            <div>
+                <a href="/lab2/flowers" class="button">Посмотреть все цветы</a>
+                <a href="/lab2" class="button">Назад к лабораторной 2</a>
+            </div>
+        </body>
+        </html>
+        '''
+
 
 @app.route('/lab2/example')
 def example():
@@ -1081,13 +1159,6 @@ def lab2():
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
     return render_template('filter.html', phrase = phrase)
-
-
-
-@app.route('/lab2/flowers')
-def all_flowers():
-    """Страница со списком всех цветов"""
-    return render_template('flowers.html', flowers=flower_list)
 
 @app.route('/lab2/clear_flowers')
 def clear_flowers():
