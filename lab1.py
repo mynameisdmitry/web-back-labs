@@ -3,7 +3,7 @@ import datetime
 
 lab1 = Blueprint('lab1', __name__)
 
-access_log = []
+
 
 COMMON_STYLES = '''
 <style>
