@@ -311,7 +311,7 @@ def internal_server_error(err):
             <div class="error-message">Внутренняя ошибка сервера</div>
             
             <div class="image-container">
-                <img class="error-image" src="{url_for('static', filename='500.png')}" alt="Ошибка сервера">
+                <img class="error-image" src="{url_for('static', filename='lab1/500.png')}" alt="Ошибка сервера">
             </div>
             
             <p>На сервере произошла непредвиденная ошибка. Наши инженеры уже работают над решением проблемы.</p>
@@ -379,7 +379,7 @@ def not_found(err):
             <div class="error-message">Страница потерялась в лабиринте</div>
             
             <div class="image-container">
-                <img class="error-image" src="{url_for('static', filename='404.png')}" alt="Заблудившийся путешественник">
+                <img class="error-image" src="{url_for('static', filename='lab1/404.png')}" alt="Заблудившийся путешественник">
             </div>
             
             <div class="client-info">

@@ -300,7 +300,7 @@ flower_list = [
 @lab2.route('/lab2/flowers')
 def all_flowers():
     """Страница со списком всех цветов"""
-    return render_template('flowers.html', flowers=flower_list)
+    return render_template('lab2/flowers.html', flowers=flower_list)
 
 @lab2.route('/lab2/add_flower/<name>')
 def add_flower(name):
@@ -398,18 +398,18 @@ def example():
         {'name': 'мандарины', 'price': 95},
         {'name': 'манго', 'price': 321},
     ]
-    return render_template('example.html', 
+    return render_template('lab2/example.html', 
                         name=name, number=number, group=group, 
                         course=course, fruits=fruits)
 
 @lab2.route('/lab2/')
 def lab22():
-    return render_template('lab2.html')
+    return render_template('lab2/lab2.html')
 
 @lab2.route('/lab2/filters')
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
-    return render_template('filter.html', phrase = phrase)
+    return render_template('lab2/filter.html', phrase = phrase)
 
 @lab2.route('/lab2/clear_flowers')
 def clear_flowers():
@@ -445,7 +445,7 @@ def add_flower_form():
         </html>
         ''', 400
     
-    flower_list.lab2end({'name': name, 'price': 300})
+    flower_list.append({'name': name, 'price': 300})
     return redirect('/lab2/flowers')
 
 @lab2.route('/lab2/calc/')
@@ -461,7 +461,7 @@ def calc_single(a):
 @lab2.route('/lab2/calc/<int:a>/<int:b>')
 def calc(a, b):
     """Страница с математическими операциями над двумя числами"""
-    return render_template('calc.html', a=a, b=b)
+    return render_template('lab2/calc.html', a=a, b=b)
 
 books = [
     {'author': 'Фёдор Достоевский', 'title': 'Преступление и наказание', 'genre': 'Роман', 'pages': 671},
@@ -479,7 +479,7 @@ books = [
 @lab2.route('/lab2/books')
 def books_list():
     "Страница со списком книг"
-    return render_template('books.html', books=books)
+    return render_template('lab2/books.html', books=books)
 
 berries = [
     {'name': 'Клубника', 'description': 'Сочная красная ягода с сладким вкусом', 'image': 'Клубника.jpg'},
@@ -507,4 +507,4 @@ berries = [
 @lab2.route('/lab2/berries')
 def berries_list():
     "Страница со списком ягод"
-    return render_template('berries.html', berries=berries)
+    return render_template('lab2/berries.html', berries=berries)
