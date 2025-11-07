@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <div class="success-container">
+        <div class="success-icon"></div>
+        <h1>Оплата прошла успешно!</h1>
+        
+        <div class="success-details">
+            <div class="amount-paid">
+                <span class="label">Сумма оплаты:</span>
+                <span class="amount">{{ price }} рублей</span>
+            </div>
+            
+            <div class="delivery-info">
+                <div class="info-item">
+                    <span class="icon"></span>
+                    <span class="text">Время доставки: 15-20 минут</span>
+                </div>
+                <div class="info-item">
+                    <span class="icon"></span>
+                    <span class="text">С вами свяжется курьер</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="thank-you-message">
+            <p>Спасибо, что выбрали наш сервис! Приятного аппетита!</p>
+        </div>
+
+        <div class="success-actions">
+            <a href="/lab3/order" class="new-order-button">
+                Сделать новый заказ
+            </a>
+            <a href="/lab3" class="back-button">
+                Назад к лабораторной
+            </a>
+        </div>
+    </div>
+{% endblock %}

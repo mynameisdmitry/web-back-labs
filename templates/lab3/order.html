@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <div class="order-container">
+        <h1>Заказ напитка</h1>
+        
+        <div class="price-info">
+            <p>Выберите ваш любимый напиток и добавки к нему</p>
+        </div>
+
+        <form action="/lab3/pay" class="order-form">
+            <div class="form-section">
+                <h2>Напиток</h2>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" value="cofee" name="drink" checked>
+                        <span class="custom-radio"></span>
+                        <div class="option-content">
+                            <span class="drink-name">Кофе</span>
+                            <span class="price">120 руб.</span>
+                            <span class="description">Ароматный свежесваренный кофе</span>
+                        </div>
+                    </label>
+                    
+                    <label class="radio-option">
+                        <input type="radio" value="black-tea" name="drink">
+                        <span class="custom-radio"></span>
+                        <div class="option-content">
+                            <span class="drink-name">Чёрный чай</span>
+                            <span class="price">80 руб.</span>
+                            <span class="description">Крепкий классический чай</span>
+                        </div>
+                    </label>
+                    
+                    <label class="radio-option">
+                        <input type="radio" value="green-tea" name="drink">
+                        <span class="custom-radio"></span>
+                        <div class="option-content">
+                            <span class="drink-name">Зелёный чай</span>
+                            <span class="price">70 руб.</span>
+                            <span class="description">Лёгкий и освежающий</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Добавки</h2>
+                <div class="checkbox-group">
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="milk">
+                        <span class="custom-checkbox"></span>
+                        <div class="option-content">
+                            <span class="addon-name">Молоко</span>
+                            <span class="price">+30 руб.</span>
+                        </div>
+                    </label>
+                    
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="sugar">
+                        <span class="custom-checkbox"></span>
+                        <div class="option-content">
+                            <span class="addon-name">Сахар</span>
+                            <span class="price">+10 руб.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="order-button">
+                    Перейти к оплате
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

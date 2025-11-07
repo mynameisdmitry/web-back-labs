@@ -204,3 +204,318 @@ button {
 button:hover {
     background: #333333;
 }
+
+.order-container, .payment-container, .success-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.price-info {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.order-form, .payment-form {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+}
+
+.radio-group, .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.radio-option, .checkbox-option {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.radio-option:hover, .checkbox-option:hover {
+    border-color: #6c25df;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 37, 223, 0.2);
+}
+
+.radio-option input, .checkbox-option input {
+    display: none;
+}
+
+.custom-radio, .custom-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #adb5bd;
+    border-radius: 50%;
+    margin-right: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.custom-checkbox {
+    border-radius: 4px;
+}
+
+.radio-option input:checked + .custom-radio,
+.checkbox-option input:checked + .custom-checkbox {
+    border-color: #6c25df;
+    background: #6c25df;
+}
+
+.radio-option input:checked + .custom-radio::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checkbox-option input:checked + .custom-checkbox::after {
+    content: '✓';
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.option-content {
+    flex: 1;
+}
+
+.drink-name, .addon-name {
+    font-weight: bold;
+    color: #2c3e50;
+    display: block;
+    font-size: 1.1em;
+}
+
+.price {
+    color: #6c25df;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.description {
+    color: #6c757d;
+    font-size: 0.9em;
+    display: block;
+    margin-top: 5px;
+}
+
+.order-summary {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.total-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2em;
+}
+
+.total-price .amount {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #6c25df;
+    box-shadow: 0 0 0 3px rgba(108, 37, 223, 0.1);
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.input-hint {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.security-notice {
+    display: flex;
+    align-items: center;
+    background: #e8f5e8;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.lock-icon {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+.success-container {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.success-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+.success-details {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+    margin: 30px 0;
+}
+
+.amount-paid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.amount-paid .amount {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #27ae60;
+}
+
+.delivery-info {
+    text-align: left;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.info-item .icon {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.thank-you-message {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.form-actions, .success-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.order-button, .pay-button, .new-order-button {
+    background: linear-gradient(135deg, #6c25df 0%, #8e44ad 100%);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.order-button:hover, .pay-button:hover, .new-order-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 37, 223, 0.4);
+}
+
+.cancel-button, .back-button {
+    background: #6c757d;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.cancel-button:hover, .back-button:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .input-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions, .success-actions {
+        flex-direction: column;
+    }
+    
+    .order-button, .pay-button, .new-order-button,
+    .cancel-button, .back-button {
+        width: 100%;
+        text-align: center;
+    }
+}

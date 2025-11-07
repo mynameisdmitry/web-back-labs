@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <div class="payment-container">
+        <h1>Оплата заказа</h1>
+        
+        <div class="order-summary">
+            <div class="total-price">
+                <span class="label">Сумма к оплате:</span>
+                <span class="amount">{{ price }} руб.</span>
+            </div>
+        </div>
+
+        <form action="/lab3/success" class="payment-form">
+            <input type="hidden" name="price" value="{{ price }}">
+            
+            <div class="form-section">
+                <h2>Данные карты</h2>
+                
+                <div class="input-group">
+                    <label>Номер банковской карты</label>
+                    <input type="text" name="card" pattern="\d{16}" placeholder="0000 0000 0000 0000" required 
+                           class="card-input">
+                    <div class="input-hint">16 цифр без пробелов</div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Имя держателя карты</label>
+                        <input type="text" name="name" placeholder="IVAN IVANOV" required 
+                               class="name-input" style="text-transform: uppercase;">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>CVV код</label>
+                        <input type="text" name="cvv" pattern="\d{3}" placeholder="123" 
+                               maxlength="3" required class="cvv-input">
+                        <div class="input-hint">3 цифры на обороте</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="security-notice">
+                <div class="lock-icon"></div>
+                <p>Ваши данные защищены SSL-шифрованием</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="pay-button">
+                    Оплатить {{ price }} руб.
+                </button>
+                <a href="/lab3/order" class="cancel-button">Отменить заказ</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
