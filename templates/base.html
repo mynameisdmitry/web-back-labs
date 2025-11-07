@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,53 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}?v=1.2">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    
+    <style>
+        body {
+            color: #000000;
+            background-color: #414344;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #6c25df;
+            color: #000000;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        main {
+            background-color: #817777;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #817777;
+            min-height: 400px;
+        }
+
+        footer {
+            background-color: #83898d;
+            color: rgb(0, 0, 0);
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+    </style>
 </head>
-<body>
+<body
+    {% if request.cookies.get('color') %}style="color: {{ request.cookies.get('color') }};"{% endif %}
+    {% if request.cookies.get('background_color') %}style="background-color: {{ request.cookies.get('background_color') }};"{% endif %}
+    {% if request.cookies.get('font_size') %}style="font-size: {{ request.cookies.get('font_size') }}px;"{% endif %}
+    {% if request.cookies.get('font_family') %}style="font-family: {{ request.cookies.get('font_family') }};"{% endif %}
+>
     <header>
         WEB-программирование, часть 2. {{ self.lab() }}
         <a href="/" style="float: right; margin-left: 20px;">Главная</a>

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <div class="settings-container">
+        <h1>Настройки оформления</h1>
+        <p>Настройте внешний вид страниц по вашему вкусу</p>
+
+        <form class="settings-form">
+            <div class="settings-grid">
+                <div class="setting-group">
+                    <label class="label" for="color">Цвет текста:</label>
+                    <input type="color" id="color" name="color" value="{{ color or '#000000' }}">
+                    <div class="current-value">{{ request.cookies.get('color', 'Чёрный') }}</div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="label" for="background_color">Цвет фона:</label>
+                    <input type="color" id="background_color" name="background_color" value="{{ background_color or '#414344' }}">
+                    <div class="current-value">{{ request.cookies.get('background_color', 'Серый') }}</div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="label" for="font_size">Размер шрифта:</label>
+                    <select id="font_size" name="font_size">
+                        <option value="12" {{ 'selected' if request.cookies.get('font_size') == '12' }}>Маленький (12px)</option>
+                        <option value="14" {{ 'selected' if request.cookies.get('font_size') == '14' }}>Стандартный (14px)</option>
+                        <option value="16" {{ 'selected' if request.cookies.get('font_size') == '16' }}>Большой (16px)</option>
+                        <option value="18" {{ 'selected' if request.cookies.get('font_size') == '18' }}>Очень большой (18px)</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label class="label" for="font_family">Шрифт:</label>
+                    <select id="font_family" name="font_family">
+                        <option value="Arial, sans-serif" {{ 'selected' if request.cookies.get('font_family') == 'Arial, sans-serif' }}>Arial</option>
+                        <option value="'Times New Roman', serif" {{ 'selected' if request.cookies.get('font_family') == "'Times New Roman', serif" }}>Times New Roman</option>
+                        <option value="'Courier New', monospace" {{ 'selected' if request.cookies.get('font_family') == "'Courier New', monospace" }}>Courier New</option>
+                        <option value="'Georgia', serif" {{ 'selected' if request.cookies.get('font_family') == "'Georgia', serif" }}>Georgia</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-button">Сохранить настройки</button>
+                <a href="/lab3/clear_settings" class="reset-button">Сбросить настройки</a>
+            </div>
+        </form>
+
+        <div class="preview-section">
+            <h3>Предпросмотр:</h3>
+            <div class="preview-box">
+                <p>Это пример текста с текущими настройками.</p>
+                <p>Вы можете видеть, как будет выглядеть текст на страницах.</p>
+                <p>Цвет, размер и шрифт применяются ко всем страницам.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
