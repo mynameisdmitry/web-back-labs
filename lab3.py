@@ -114,3 +114,48 @@ def clear_settings():
     resp.delete_cookie('font_size')
     resp.delete_cookie('font_family')
     return resp
+
+
+@lab3.route('/lab3/ticket')
+def ticket():
+    errors = {}
+    fio = request.args.get('fio')
+    shelf = request.args.get('shelf')
+    linen = request.args.get('linen')
+    baggage = request.args.get('baggage')
+    age = request.args.get('age')
+    departure = request.args.get('departure')
+    destination = request.args.get('destination')
+    date = request.args.get('date')
+    insurance = request.args.get('insurance')
+
+    if fio and shelf and age and departure and destination and date:
+        if not fio.strip():
+            errors['fio'] = 'Заполните ФИО пассажира'
+        
+        try:
+            age_int = int(age)
+            if age_int < 1 or age_int > 120:
+                errors['age'] = 'Возраст должен быть от 1 до 120 лет'
+        except ValueError:
+            errors['age'] = 'Возраст должен быть числом'
+        
+        if not departure.strip():
+            errors['departure'] = 'Заполните пункт выезда'
+        
+        if not destination.strip():
+            errors['destination'] = 'Заполните пункт назначения'
+        
+        if not date:
+            errors['date'] = 'Выберите дату поездки'
+
+        if not errors:
+            return render_template('lab3/ticket_result.html',
+                                 fio=fio, shelf=shelf, linen=linen, baggage=baggage,
+                                 age=age, departure=departure, destination=destination,
+                                 date=date, insurance=insurance)
+    
+    return render_template('lab3/ticket.html', errors=errors,
+                         fio=fio or '', shelf=shelf or '', linen=linen or '',
+                         baggage=baggage or '', age=age or '', departure=departure or '',
+                         destination=destination or '', date=date or '', insurance=insurance or '')

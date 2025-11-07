@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+<div class="ticket-container">
+    <h1>Заказ железнодорожного билета</h1>
+    
+    <form class="ticket-form">
+        <div class="form-section">
+            <h2>👤 Данные пассажира</h2>
+            
+            <div class="input-group">
+                <label>ФИО пассажира:</label>
+                <input type="text" name="fio" value="{{ fio }}" required>
+                <span class="error">{{ errors.fio }}</span>
+            </div>
+
+            <div class="input-group">
+                <label>Возраст:</label>
+                <input type="number" name="age" value="{{ age }}" min="1" max="120" required>
+                <span class="error">{{ errors.age }}</span>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>🛏️ Условия поездки</h2>
+            
+            <div class="input-group">
+                <label>Полка:</label>
+                <select name="shelf" required>
+                    <option value="">Выберите полку</option>
+                    <option value="lower" {{ 'selected' if shelf == 'lower' }}>Нижняя</option>
+                    <option value="upper" {{ 'selected' if shelf == 'upper' }}>Верхняя</option>
+                    <option value="upper-side" {{ 'selected' if shelf == 'upper-side' }}>Верхняя боковая</option>
+                    <option value="lower-side" {{ 'selected' if shelf == 'lower-side' }}>Нижняя боковая</option>
+                </select>
+            </div>
+
+            <div class="checkbox-group">
+                <label class="checkbox-option">
+                    <input type="checkbox" name="linen" {{ 'checked' if linen == 'on' }}>
+                    <span class="custom-checkbox"></span>
+                    <span class="option-text">Постельное бельё (+75 руб.)</span>
+                </label>
+
+                <label class="checkbox-option">
+                    <input type="checkbox" name="baggage" {{ 'checked' if baggage == 'on' }}>
+                    <span class="custom-checkbox"></span>
+                    <span class="option-text">Багаж (+250 руб.)</span>
+                </label>
+
+                <label class="checkbox-option">
+                    <input type="checkbox" name="insurance" {{ 'checked' if insurance == 'on' }}>
+                    <span class="custom-checkbox"></span>
+                    <span class="option-text">Страховка (+150 руб.)</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Маршрут</h2>
+            
+            <div class="input-group">
+                <label>Пункт выезда:</label>
+                <input type="text" name="departure" value="{{ departure }}" required>
+                <span class="error">{{ errors.departure }}</span>
+            </div>
+
+            <div class="input-group">
+                <label>Пункт назначения:</label>
+                <input type="text" name="destination" value="{{ destination }}" required>
+                <span class="error">{{ errors.destination }}</span>
+            </div>
+
+            <div class="input-group">
+                <label>Дата поездки:</label>
+                <input type="date" name="date" value="{{ date }}" required>
+                <span class="error">{{ errors.date }}</span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="order-button">🎫 Оформить билет</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

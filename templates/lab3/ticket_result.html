@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+<div class="ticket-result-container">
+    <h1>🎫 Ваш железнодорожный билет</h1>
+    
+    <div class="ticket">
+        <div class="ticket-header">
+            <h2>РЖД - Российские железные дороги</h2>
+            <div class="ticket-type">
+                {% set age_int = age | int %}
+                {% if age_int < 18 %}
+                <span class="child-ticket">Детский билет</span>
+                {% else %}
+                <span class="adult-ticket">Взрослый билет</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="ticket-body">
+            <div class="passenger-info">
+                <h3>👤 Пассажир</h3>
+                <p><strong>ФИО:</strong> {{ fio }}</p>
+                <p><strong>Возраст:</strong> {{ age }} лет</p>
+            </div>
+
+            <div class="route-info">
+                <h3>Маршрут</h3>
+                <p><strong>Откуда:</strong> {{ departure }}</p>
+                <p><strong>Куда:</strong> {{ destination }}</p>
+                <p><strong>Дата:</strong> {{ date }}</p>
+            </div>
+
+            <div class="service-info">
+                <h3>Услуги</h3>
+                <p><strong>Полка:</strong> 
+                    {% if shelf == 'lower' %}Нижняя
+                    {% elif shelf == 'upper' %}Верхняя
+                    {% elif shelf == 'upper-side' %}Верхняя боковая
+                    {% elif shelf == 'lower-side' %}Нижняя боковая
+                    {% endif %}
+                </p>
+                <p><strong>Бельё:</strong> {{ 'Да' if linen == 'on' else 'Нет' }}</p>
+                <p><strong>Багаж:</strong> {{ 'Да' if baggage == 'on' else 'Нет' }}</p>
+                <p><strong>Страховка:</strong> {{ 'Да' if insurance == 'on' else 'Нет' }}</p>
+            </div>
+
+            <div class="price-info">
+                <h3>Стоимость</h3>
+                {% set age_int = age | int %}
+                {% if age_int < 18 %}
+                    {% set base_price = 700 %}
+                    <p>Детский билет: 700 руб.</p>
+                {% else %}
+                    {% set base_price = 1000 %}
+                    <p>Взрослый билет: 1000 руб.</p>
+                {% endif %}
+
+                {% set additional_price = 0 %}
+                {% if shelf == 'lower' or shelf == 'lower-side' %}
+                    {% set additional_price = additional_price + 100 %}
+                    <p>Нижняя полка: +100 руб.</p>
+                {% endif %}
+                
+                {% if linen == 'on' %}
+                    {% set additional_price = additional_price + 75 %}
+                    <p>Постельное бельё: +75 руб.</p>
+                {% endif %}
+                
+                {% if baggage == 'on' %}
+                    {% set additional_price = additional_price + 250 %}
+                    <p>Багаж: +250 руб.</p>
+                {% endif %}
+                
+                {% if insurance == 'on' %}
+                    {% set additional_price = additional_price + 150 %}
+                    <p>Страховка: +150 руб.</p>
+                {% endif %}
+
+                {% set total_price = base_price + additional_price %}
+                <div class="total-price">
+                    <strong>Итого: {{ total_price }} руб.</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-footer">
+            <p>Билет оформлен успешно! Приятной поездки!</p>
+        </div>
+    </div>
+
+    <div class="ticket-actions">
+        <a href="/lab3/ticket" class="new-ticket-button">Оформить новый билет</a>
+        <a href="/lab3" class="back-button">← Назад к лабораторной</a>
+    </div>
+</div>
+{% endblock %}
