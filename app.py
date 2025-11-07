@@ -1,11 +1,13 @@
 from flask import Flask, url_for, request, redirect, abort, render_template
 from lab1 import lab1
 from lab2 import lab2
+from lab3 import lab3
 import datetime
 
 app = Flask(__name__)
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
+app.register_blueprint(lab3)
 access_log = []
 
 COMMON_STYLES = '''
@@ -29,7 +31,7 @@ COMMON_STYLES = '''
         padding: 40px;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        border: 3px solid #4a90e2;
+        border: 3px solid #2c3e50;
     }
     h1 {
         color: #2c3e50;
@@ -39,7 +41,7 @@ COMMON_STYLES = '''
         font-weight: 700;
     }
     h2 {
-        color: #34495e;
+        color: #2c3e50;
         margin: 25px 0 15px;
         font-size: 1.8em;
         font-weight: 600;
@@ -51,18 +53,18 @@ COMMON_STYLES = '''
         font-size: 1.1em;
     }
     a {
-        color: #4a90e2;
+        color: #2c3e50;
         text-decoration: none;
         font-weight: 600;
         transition: all 0.3s ease;
     }
     a:hover {
-        color: #357abd;
+        color: #1a252f;
         text-decoration: underline;
     }
     .button {
         display: inline-block;
-        background: #4a90e2;
+        background: #2c3e50;
         color: white;
         padding: 12px 30px;
         text-decoration: none;
@@ -70,14 +72,14 @@ COMMON_STYLES = '''
         font-weight: bold;
         margin: 10px 5px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
         border: none;
         cursor: pointer;
     }
     .button:hover {
-        background: #357abd;
+        background: #1a252f;
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
         text-decoration: none;
     }
     .nav-menu {
@@ -90,6 +92,10 @@ COMMON_STYLES = '''
     .nav-menu a {
         margin: 0 15px;
         font-size: 1.1em;
+        color: #2c3e50;
+    }
+    .nav-menu a:hover {
+        color: #1a252f;
     }
     ul, ol {
         margin: 15px 0;
@@ -97,14 +103,20 @@ COMMON_STYLES = '''
     }
     li {
         margin: 10px 0;
-        color: #5a6c7d;
+        color: #2c3e50;
+    }
+    li a {
+        color: #2c3e50;
+    }
+    li a:hover {
+        color: #1a252f;
     }
     .highlight {
-        background: #e3f2fd;
+        background: #f8f9fa;
         padding: 20px;
         border-radius: 10px;
         margin: 20px 0;
-        border-left: 4px solid #4a90e2;
+        border-left: 4px solid #2c3e50;
     }
     .code {
         background: #2c3e50;
@@ -140,7 +152,7 @@ COMMON_STYLES = '''
         background: #f8f9fa;
         padding: 20px;
         border-radius: 10px;
-        border-left: 4px solid #4a90e2;
+        border-left: 4px solid #2c3e50;
     }
     img {
         max-width: 100%;
@@ -181,7 +193,7 @@ COMMON_STYLES = '''
     .quote {
         font-style: italic;
         color: #7f8c8d;
-        border-left: 4px solid #4a90e2;
+        border-left: 4px solid #2c3e50;
         padding-left: 15px;
         margin: 25px auto;
         text-align: center;
@@ -212,7 +224,7 @@ COMMON_STYLES = '''
         margin: 8px 0;
         background: white;
         border-radius: 8px;
-        border-left: 4px solid #4a90e2;
+        border-left: 4px solid #2c3e50;
         transition: all 0.3s ease;
     }
     .route-item:hover {
@@ -238,7 +250,7 @@ COMMON_STYLES = '''
         overflow-y: auto;
     }
     .log-header {
-        color: #4a90e2;
+        color: #ecf0f1;
         text-align: center;
         margin-bottom: 15px;
         font-size: 1.3em;
@@ -249,7 +261,7 @@ COMMON_STYLES = '''
         margin: 8px 0;
         background: #34495e;
         border-radius: 5px;
-        border-left: 3px solid #4a90e2;
+        border-left: 3px solid #ecf0f1;
         font-family: 'Courier New', monospace;
         font-size: 0.9em;
     }
@@ -265,11 +277,11 @@ COMMON_STYLES = '''
         color: #f39c12;
     }
     .client-info {
-        background: #e8f4fd;
+        background: #f8f9fa;
         padding: 15px;
         border-radius: 8px;
         margin: 15px 0;
-        border-left: 4px solid #3498db;
+        border-left: 4px solid #2c3e50;
     }
     .client-info h3 {
         color: #2c3e50;
@@ -357,9 +369,7 @@ def not_found(err):
         {COMMON_STYLES}
         <style>
             .error-code {{
-            
-                color: #4a90e2;
-
+                color: #2c3e50;
             }}
         </style>
     </head>
@@ -434,11 +444,17 @@ def index():
                     <p>Работа с шаблонами и маршрутизацией</p>
                     <a href="/lab2" class="button">Перейти к работе</a>
                 </div>
+                <div class="info-card">
+                    <h3>Лабораторная работа 3</h3>
+                    <p>Работа с cookies и сессиями</p>
+                    <a href="/lab3" class="button">Перейти к работе</a>
+                </div>
             </div>
             
             <div class="nav-menu">
                 <a href="/lab1">Лабораторная работа 1</a> |
                 <a href="/lab2">Лабораторная работа 2</a> |
+                <a href="/lab3">Лабораторная работа 3</a> |
                 <a href="/lab1/http_codes">Тестирование HTTP кодов</a> |
                 <a href="/nonexistent-page">Тест 404 ошибки</a> |
                 <a href="/lab1/server_error">Тест 500 ошибки</a>
