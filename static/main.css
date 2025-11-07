@@ -164,3 +164,43 @@ img {
     text-decoration: none;
     transform: translateY(-2px);
 }
+
+.error {
+    color: #ff0000 !important;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+    display: block;
+}
+
+input, select {
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+input:invalid {
+    border-color: #ff0000;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+button {
+    background: #000000;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #333333;
+}
