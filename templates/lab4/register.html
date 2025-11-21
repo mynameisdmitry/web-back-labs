@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block lab %}Регистрация{% endblock %}
+
+{% block main %}
+    <div style="max-width: 500px; margin: 0 auto;">
+        <h1 style="text-align: center;">Регистрация</h1>
+        
+        <form method="post" action="/lab4/register" style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin: 20px 0;">
+            <div style="margin-bottom: 20px;">
+                <label for="login" style="display: block; margin-bottom: 5px; font-weight: bold;">Логин:</label>
+                <input type="text" id="login" name="login" value="{{ login or '' }}" 
+                       style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="name" style="display: block; margin-bottom: 5px; font-weight: bold;">Имя:</label>
+                <input type="text" id="name" name="name" value="{{ name or '' }}" 
+                       style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;"
+                       placeholder="Ваше настоящее имя">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="gender" style="display: block; margin-bottom: 5px; font-weight: bold;">Пол:</label>
+                <select id="gender" name="gender" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="male" {% if gender == 'male' %}selected{% endif %}>Мужской</option>
+                    <option value="female" {% if gender == 'female' %}selected{% endif %}>Женский</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="password" style="display: block; margin-bottom: 5px; font-weight: bold;">Пароль:</label>
+                <input type="password" id="password" name="password" 
+                       style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="password_confirm" style="display: block; margin-bottom: 5px; font-weight: bold;">Подтверждение пароля:</label>
+                <input type="password" id="password_confirm" name="password_confirm" 
+                       style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+            
+            <button type="submit" style="background: #27ae60; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+                Зарегистрироваться
+            </button>
+        </form>
+
+        {% if errors %}
+            <div style="max-width: 500px; margin: 20px auto;">
+                {% for error in errors %}
+                    <div style="color: #e74c3c; background: #ffe6e6; padding: 12px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #e74c3c; font-weight: bold;">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 20px;">
+            <p>Уже есть аккаунт? <a href="/lab4/login" style="color: #3498db;">Войдите</a></p>
+            <a href="/lab4/" style="display: inline-block; background: #666; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                ← Назад к меню
+            </a>
+        </div>
+    </div>
+{% endblock %}

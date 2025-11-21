@@ -3,49 +3,42 @@
 {% block lab %}Авторизация{% endblock %}
 
 {% block main %}
-    <h1>Авторизация</h1>
-    
-    <form method="post" action="/lab4/login" style="max-width: 400px; margin: 0 auto;">
-        <div style="margin-bottom: 20px;">
-            <label for="login" style="display: block; margin-bottom: 5px; font-weight: bold;">Логин:</label>
-            <input type="text" id="login" name="login" value="{{ saved_login or '' }}" 
-                   style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
-        </div>
+    <div style="max-width: 500px; margin: 0 auto;">
+        <h1 style="text-align: center;">Авторизация</h1>
         
-        <div style="margin-bottom: 20px;">
-            <label for="password" style="display: block; margin-bottom: 5px; font-weight: bold;">Пароль:</label>
-            <input type="password" id="password" name="password" 
-                   style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
-        </div>
-        
-        <button type="submit" style="background: #2c3e50; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
-            Войти
-        </button>
-    </form>
+        <form method="post" action="/lab4/login" style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin: 20px 0;">
+            <div style="margin-bottom: 20px;">
+                <label for="login" style="display: block; margin-bottom: 5px; font-weight: bold;">Логин:</label>
+                <input type="text" id="login" name="login" value="{{ saved_login or '' }}" 
+                       style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="password" style="display: block; margin-bottom: 5px; font-weight: bold;">Пароль:</label>
+                <input type="password" id="password" name="password" 
+                       style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+            
+            <button type="submit" style="background: #2c3e50; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+                Войти
+            </button>
+        </form>
 
-    {% if errors %}
-        <div style="max-width: 400px; margin: 20px auto;">
-            {% for error in errors %}
-                <div style="color: #e74c3c; background: #ffe6e6; padding: 12px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #e74c3c; font-weight: bold;">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+        {% if errors %}
+            <div style="max-width: 500px; margin: 20px auto;">
+                {% for error in errors %}
+                    <div style="color: #e74c3c; background: #ffe6e6; padding: 12px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #e74c3c; font-weight: bold;">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-    <div style="text-align: center; margin-top: 20px;">
-        <p>Тестовые пользователи:</p>
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; display: inline-block;">
-            <strong>alex / 123</strong> (Алексей Петров)<br>
-            <strong>bob / 555</strong> (Боб Смит)<br>
-            <strong>maria / 789</strong> (Мария Иванова)<br>
-            <strong>admin / admin</strong> (Администратор)
+        <div style="text-align: center; margin-top: 20px;">
+            <p>Нет аккаунта? <a href="/lab4/register" style="color: #3498db;">Зарегистрируйтесь</a></p>
+            <a href="/lab4/" style="display: inline-block; background: #666; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                ← Назад к меню
+            </a>
         </div>
-    </div>
-
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="/lab4/" style="display: inline-block; background: #666; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
-            ← Назад к меню
-        </a>
     </div>
 {% endblock %}
