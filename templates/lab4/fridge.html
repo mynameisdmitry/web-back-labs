@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block lab %}Холодильник{% endblock %}
+
+{% block main %}
+    <div style="max-width: 500px; margin: 0 auto;">
+        <h1 style="text-align: center;">Холодильник</h1>
+        
+        <div style="background: #e6f2ff; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <p><strong>Диапазон рабочих температур:</strong> от -12°C до -1°C</p>
+            <p><strong>Рекомендуемые значения:</strong></p>
+            <ul>
+                <li>-12°C до -9°C: (максимальное охлаждение)</li>
+                <li>-8°C до -5°C: (среднее охлаждение)</li>
+                <li>-4°C до -1°C: (минимальное охлаждение)</li>
+            </ul>
+        </div>
+        
+        <form method="post" action="/lab4/fridge" style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin: 20px 0;">
+            <div style="margin-bottom: 20px;">
+                <label for="temperature" style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 1.1em;">
+                    Установите температуру (°C):
+                </label>
+                <input type="number" id="temperature" name="temperature" 
+                       value="{{ temperature or '' }}" 
+                       min="-50" max="10" step="1"
+                       style="padding: 12px; width: 100%; border: 2px solid #3498db; border-radius: 8px; font-size: 16px;"
+                       placeholder="Введите температуру от -12 до -1">
+            </div>
+            
+            <button type="submit" style="background: #3498db; color: white; padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold;">
+                Установить температуру
+            </button>
+        </form>
+
+        {% if error %}
+            <div style="color: #e74c3c; background: #ffe6e6; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #e74c3c;">
+                <strong>Ошибка:</strong> {{ error }}
+            </div>
+        {% endif %}
+
+        {% if message %}
+            <div style="background: #e6f7e6; padding: 25px; border-radius: 10px; margin: 20px 0; text-align: center; border: 2px solid #27ae60;">
+                <h3 style="color: #27ae60; margin-bottom: 15px;">{{ message }}</h3>
+                
+                {% if snowflakes > 0 %}
+                    <div style="font-size: 2em; color: #3498db; margin: 15px 0;">
+                        {% for i in range(snowflakes) %}
+                        {% endfor %}
+                    </div>
+                    <p style="color: #666; margin-top: 10px;">
+                        {% if snowflakes == 3 %}
+                            Максимальное охлаждение
+                        {% elif snowflakes == 2 %}
+                            Среднее охлаждение
+                        {% else %}
+                            Минимальное охлаждение
+                        {% endif %}
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/lab4/" style="display: inline-block; background: #666; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                ← Назад к меню
+            </a>
+        </div>
+    </div>
+{% endblock %}
