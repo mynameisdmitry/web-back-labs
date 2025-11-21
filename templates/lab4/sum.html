@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block lab %}Суммирование чисел{% endblock %}
+
+{% block main %}
+    <h1>Суммирование чисел</h1>
+    
+    <form method="post" action="/lab4/sum" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <div style="margin-bottom: 15px;">
+            <label for="x1" style="display: block; margin-bottom: 5px; font-weight: bold;">Первое число:</label>
+            <input type="text" id="x1" name="x1" value="{{ x1 or '' }}" style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="x2" style="display: block; margin-bottom: 5px; font-weight: bold;">Второе число:</label>
+            <input type="text" id="x2" name="x2" value="{{ x2 or '' }}" style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        
+        <button type="submit" style="background: #2c3e50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Сложить</button>
+    </form>
+
+    {% if error %}
+        <div style="color: red; background: #ffe6e6; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <strong>Ошибка:</strong> {{ error }}
+        </div>
+    {% elif result is defined %}
+        <div style="background: #e6f7e6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3>Результат:</h3>
+            <p style="font-size: 1.2em; font-weight: bold;">{{ x1 }} + {{ x2 }} = {{ result }}</p>
+        </div>
+    {% endif %}
+
+    <a href="/lab4/" style="display: inline-block; background: #666; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px;">
+        ← Назад к меню
+    </a>
+{% endblock %}

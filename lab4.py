@@ -6,10 +6,12 @@ lab4 = Blueprint('lab4', __name__)
 def lab():
     return render_template('lab4/lab4.html')
 
-@lab4.route('/lab4/div', methods = ['GET', 'POST'])
+
+@lab4.route('/lab4/div', methods=['GET', 'POST'])
 def div_form():
     if request.method == 'GET':
         return render_template('lab4/div.html')
+    
     x1 = request.form.get('x1')
     x2 = request.form.get('x2')
     
@@ -17,12 +19,94 @@ def div_form():
         return render_template('lab4/div.html', error='Оба поля должны быть заполнены!')
     
     try:
-        x1 = int(x1)
-        x2 = int(x2)
+        x1 = float(x1)
+        x2 = float(x2)
     except ValueError:
         return render_template('lab4/div.html', error='Оба поля должны содержать числа!')
     
     if x2 == 0:
         return render_template('lab4/div.html', error='На ноль делить нельзя!')
+    
     result = x1 / x2
-    return render_template('lab4/div.html', x1=x1, x2=x2, result=result, show_result=True)
+    return render_template('lab4/div.html', x1=x1, x2=x2, result=result)
+
+
+@lab4.route('/lab4/sum', methods=['GET', 'POST'])
+def sum_form():
+    if request.method == 'GET':
+        return render_template('lab4/sum.html')
+    
+    x1 = request.form.get('x1', '0')
+    x2 = request.form.get('x2', '0')
+    
+    try:
+        x1 = float(x1) if x1 != '' else 0.0
+        x2 = float(x2) if x2 != '' else 0.0
+    except ValueError:
+        return render_template('lab4/sum.html', error='Поля должны содержать числа!')
+    
+    result = x1 + x2
+    return render_template('lab4/sum.html', x1=x1, x2=x2, result=result)
+
+
+@lab4.route('/lab4/sub', methods=['GET', 'POST'])
+def sub_form():
+    if request.method == 'GET':
+        return render_template('lab4/sub.html')
+    
+    x1 = request.form.get('x1')
+    x2 = request.form.get('x2')
+    
+    if x1 == '' or x2 == '':
+        return render_template('lab4/sub.html', error='Оба поля должны быть заполнены!')
+    
+    try:
+        x1 = float(x1)
+        x2 = float(x2)
+    except ValueError:
+        return render_template('lab4/sub.html', error='Оба поля должны содержать числа!')
+    
+    result = x1 - x2
+    return render_template('lab4/sub.html', x1=x1, x2=x2, result=result)
+
+
+@lab4.route('/lab4/mul', methods=['GET', 'POST'])
+def mul_form():
+    if request.method == 'GET':
+        return render_template('lab4/mul.html')
+    
+    x1 = request.form.get('x1', '1')
+    x2 = request.form.get('x2', '1')
+    
+    try:
+        x1 = float(x1) if x1 != '' else 1.0
+        x2 = float(x2) if x2 != '' else 1.0
+    except ValueError:
+        return render_template('lab4/mul.html', error='Поля должны содержать числа!')
+    
+    result = x1 * x2
+    return render_template('lab4/mul.html', x1=x1, x2=x2, result=result)
+
+
+@lab4.route('/lab4/pow', methods=['GET', 'POST'])
+def pow_form():
+    if request.method == 'GET':
+        return render_template('lab4/pow.html')
+    
+    x1 = request.form.get('x1')
+    x2 = request.form.get('x2')
+    
+    if x1 == '' or x2 == '':
+        return render_template('lab4/pow.html', error='Оба поля должны быть заполнены!')
+    
+    try:
+        x1 = float(x1)
+        x2 = float(x2)
+    except ValueError:
+        return render_template('lab4/pow.html', error='Оба поля должны содержать числа!')
+    
+    if x1 == 0 and x2 == 0:
+        return render_template('lab4/pow.html', error='Ноль в степени ноль не определен!')
+    
+    result = x1 ** x2
+    return render_template('lab4/pow.html', x1=x1, x2=x2, result=result)
