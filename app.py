@@ -2,12 +2,14 @@ from flask import Flask, url_for, request, redirect, abort, render_template
 from lab1 import lab1
 from lab2 import lab2
 from lab3 import lab3
+from lab4 import lab4
 import datetime
 
 app = Flask(__name__)
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
 app.register_blueprint(lab3)
+app.register_blueprint(lab4)
 access_log = []
 
 COMMON_STYLES = '''
@@ -449,12 +451,17 @@ def index():
                     <p>Работа с cookies и сессиями</p>
                     <a href="/lab3" class="button">Перейти к работе</a>
                 </div>
+                <div class="info-card">
+                    <h3>Лабораторная работа 4</h3>
+                    <p>Формы (POST), сессии</p>
+                    <a href="/lab4" class="button">Перейти к работе</a>
             </div>
             
             <div class="nav-menu">
                 <a href="/lab1">Лабораторная работа 1</a> |
                 <a href="/lab2">Лабораторная работа 2</a> |
                 <a href="/lab3">Лабораторная работа 3</a> |
+                <a href="/lab3">Лабораторная работа 4</a> |
                 <a href="/lab1/http_codes">Тестирование HTTP кодов</a> |
                 <a href="/nonexistent-page">Тест 404 ошибки</a> |
                 <a href="/lab1/server_error">Тест 500 ошибки</a>
