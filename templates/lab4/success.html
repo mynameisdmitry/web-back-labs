@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block lab %}Успешная авторизация{% endblock %}
+
+{% block main %}
+    <div style="text-align: center; max-width: 500px; margin: 0 auto;">
+        <div style="background: #e6f7e6; padding: 30px; border-radius: 10px; margin: 20px 0;">
+            <h1 style="color: #27ae60;">Добро пожаловать, {{ user.name }}!</h1>
+            
+            <div style="margin: 20px 0;">
+                <p><strong>Логин:</strong> {{ user.login }}</p>
+                <p><strong>Пол:</strong> 
+                    {% if user.gender == 'male' %}
+                        Мужской
+                    {% else %}
+                        Женский
+                    {% endif %}
+                </p>
+            </div>
+            
+            <p>Вы успешно авторизовались в системе.</p>
+        </div>
+        
+        <div style="margin: 30px 0;">
+            <a href="/lab4/logout" style="display: inline-block; background: #e74c3c; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; margin: 5px;">
+                Выйти
+            </a>
+            <a href="/lab4/" style="display: inline-block; background: #666; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; margin: 5px;">
+                Назад к меню
+            </a>
+        </div>
+    </div>
+{% endblock %}

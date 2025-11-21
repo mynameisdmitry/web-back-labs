@@ -1,6 +1,29 @@
 from flask import Blueprint, render_template, request, redirect, session
 lab4 = Blueprint('lab4', __name__)
 
+USERS = {
+    'alex': {
+        'password': '123',
+        'name': 'Алексей Петров',
+        'gender': 'male'
+    },
+    'bob': {
+        'password': '555',
+        'name': 'Боб Смит', 
+        'gender': 'male'
+    },
+    'maria': {
+        'password': '789',
+        'name': 'Мария Иванова',
+        'gender': 'female'
+    },
+    'admin': {
+        'password': 'admin',
+        'name': 'Администратор',
+        'gender': 'male'
+    }
+}
+
 
 @lab4.route('/lab4/')
 def lab():
@@ -130,37 +153,51 @@ def tree():
 
     return redirect('/lab4/tree')
 
-users = [
-    {'login' : 'alex', 'password': '123'},
-    {'login' : 'bob', 'password': '555'},
-    {'login' : 'artem', 'password': '666'},
-    {'login' : 'misha', 'password': '777'},
-]
+
 
 @lab4.route('/lab4/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        if 'login' in session:
-            authorized = True
-            login = session['login']
-        else:
-            authorized = False
-            login = ''
-        return render_template("lab4/login.html", authorized=authorized, login=login)
+        saved_login = session.get('login_attempt', '')
+        return render_template('lab4/login.html', saved_login=saved_login)
     
     login = request.form.get('login')
     password = request.form.get('password')
-
-    for user in users:
-        if login == user['login'] and password == user['password']:
-            session['login'] = login
-            return redirect('/lab4/login')
     
-    error = 'Неверный логин и/или пароль'
-    return render_template('lab4/login.html', error=error, authorized=False)
+    session['login_attempt'] = login
+    
+    errors = []
+    if not login:
+        errors.append('Не введён логин')
+    if not password:
+        errors.append('Не введён пароль')
+    
+    if errors:
+        return render_template('lab4/login.html', errors=errors, saved_login=login)
+    
+    if login in USERS and USERS[login]['password'] == password:
+        session['user'] = {
+            'login': login,
+            'name': USERS[login]['name'],
+            'gender': USERS[login]['gender']
+        }
+        session.pop('login_attempt', None)
+        return redirect('/lab4/success')
+    else:
+        errors.append('Неверные логин или пароль')
+        return render_template('lab4/login.html', errors=errors, saved_login=login)
 
 
-@lab4.route('/lab4/logout', methods = ['POST'])
+@lab4.route('/lab4/success')
+def success():
+    user = session.get('user')
+    if not user:
+        return redirect('/lab4/login')
+    
+    return render_template('lab4/success.html', user=user)
+
+
+@lab4.route('/lab4/logout')
 def logout():
-    session.pop('login', None)
+    session.pop('user', None)
     return redirect('/lab4/login')
