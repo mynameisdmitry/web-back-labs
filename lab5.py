@@ -29,23 +29,25 @@ def db_close(conn, cur):
 @lab5.route('')
 @lab5.route('/')
 def lab():
+    # выводим логин, если он есть в сессии
     return render_template('lab5/lab5.html', login=session.get('login'))
 
 
-
+# ===== РЕГИСТРАЦИЯ (уже с защитой от SQL-инъекции) =====
 @lab5.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('lab5/register.html')
 
-    login = request.form.get('login')
-    password = request.form.get('password')
+    login = request.form.get('login', '').strip()
+    password = request.form.get('password', '').strip()
 
-    if not (login and password):
+    if not login or not password:
         return render_template('lab5/register.html', error='Заполните все поля')
 
     conn, cur = db_connect()
 
+    # ВАЖНО: параметризованный запрос -> защита от SQL-инъекции
     cur.execute("SELECT login FROM users WHERE login = %s", (login,))
     if cur.fetchone():
         db_close(conn, cur)
@@ -53,6 +55,7 @@ def register():
 
     password_hash = generate_password_hash(password)
 
+    # ВАЖНО: параметры отдельно -> защита от SQL-инъекции
     cur.execute(
         "INSERT INTO users (login, password) VALUES (%s, %s)",
         (login, password_hash)
@@ -62,21 +65,22 @@ def register():
     return render_template('lab5/success.html', login=login)
 
 
-
+# ===== АУТЕНТИФИКАЦИЯ / LOGIN (уже с защитой от SQL-инъекции) =====
 @lab5.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return render_template('lab5/login.html')
 
-    login = request.form.get('login')
-    password = request.form.get('password')
+    login_value = request.form.get('login', '').strip()
+    password = request.form.get('password', '').strip()
 
-    if not (login and password):
+    if not login_value or not password:
         return render_template('lab5/login.html', error='Заполните поля')
 
     conn, cur = db_connect()
 
-    cur.execute("SELECT * FROM users WHERE login = %s", (login,))
+    # ВАЖНО: параметризованный запрос -> защита от SQL-инъекции
+    cur.execute("SELECT * FROM users WHERE login = %s", (login_value,))
     user = cur.fetchone()
 
     if not user:
@@ -87,13 +91,13 @@ def login():
         db_close(conn, cur)
         return render_template('lab5/login.html', error='Логин и/или пароль неверны')
 
-    session['login'] = login
+    session['login'] = login_value
 
     db_close(conn, cur)
-    return render_template('lab5/success_login.html', login=login)
+    return render_template('lab5/success_login.html', login=login_value)
 
 
-
+# ===== СОЗДАНИЕ СТАТЬИ (безопасно) =====
 @lab5.route('/create', methods=['GET', 'POST'])
 def create():
     user_login = session.get('login')
@@ -103,18 +107,20 @@ def create():
     if request.method == 'GET':
         return render_template('lab5/create_article.html')
 
-    title = request.form.get('title')
-    article_text = request.form.get('article_text')
+    title = request.form.get('title', '').strip()
+    article_text = request.form.get('article_text', '').strip()
 
-    if not (title and article_text):
+    if not title or not article_text:
         return render_template('lab5/create_article.html', error='Заполните все поля')
 
     conn, cur = db_connect()
 
-    cur.execute("SELECT * FROM users WHERE login=%s", (user_login,))
-    user = cur.fetchone()
-    user_id = user['id']
+    # ВАЖНО: параметризованный запрос
+    cur.execute("SELECT id FROM users WHERE login = %s", (user_login,))
+    row = cur.fetchone()
+    user_id = row['id']
 
+    # ВАЖНО: параметризованный запрос
     cur.execute(
         "INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s)",
         (user_id, title, article_text)
@@ -124,6 +130,7 @@ def create():
     return redirect('/lab5')
 
 
+# ===== ВЫВОД СТАТЕЙ (безопасно) =====
 @lab5.route('/list')
 def list():
     user_login = session.get('login')
@@ -132,13 +139,13 @@ def list():
 
     conn, cur = db_connect()
 
-    # id текущего пользователя
-    cur.execute("SELECT id FROM users WHERE login=%s", (user_login,))
+    # ВАЖНО: параметризованный запрос
+    cur.execute("SELECT id FROM users WHERE login = %s", (user_login,))
     row = cur.fetchone()
     user_id = row['id']
 
-    # все статьи только этого пользователя
-    cur.execute("SELECT * FROM articles WHERE user_id=%s ORDER BY id DESC", (user_id,))
+    # ВАЖНО: параметризованный запрос
+    cur.execute("SELECT * FROM articles WHERE user_id = %s ORDER BY id DESC", (user_id,))
     articles = cur.fetchall()
 
     db_close(conn, cur)
