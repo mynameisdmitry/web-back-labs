@@ -3,14 +3,32 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-    <h1>Статьи</h1>
+<h1>Мои статьи</h1>
 
-    {% if articles|length == 0 %}
-        <p>У вас пока нет статей.</p>
-    {% endif %}
-
+{% if not articles %}
+    <p style="text-align: center; color: #777; margin-top: 30px;">
+        У вас пока нет ни одной статьи.
+    </p>
+{% else %}
     {% for article in articles %}
-        <h2>{{ article['title'] }}</h2>
-        <blockquote>{{ article['article_text'] }}</blockquote>
+        <div style="margin-bottom: 30px;">
+            <h2>{{ article['title'] }}</h2>
+
+            <blockquote>
+                {{ article['article_text'] }}
+            </blockquote>
+
+            <div style="margin-top: 10px;">
+                <a href="{{ url_for('lab5.edit_article', article_id=article['id']) }}">Редактировать</a>
+                |
+                <a href="{{ url_for('lab5.delete_article', article_id=article['id']) }}"
+                   onclick="return confirm('Удалить статью?')">
+                    Удалить
+                </a>
+            </div>
+
+            <hr>
+        </div>
     {% endfor %}
+{% endif %}
 {% endblock %}

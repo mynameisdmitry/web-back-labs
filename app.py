@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'секретно-секретный секрет')
-app.secret_key = app.config['SECRET_KEY']  # чтобы session точно работала
+app.secret_key = app.config['SECRET_KEY']
 
 app.config['DB_TYPE'] = os.environ.get('DB_TYPE', 'postgres')
 
@@ -323,23 +323,23 @@ def internal_server_error(err):
         <div class="container">
             <div class="error-code">500</div>
             <div class="error-message">Внутренняя ошибка сервера</div>
-
+            
             <div class="image-container">
                 <img class="error-image" src="{url_for('static', filename='lab1/500.png')}" alt="Ошибка сервера">
             </div>
-
+            
             <p>На сервере произошла непредвиденная ошибка. Наши инженеры уже работают над решением проблемы.</p>
-
+            
             <div class="technical-info">
                 <h3>Что произошло?</h3>
                 <p>Сервер столкнулся с внутренней ошибкой и не может выполнить ваш запрос.</p>
                 <p>Это может быть связано с временными техническими неполадками или ошибкой в коде.</p>
             </div>
-
+            
             <div class="quote">
                 "Даже у серверов бывают плохие дни... Но мы уже исправляем ситуацию!"
             </div>
-
+            
             <div style="text-align: center;">
                 <a href="/" class="button">Вернуться на главную</a>
                 <a href="/lab1" class="button">К лабораторным работам</a>
@@ -354,27 +354,27 @@ def not_found(err):
     client_ip = request.remote_addr
     access_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     requested_path = request.path
-
+    
     log_entry = {
         'timestamp': access_date,
         'ip': client_ip,
         'path': requested_path
     }
     access_log.append(log_entry)
-
+    
     if len(access_log) > 50:
         access_log.pop(0)
-
+    
     log_html = ''
     for entry in reversed(access_log):
         log_html += f'''
         <div class="log-entry">
-            <span class="log-timestamp">[{entry['timestamp']}]</span>
-            <span class="log-ip">IP: {entry['ip']}</span>
+            <span class="log-timestamp">[{entry['timestamp']}]</span> 
+            <span class="log-ip">IP: {entry['ip']}</span> 
             посетил <span class="log-path">{entry['path']}</span>
         </div>
         '''
-
+    
     return f'''
 <!doctype html>
 <html>
@@ -391,31 +391,31 @@ def not_found(err):
         <div class="container">
             <div class="error-code">404</div>
             <div class="error-message">Страница потерялась в лабиринте</div>
-
+            
             <div class="image-container">
                 <img class="error-image" src="{url_for('static', filename='lab1/404.png')}" alt="Заблудившийся путешественник">
             </div>
-
+            
             <div class="client-info">
                 <h3>Информация о вашем посещении:</h3>
                 <p><strong>Ваш IP-адрес:</strong> {client_ip}</p>
                 <p><strong>Дата и время доступа:</strong> {access_date}</p>
                 <p><strong>Запрошенный адрес:</strong> {requested_path}</p>
             </div>
-
+            
             <p>Кажется, эта страница отправилась в собственное приключение и не может найти дорогу назад.</p>
-
+            
             <div class="quote">
                 "Иногда заблудиться - значит найти нечто большее, чем искал"
             </div>
-
+            
             <p>Но не беспокойтесь! Пока страница ищет свой путь, вы можете вернуться в безопасную гавань главной страницы.</p>
-
+            
             <div style="text-align: center; margin: 30px 0;">
                 <a href="/" class="button">Вернуться на главную страницу</a>
                 <a href="/lab1" class="button">К лабораторным работам</a>
             </div>
-
+            
             <div class="log-container">
                 <div class="log-header">Журнал посещений (последние 50 записей)</div>
                 {log_html if log_html else '<div class="log-entry">Журнал посещений пуст</div>'}
@@ -442,11 +442,11 @@ def index():
         <div class="container">
             <h1>НГТУ, ФБ, WEB-программирование, часть 2</h1>
             <h2>Список лабораторных работ</h2>
-
+            
             <div class="highlight">
                 <p>Добро пожаловать на платформу для выполнения лабораторных работ по WEB-программированию!</p>
             </div>
-
+            
             <div class="info-grid">
                 <div class="info-card">
                     <h3>Лабораторная работа 1</h3>
@@ -467,14 +467,12 @@ def index():
                     <h3>Лабораторная работа 4</h3>
                     <p>Формы (POST), сессии</p>
                     <a href="/lab4" class="button">Перейти к работе</a>
-                </div>
-                <div class="info-card">
+                <div>
                     <h3>Лабораторная работа 5</h3>
                     <p>Flask и БД</p>
                     <a href="/lab5" class="button">Перейти к работе</a>
-                </div>
             </div>
-        </div>
+            
 
         {FOOTER}
     </body>
