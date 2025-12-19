@@ -470,7 +470,5 @@ def index():
 </html>
 """
 
-@app.route("/whoami")
-def whoami():
-    return "THIS IS APP.PY (web-back-labs)"
+
 

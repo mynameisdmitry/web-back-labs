@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+<div class="success-wrapper">
+    <div class="success-card">
+        <div class="success-icon">✓</div>
+
+        <h1 class="success-title">Вход выполнен успешно</h1>
+
+        <p class="success-text">
+            Добро пожаловать, <strong>{{ login }}</strong>.
+        </p>
+
+        <a href="/lab5" class="success-button">
+            Перейти к базе знаний
+        </a>
+    </div>
+</div>
+
+<style>
+.success-wrapper {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f7fa;
+}
+
+.success-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 40px 50px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.success-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #e6f4ea;
+    color: #2e7d32;
+    font-size: 36px;
+    line-height: 64px;
+    font-weight: bold;
+}
+
+.success-title {
+    font-size: 26px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.success-text {
+    font-size: 16px;
+    color: #5f6c7b;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.success-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #4CAF50;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 6px;
+    transition: background-color 0.25s ease, transform 0.15s ease;
+}
+
+.success-button:hover {
+    background: #43a047;
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}
