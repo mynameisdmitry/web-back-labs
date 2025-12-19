@@ -10,7 +10,7 @@
         </div>
     {% endif %}
     
-    <form action="/lab5/register" method="post">
+    <form action="{{ url_for('lab5.register') }}" method="post">
         <div>
             <label>
                 Логин: <input type="text" name="login">

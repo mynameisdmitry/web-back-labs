@@ -458,21 +458,19 @@ def index():
                     <h3>Лабораторная работа 4</h3>
                     <p>Формы (POST), сессии</p>
                     <a href="/lab4" class="button">Перейти к работе</a>
+                <div>
+                    <h3>Лабораторная работа 5</h3>
+                    <p>Flask и БД</p>
+                    <a href="/lab5" class="button">Перейти к работе</a>
             </div>
             
-            <div class="nav-menu">
-                <a href="/lab1">Лабораторная работа 1</a> |
-                <a href="/lab2">Лабораторная работа 2</a> |
-                <a href="/lab3">Лабораторная работа 3</a> |
-                <a href="/lab3">Лабораторная работа 4</a> |
-                <a href="/lab1/http_codes">Тестирование HTTP кодов</a> |
-                <a href="/nonexistent-page">Тест 404 ошибки</a> |
-                <a href="/lab1/server_error">Тест 500 ошибки</a>
-            </div>
-        </div>
+
         {FOOTER}
     </body>
 </html>
 """
 
+@app.route("/whoami")
+def whoami():
+    return "THIS IS APP.PY (web-back-labs)"
 
