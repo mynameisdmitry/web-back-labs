@@ -1,53 +1,51 @@
 from flask import Blueprint, render_template, request, session, redirect, current_app
-import os
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import sqlite3
-from os import path
+
 from werkzeug.security import generate_password_hash, check_password_hash
+from os import path
 
 lab5 = Blueprint('lab5', __name__, url_prefix='/lab5')
 
 
-# ----------------------------
-# DB helpers (Postgres/SQLite)
-# ----------------------------
-
-def q(sql_text: str, db_type: str) -> str:
+def sql(query_ps: str) -> str:
     """
-    В коде пишем запросы в стиле Postgres (%s),
+    Пишем запросы в стиле Postgres (%s),
     а для SQLite автоматически заменяем %s -> ?
     """
+    db_type = current_app.config.get('DB_TYPE', 'postgres')
     if db_type == 'sqlite':
-        return sql_text.replace('%s', '?')
-    return sql_text
+        return query_ps.replace('%s', '?')
+    return query_ps
 
 
 def db_connect():
     """
-    Возвращает (conn, cur, db_type).
-    db_type берём из app.config['DB_TYPE'] -> 'postgres' или 'sqlite'.
+    Возвращает (conn, cur)
+    DB_TYPE берём из app.config['DB_TYPE'] -> 'postgres' или 'sqlite'
     """
     db_type = current_app.config.get('DB_TYPE', 'postgres')
 
     if db_type == 'postgres':
         conn = psycopg2.connect(
-            host=os.environ.get('PG_HOST', '127.0.0.1'),
-            port=int(os.environ.get('PG_PORT', '5432')),
-            database=os.environ.get('PG_DB', 'dmitry_igumenshev_knowledge_base'),
-            user=os.environ.get('PG_USER', 'dmitry_igumenshev_knowledge_base'),
-            password=os.environ.get('PG_PASSWORD', 'Dima2005'),
+            host='127.0.0.1',
+            database='dmitry_igumenshev_knowledge_base',
+            user='dmitry_igumenshev_knowledge_base',
+            password='Dima2005',
+            port=5432
         )
         cur = conn.cursor(cursor_factory=RealDictCursor)
-        return conn, cur, db_type
+        return conn, cur
 
     # sqlite
     dir_path = path.dirname(path.realpath(__file__))
     db_path = path.join(dir_path, "database.db")
     conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row  # чтобы row['id'] работало
+    conn.row_factory = sqlite3.Row
     cur = conn.cursor()
-    return conn, cur, db_type
+    return conn, cur
 
 
 def db_close(conn, cur):
@@ -56,40 +54,31 @@ def db_close(conn, cur):
     conn.close()
 
 
-# ----------------------------
-# MAIN
-# ----------------------------
-
-
-
-
+# ---------- MAIN ----------
 @lab5.route('/')
 def lab():
     username = session.get('login') or 'Anonymous'
     return render_template('lab5/lab5.html', username=username)
 
 
-# ----------------------------
-# REGISTER
-# ----------------------------
-
+# ---------- REGISTER ----------
 @lab5.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('lab5/register.html')
 
-    login = (request.form.get('login') or '').strip()
+    login_value = (request.form.get('login') or '').strip()
     password = (request.form.get('password') or '').strip()
 
-    if not login or not password:
+    if not login_value or not password:
         return render_template('lab5/register.html', error='Заполните все поля')
 
     conn = cur = None
     try:
-        conn, cur, db_type = db_connect()
+        conn, cur = db_connect()
 
-        # проверяем, что логина нет
-        cur.execute(q("SELECT id FROM users WHERE login=%s", db_type), (login,))
+        # проверка существования логина (защита от SQL-инъекций)
+        cur.execute(sql("SELECT id FROM users WHERE login=%s"), (login_value,))
         if cur.fetchone():
             db_close(conn, cur)
             return render_template('lab5/register.html', error='Такой пользователь уже существует')
@@ -97,12 +86,12 @@ def register():
         password_hash = generate_password_hash(password)
 
         cur.execute(
-            q("INSERT INTO users (login, password) VALUES (%s, %s)", db_type),
-            (login, password_hash)
+            sql("INSERT INTO users (login, password) VALUES (%s, %s)"),
+            (login_value, password_hash)
         )
 
         db_close(conn, cur)
-        return render_template('lab5/success.html', login=login)
+        return render_template('lab5/success.html', login=login_value)
 
     except Exception as e:
         if conn and cur:
@@ -113,10 +102,7 @@ def register():
         return render_template('lab5/register.html', error=f'Ошибка базы данных: {e}')
 
 
-# ----------------------------
-# LOGIN
-# ----------------------------
-
+# ---------- LOGIN ----------
 @lab5.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -130,19 +116,22 @@ def login():
 
     conn = cur = None
     try:
-        conn, cur, db_type = db_connect()
+        conn, cur = db_connect()
 
-        cur.execute(q("SELECT id, login, password FROM users WHERE login=%s", db_type), (login_value,))
+        cur.execute(sql("SELECT id, login, password FROM users WHERE login=%s"), (login_value,))
         user = cur.fetchone()
 
         if not user:
             db_close(conn, cur)
-            return render_template('lab5/login.html', error='Логин и/или пароль неверны')
+            return render_template('lab5/login.html', error='Логин или пароль неверны')
 
-        # password в БД — это хеш
+
+
+
+
         if not check_password_hash(user['password'], password):
             db_close(conn, cur)
-            return render_template('lab5/login.html', error='Логин и/или пароль неверны')
+            return render_template('lab5/login.html', error='Логин или пароль неверны')
 
         session['login'] = login_value
 
@@ -158,10 +147,7 @@ def login():
         return render_template('lab5/login.html', error=f'Ошибка базы данных: {e}')
 
 
-# ----------------------------
-# CREATE ARTICLE
-# ----------------------------
-
+# ---------- CREATE ARTICLE ----------
 @lab5.route('/create', methods=['GET', 'POST'])
 def create():
     login_value = session.get('login')
@@ -179,21 +165,20 @@ def create():
 
     conn = cur = None
     try:
-        conn, cur, db_type = db_connect()
+        conn, cur = db_connect()
 
-        # находим id пользователя
-        cur.execute(q("SELECT id FROM users WHERE login=%s", db_type), (login_value,))
-        row = cur.fetchone()
-        if not row:
+        cur.execute(sql("SELECT id FROM users WHERE login=%s"), (login_value,))
+        user_row = cur.fetchone()
+        if not user_row:
             db_close(conn, cur)
             session.pop('login', None)
             return redirect('/lab5/login')
 
-        login_id = row['id']
+        user_id = user_row['id']
 
         cur.execute(
-            q("INSERT INTO articles (login_id, title, article_text) VALUES (%s, %s, %s)", db_type),
-            (login_id, title, article_text)
+            sql("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s)"),
+            (user_id, title, article_text)
         )
 
         db_close(conn, cur)
@@ -208,10 +193,7 @@ def create():
         return render_template('lab5/create_article.html', error=f'Ошибка базы данных: {e}')
 
 
-# ----------------------------
-# LIST ARTICLES (only own)
-# ----------------------------
-
+# ---------- LIST ----------
 @lab5.route('/list')
 def list_articles():
     login_value = session.get('login')
@@ -220,20 +202,20 @@ def list_articles():
 
     conn = cur = None
     try:
-        conn, cur, db_type = db_connect()
+        conn, cur = db_connect()
 
-        cur.execute(q("SELECT id FROM users WHERE login=%s", db_type), (login_value,))
-        row = cur.fetchone()
-        if not row:
+        cur.execute(sql("SELECT id FROM users WHERE login=%s"), (login_value,))
+        user_row = cur.fetchone()
+        if not user_row:
             db_close(conn, cur)
             session.pop('login', None)
             return redirect('/lab5/login')
 
-        login_id = row['id']
+        user_id = user_row['id']
 
         cur.execute(
-            q("SELECT id, title, article_text FROM articles WHERE login_id=%s ORDER BY id DESC", db_type),
-            (login_id,)
+            sql("SELECT id, title, article_text FROM articles WHERE user_id=%s ORDER BY id DESC"),
+            (user_id,)
         )
         articles = cur.fetchall()
 
@@ -247,3 +229,4 @@ def list_articles():
             except Exception:
                 pass
         return f"Ошибка базы данных: {e}", 500
+    
