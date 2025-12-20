@@ -5,4 +5,87 @@
 {% block main %}
 <div class="page-header">
     <h1><i class="fas fa-globe"></i> Публичные статьи</h1>
-    <p>Статьи
+    <p>Статьи, доступные всем пользователям</p>
+</div>
+
+{% if articles %}
+<div class="articles-list">
+    {% for article in articles %}
+    <div class="card article-card" style="margin-bottom: 1.5rem; position: relative; border-left: 4px solid var(--success-color);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <h2 style="margin: 0; color: var(--secondary-color);">
+                    <i class="fas fa-file-alt" style="color: var(--success-color);"></i>
+                    {{ article['title'] }}
+                </h2>
+                <div style="color: var(--gray-color); font-size: 0.9rem; margin-top: 0.25rem;">
+                    <i class="fas fa-user"></i> Автор: {{ article['author_name'] or article['author_login'] }}
+                    {% if article['is_favorite'] %}
+                    <span style="color: gold; margin-left: 1rem;">
+                        <i class="fas fa-star"></i> Избранная
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div style="background: var(--light-color); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                ID: {{ article['id'] }}
+            </div>
+        </div>
+        
+        <div style="background: var(--light-color); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 1.5rem;">
+            <div style="white-space: pre-wrap; line-height: 1.6;">
+                {{ article['article_text'] }}
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end; color: var(--gray-color); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-ruler-combined"></i>
+            {{ article['article_text']|length }} символов
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card" style="text-align: center; padding: 4rem 2rem;">
+    <div style="font-size: 5rem; color: #e0e0e0; margin-bottom: 1rem;">
+        <i class="fas fa-file-alt"></i>
+    </div>
+    <h2 style="color: var(--gray-color); margin-bottom: 1rem;">Публичных статей пока нет</h2>
+    <p style="color: var(--gray-color); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+        Пользователи еще не создали публичные статьи
+    </p>
+</div>
+{% endif %}
+
+<div style="text-align: center; margin-top: 2rem;">
+    <a href="/lab5" class="btn" style="background: var(--primary-color);">
+        <i class="fas fa-arrow-left"></i> На главную
+    </a>
+</div>
+
+<style>
+.article-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.articles-list {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+{% endblock %}

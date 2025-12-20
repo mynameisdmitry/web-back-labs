@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import sqlite3
 from os import path
+import os
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -28,24 +29,41 @@ def db_connect():
     db_type = current_app.config.get('DB_TYPE', 'postgres')
     
     if db_type == 'postgres':
-        conn = psycopg2.connect(
-            host='127.0.0.1',
-            database='dmitry_igumenshev_knowledge_base',
-            user='dmitry_igumenshev_knowledge_base',
-            password='Dima2005',
-            port=5432
-        )
-        cur = conn.cursor(cursor_factory=RealDictCursor)
-        return conn, cur
+        try:
+            conn = psycopg2.connect(
+                host='127.0.0.1',
+                database='dmitry_igumenshev_knowledge_base',
+                user='dmitry_igumenshev_knowledge_base',
+                password='Dima2005',
+                port=5432
+            )
+            cur = conn.cursor(cursor_factory=RealDictCursor)
+            print("Подключение к PostgreSQL")
+            return conn, cur
+        except Exception as e:
+            print(f"Ошибка подключения к PostgreSQL: {e}. Пробуем SQLite...")
+            # Падаем обратно на SQLite
     
-    # sqlite (на PythonAnywhere обычно будет именно он)
-    dir_path = path.dirname(path.realpath(__file__))
-    db_path = path.join(dir_path, "database.db")
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    return conn, cur
-
+    # sqlite (для PythonAnywhere и как fallback)
+    try:
+        # Проверяем, на PythonAnywhere мы или локально
+        if path.exists('/home/mynameisdmitry/web-back-labs/database.db'):
+            # На PythonAnywhere
+            db_path = '/home/mynameisdmitry/web-back-labs/database.db'
+        else:
+            # Локально
+            dir_path = path.dirname(path.realpath(__file__))
+            db_path = path.join(dir_path, "database.db")
+        
+        print(f"Подключение к SQLite: {db_path}")
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        return conn, cur
+    except Exception as e:
+        print(f"Ошибка подключения к SQLite: {e}")
+        raise
+    
 
 def db_close(conn, cur):
     conn.commit()
@@ -70,7 +88,8 @@ def get_login_id():
             return login_value, None, None
         
         return login_value, row['id'], row.get('real_name', '')
-    except Exception:
+    except Exception as e:
+        print(f"Ошибка в get_login_id: {e}")
         if conn and cur:
             try:
                 db_close(conn, cur)
@@ -103,9 +122,44 @@ def logout():
     session.pop('login', None)
     return redirect(url_for('lab5.lab'))
 
-
 # -------------------------
-# REGISTER (обновленный с полем реального имени)
+# FORGOT PASSWORD
+# -------------------------
+@lab5.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'GET':
+        return render_template('lab5/forgot_password.html')
+    
+    login_value = (request.form.get('login') or '').strip()
+    
+    if not login_value:
+        return render_template('lab5/forgot_password.html', error='Введите логин')
+    
+    conn = cur = None
+    try:
+        conn, cur = db_connect()
+        cur.execute(sql("SELECT id, login, real_name FROM users WHERE login=%s"), (login_value,))
+        user = cur.fetchone()
+        db_close(conn, cur)
+        
+        if not user:
+            return render_template('lab5/forgot_password.html', 
+                                 error='Пользователь с таким логином не найден')
+        
+        return render_template('lab5/forgot_password_success.html', 
+                             login=login_value,
+                             real_name=user.get('real_name', ''))
+    
+    except Exception as e:
+        if conn and cur:
+            try:
+                db_close(conn, cur)
+            except Exception:
+                pass
+        return render_template('lab5/forgot_password.html', error=f'Ошибка базы данных: {e}')
+    
+# -------------------------
+# REGISTER
 # -------------------------
 @lab5.route('/register', methods=['GET', 'POST'])
 def register():
@@ -188,12 +242,12 @@ def login():
 
 
 # -------------------------
-# CREATE ARTICLE (обновленный для is_favorite и is_public)
+# CREATE ARTICLE
 # -------------------------
 @lab5.route('/create', methods=['GET', 'POST'])
 def create():
-    login_value, login_id, real_name = get_login_id()
-    if not login_value or not login_id:
+    login_value, user_id, real_name = get_login_id()
+    if not login_value or not user_id:
         session.pop('login', None)
         return redirect('/lab5/login')
     
@@ -213,8 +267,8 @@ def create():
         conn, cur = db_connect()
         
         cur.execute(
-            sql("INSERT INTO articles (login_id, title, article_text, is_favorite, is_public) VALUES (%s, %s, %s, %s, %s)"),
-            (login_id, title, article_text, is_favorite, is_public)
+            sql("INSERT INTO articles (user_id, title, article_text, is_favorite, is_public) VALUES (%s, %s, %s, %s, %s)"),
+            (user_id, title, article_text, is_favorite, is_public)
         )
 
         db_close(conn, cur)
@@ -230,14 +284,11 @@ def create():
 
 
 # -------------------------
-# LIST ARTICLES (обновленный для is_favorite и is_public)
+# LIST ARTICLES
 # -------------------------
 @lab5.route('/list')
 def list_articles():
-    login_value, login_id, real_name = get_login_id()
-    
-    # Публичные статьи доступны всем
-    public_articles = []
+    login_value, user_id, real_name = get_login_id()
     
     conn = cur = None
     try:
@@ -249,7 +300,7 @@ def list_articles():
                 SELECT a.id, a.title, a.article_text, a.is_favorite, a.is_public, 
                        u.login as author_login, u.real_name as author_name
                 FROM articles a
-                JOIN users u ON a.login_id = u.id
+                JOIN users u ON a.user_id = u.id
                 WHERE a.is_public = TRUE
                 ORDER BY a.is_favorite DESC, a.id DESC
             """)
@@ -258,15 +309,15 @@ def list_articles():
         
         # Если пользователь авторизован, получаем его статьи
         user_articles = []
-        if login_value and login_id:
+        if login_value and user_id:
             cur.execute(
                 sql("""
                     SELECT id, title, article_text, is_favorite, is_public
                     FROM articles 
-                    WHERE login_id=%s 
+                    WHERE user_id=%s 
                     ORDER BY is_favorite DESC, id DESC
                 """),
-                (login_id,)
+                (user_id,)
             )
             user_articles = cur.fetchall()
         
@@ -282,16 +333,19 @@ def list_articles():
                 db_close(conn, cur)
             except Exception:
                 pass
-        return f"Ошибка базы данных: {e}", 500
+        return render_template('lab5/articles.html', 
+                             articles=[],
+                             public_articles=[],
+                             error=f"Ошибка базы данных: {e}")
 
 
 # -------------------------
-# EDIT ARTICLE (обновленный для is_favorite и is_public)
+# EDIT ARTICLE
 # -------------------------
 @lab5.route('/edit/<int:article_id>', methods=['GET', 'POST'])
 def edit_article(article_id):
-    login_value, login_id, real_name = get_login_id()
-    if not login_value or not login_id:
+    login_value, user_id, real_name = get_login_id()
+    if not login_value or not user_id:
         session.pop('login', None)
         return redirect('/lab5/login')
     
@@ -301,8 +355,8 @@ def edit_article(article_id):
         
         if request.method == 'GET':
             cur.execute(
-                sql("SELECT id, title, article_text, is_favorite, is_public FROM articles WHERE id=%s AND login_id=%s"),
-                (article_id, login_id)
+                sql("SELECT id, title, article_text, is_favorite, is_public FROM articles WHERE id=%s AND user_id=%s"),
+                (article_id, user_id)
             )
             article = cur.fetchone()
             db_close(conn, cur)
@@ -319,7 +373,7 @@ def edit_article(article_id):
         is_public = request.form.get('is_public') == 'on'
         
         if not title or not text:
-
+            
             db_close(conn, cur)
             return render_template(
                 'lab5/edit_article.html',
@@ -328,8 +382,8 @@ def edit_article(article_id):
             )
         
         cur.execute(
-            sql("UPDATE articles SET title=%s, article_text=%s, is_favorite=%s, is_public=%s WHERE id=%s AND login_id=%s"),
-            (title, text, is_favorite, is_public, article_id, login_id)
+            sql("UPDATE articles SET title=%s, article_text=%s, is_favorite=%s, is_public=%s WHERE id=%s AND user_id=%s"),
+            (title, text, is_favorite, is_public, article_id, user_id)
         )
         
         db_close(conn, cur)
@@ -349,8 +403,8 @@ def edit_article(article_id):
 # -------------------------
 @lab5.route('/delete/<int:article_id>')
 def delete_article(article_id):
-    login_value, login_id, real_name = get_login_id()
-    if not login_value or not login_id:
+    login_value, user_id, real_name = get_login_id()
+    if not login_value or not user_id:
         session.pop('login', None)
         return redirect('/lab5/login')
     
@@ -359,8 +413,8 @@ def delete_article(article_id):
         conn, cur = db_connect()
 
         cur.execute(
-            sql("DELETE FROM articles WHERE id=%s AND login_id=%s"),
-            (article_id, login_id)
+            sql("DELETE FROM articles WHERE id=%s AND user_id=%s"),
+            (article_id, user_id)
         )
 
         db_close(conn, cur)
@@ -374,42 +428,50 @@ def delete_article(article_id):
         return f"Ошибка базы данных: {e}", 500
 
 # -------------------------
-# НОВАЯ СТРАНИЦА: Список пользователей
+# СПИСОК ПОЛЬЗОВАТЕЛЕЙ
 # -------------------------
 @lab5.route('/users')
 def list_users():
     conn = cur = None
     try:
         conn, cur = db_connect()
+        print("DEBUG: Подключение к базе для /users")
+        
         cur.execute(
             sql("SELECT id, login, real_name FROM users ORDER BY login")
         )
         users = cur.fetchall()
+        
+        print(f"DEBUG: Найдено {len(users)} пользователей")
+        for user in users:
+            print(f"DEBUG: Пользователь - ID: {user['id']}, Логин: {user['login']}")
+        
         db_close(conn, cur)
         
         return render_template('lab5/users.html', users=users)
     except Exception as e:
+        print(f"ERROR в list_users: {e}")
         if conn and cur:
             try:
                 db_close(conn, cur)
             except Exception:
                 pass
-        return f"Ошибка базы данных: {e}", 500
+        return render_template('lab5/users.html', users=[], error=f"Ошибка базы данных: {e}")
 
 # -------------------------
-# НОВАЯ СТРАНИЦА: Профиль пользователя (смена имени и пароля)
+# ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
 # -------------------------
 @lab5.route('/profile', methods=['GET', 'POST'])
 def profile():
-    login_value, login_id, real_name = get_login_id()
-    if not login_value or not login_id:
+    login_value, user_id, real_name = get_login_id()
+    if not login_value or not user_id:
         session.pop('login', None)
         return redirect('/lab5/login')
     
     if request.method == 'GET':
         return render_template('lab5/profile.html', real_name=real_name or '', login=login_value)
     
-    # Обработка POST запроса
+
     new_real_name = (request.form.get('real_name') or '').strip()
     current_password = (request.form.get('current_password') or '').strip()
     new_password = (request.form.get('new_password') or '').strip()
@@ -419,8 +481,7 @@ def profile():
     try:
         conn, cur = db_connect()
         
-        # Проверяем текущий пароль
-        cur.execute(sql("SELECT password FROM users WHERE id=%s"), (login_id,))
+        cur.execute(sql("SELECT password FROM users WHERE id=%s"), (user_id,))
         user = cur.fetchone()
         
         if not user or not check_password_hash(user['password'], current_password):
@@ -430,7 +491,7 @@ def profile():
                                  login=login_value,
                                  error='Неверный текущий пароль')
         
-        # Проверяем новый пароль
+
         if new_password:
             if new_password != confirm_password:
                 db_close(conn, cur)
@@ -446,19 +507,19 @@ def profile():
                                      login=login_value,
                                      error='Новый пароль должен содержать минимум 6 символов')
             
-            # Хешируем новый пароль
+
             new_password_hash = generate_password_hash(new_password)
             
-            # Обновляем имя и пароль
+
             cur.execute(
                 sql("UPDATE users SET real_name=%s, password=%s WHERE id=%s"),
-                (new_real_name, new_password_hash, login_id)
+                (new_real_name, new_password_hash, user_id)
             )
         else:
-            # Обновляем только имя
+
             cur.execute(
                 sql("UPDATE users SET real_name=%s WHERE id=%s"),
-                (new_real_name, login_id)
+                (new_real_name, user_id)
             )
         
         db_close(conn, cur)
@@ -475,18 +536,18 @@ def profile():
                              error=f'Ошибка базы данных: {e}')
 
 # -------------------------
-# НОВАЯ СТРАНИЦА: Успешное обновление профиля
+# УСПЕШНОЕ ОБНОВЛЕНИЕ ПРОФИЛЯ
 # -------------------------
 @lab5.route('/profile/success')
 def profile_success():
-    login_value, login_id, real_name = get_login_id()
+    login_value, user_id, real_name = get_login_id()
     if not login_value:
         return redirect('/lab5/login')
     
     return render_template('lab5/profile_success.html', login=login_value)
 
 # -------------------------
-# НОВАЯ СТРАНИЦА: Публичные статьи
+# ПУБЛИЧНЫЕ СТАТЬИ
 # -------------------------
 @lab5.route('/public')
 def public_articles():
@@ -499,7 +560,7 @@ def public_articles():
                 SELECT a.id, a.title, a.article_text, a.is_favorite, a.is_public,
                        u.login as author_login, u.real_name as author_name
                 FROM articles a
-                JOIN users u ON a.login_id = u.id
+                JOIN users u ON a.user_id = u.id
                 WHERE a.is_public = TRUE
                 ORDER BY a.is_favorite DESC, a.id DESC
             """)
@@ -514,4 +575,6 @@ def public_articles():
                 db_close(conn, cur)
             except Exception:
                 pass
-        return f"Ошибка базы данных: {e}", 500
+        return render_template('lab5/public_articles.html', 
+                             articles=[], 
+                             error=f"Ошибка базы данных: {e}")

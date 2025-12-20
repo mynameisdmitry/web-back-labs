@@ -1,102 +1,86 @@
 {% extends "base.html" %}
 
-{% block title %}Lab 5{% endblock %}
+{% block lab %}База знаний{% endblock %}
 
-{% block content %}
-<div class="container mt-4">
-    <h1 class="mb-4">Lab 5 - Управление системой</h1>
-    
-    <div class="row">
-        <!-- Карточка "Пробить" -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title text-primary">
-                        <i class="fas fa-search me-2"></i>Пробить
-                    </h5>
-                    <p class="card-text">Изменение имени и кармы пользователя</p>
-                    <div class="mt-3">
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="fas fa-arrow-right me-1"></i>Перейти
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+{% block main %}
+<div class="page-header">
+    <h1><i class="fas fa-database"></i> База знаний</h1>
+    <p>Добро пожаловать в систему управления статьями и знаниями</p>
+</div>
 
-        <!-- Карточка "Пользователи" -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title text-success">
-                        <i class="fas fa-users me-2"></i>Пользователи
-                    </h5>
-                    <p class="card-text">Список всех пользователей системы</p>
-                    <div class="mt-3">
-                        <a href="#" class="btn btn-outline-success">
-                            <i class="fas fa-eye me-1"></i>Просмотреть
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div style="display: flex; justify-content: center; margin-bottom: 3rem;">
+    <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%); color: white; padding: 2rem; border-radius: var(--border-radius); text-align: center; max-width: 600px; width: 100%;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">
+            <i class="fas fa-user-circle"></i>
         </div>
-
-        <!-- Карточка "Публичные статьи" -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title text-warning">
-                        <i class="fas fa-newspaper me-2"></i>Публичные статьи
-                    </h5>
-                    <p class="card-text">Статьи доступные всем пользователям</p>
-                    <div class="mt-3">
-                        <a href="#" class="btn btn-outline-warning">
-                            <i class="fas fa-eye me-1"></i>Просмотреть
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <h2 style="margin-bottom: 0.5rem;">Привет, {{ username }}!</h2>
+        <p style="opacity: 0.9; margin-bottom: 1.5rem;">
+            {% if username == 'Anonymous' %}
+            Для доступа ко всем функциям войдите или зарегистрируйтесь
+            {% else %}
+            Рады видеть вас в системе управления знаниями
+            {% endif %}
+        </p>
+        
+        {% if username == 'Anonymous' %}
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="/lab5/login" class="btn" style="background: white; color: var(--primary-color);">
+                <i class="fas fa-sign-in-alt"></i> Войти
+            </a>
+            <a href="/lab5/register" class="btn" style="background: rgba(255, 255, 255, 0.2); color: white; border: 2px solid white;">
+                <i class="fas fa-user-plus"></i> Регистрация
+            </a>
         </div>
-    </div>
-
-    <!-- Дополнительная информация -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Информация о разделе
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="mb-0">
-                        В этом разделе вы можете управлять основными компонентами системы: 
-                        редактировать данные пользователей, просматривать список пользователей 
-                        и управлять публичными статьями.
-                    </p>
-                </div>
-                
-            </div>
-        </div>
+        {% endif %}
     </div>
 </div>
-{% endblock %}
 
-{% block scripts %}
-{{ super() }}
-<!-- Дополнительные скрипты для этой страницы, если нужны -->
-<script>
-    // Пример JavaScript для этой страницы
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Lab 5 page loaded');
-        
-        // Можно добавить обработчики событий для кнопок
-        document.querySelectorAll('.card .btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                const cardTitle = this.closest('.card').querySelector('.card-title').textContent;
-                console.log(`Нажата кнопка в карточке: ${cardTitle}`);
-            });
-        });
-    });
-</script>
+<div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;">
+            <i class="fas fa-book"></i>
+        </div>
+        <h3 style="margin-bottom: 0.5rem;">Статьи</h3>
+        <p style="color: var(--gray-color); margin-bottom: 1.5rem;">Создавайте и управляйте своими статьями</p>
+        <a href="/lab5/list" class="btn" style="background: var(--primary-color);">
+            <i class="fas fa-arrow-right"></i> Перейти
+        </a>
+    </div>
+    
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 3rem; color: var(--success-color); margin-bottom: 1rem;">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3 style="margin-bottom: 0.5rem;">Пользователи</h3>
+        <p style="color: var(--gray-color); margin-bottom: 1.5rem;">Просмотр всех пользователей системы</p>
+        <a href="/lab5/users" class="btn" style="background: var(--success-color);">
+            <i class="fas fa-arrow-right"></i> Перейти
+        </a>
+    </div>
+    
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 3rem; color: var(--warning-color); margin-bottom: 1rem;">
+            <i class="fas fa-globe"></i>
+        </div>
+        <h3 style="margin-bottom: 0.5rem;">Публичные</h3>
+        <p style="color: var(--gray-color); margin-bottom: 1.5rem;">Статьи доступные всем пользователям</p>
+        <a href="/lab5/public" class="btn" style="background: var(--warning-color);">
+            <i class="fas fa-arrow-right"></i> Перейти
+        </a>
+    </div>
+</div>
+
+<div class="card" style="background: var(--light-color);">
+    <h3 style="margin-bottom: 1rem; color: var(--secondary-color);">
+        <i class="fas fa-info-circle"></i> О системе
+    </h3>
+    <p style="color: var(--gray-color);">
+        База знаний - это платформа для создания, хранения и обмена информацией.
+        {% if username == 'Anonymous' %}
+        Зарегистрируйтесь, чтобы получить доступ ко всем функциям.
+        {% else %}
+        Используйте все возможности системы для эффективной работы со знаниями.
+        {% endif %}
+    </p>
+</div>
 {% endblock %}
