@@ -3,33 +3,31 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<h1>Редактирование статьи</h1>
+<h1>Редактировать статью</h1>
 
 {% if error %}
-    <div style="color: rgb(185, 5, 5); background-color: #c2acac; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        {{ error }}
-    </div>
+<div style="color: #b90505; background-color: #f2dede; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+    {{ error }}
+</div>
 {% endif %}
 
-<form method="post">
-    <div>
+<form method="post" action="{{ url_for('lab5.edit_article', article_id=article['id']) }}">
+    <div style="margin-bottom: 12px;">
         <label>
             Название:
-            <input type="text" name="title" maxlength="50" value="{{ article['title'] }}">
+            <input type="text" name="title" maxlength="50" value="{{ article['title'] }}" style="width: 100%;">
         </label>
     </div>
 
-    <div style="margin-top: 10px;">
+    <div style="margin-bottom: 12px;">
         <label>
             Текст:
-            <br>
+            
             <textarea name="article_text" rows="10" style="width: 100%;">{{ article['article_text'] }}</textarea>
         </label>
     </div>
 
-    <div style="margin-top: 10px;">
-        <button type="submit">Сохранить</button>
-        <a href="{{ url_for('lab5.list_articles') }}" style="margin-left: 10px;">Отмена</a>
-    </div>
+    <button type="submit" class="button">Сохранить</button>
+    <a href="{{ url_for('lab5.list_articles') }}" class="button" style="background:#7f8c8d;">Назад</a>
 </form>
 {% endblock %}

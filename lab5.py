@@ -98,6 +98,13 @@ def lab():
     return render_template('lab5/lab5.html', username=username)
 
 
+
+@lab5.route('/logout')
+def logout():
+    session.pop('login', None)
+    return redirect(url_for('lab5.lab'))
+
+
 # -------------------------
 # REGISTER
 # -------------------------
@@ -283,7 +290,7 @@ def edit_article(article_id):
         text = (request.form.get('article_text') or '').strip()
 
         if not title or not text:
-            # Важно: НЕ закрываем соединение дважды, поэтому закроем тут и вернёмся
+
             db_close(conn, cur)
             return render_template(
                 'lab5/edit_article.html',
