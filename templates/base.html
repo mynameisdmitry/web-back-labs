@@ -96,7 +96,8 @@
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            align-items: center;
         }
 
         .nav-links a {
@@ -106,11 +107,39 @@
             padding: 8px 16px;
             border-radius: var(--border-radius);
             transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
         }
 
         .nav-links a:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+
+        /* User info in header */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .user-info i {
+            color: var(--success-color);
+        }
+
+        .user-info span {
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         /* Main content */
@@ -209,6 +238,14 @@
             background: #5a6268;
         }
 
+        .btn-accent {
+            background: var(--accent-color);
+        }
+
+        .btn-accent:hover {
+            background: #5f078d;
+        }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -280,6 +317,20 @@
         }
 
         /* Адаптивность */
+        @media (max-width: 1024px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -290,10 +341,33 @@
             .nav-links {
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: 10px;
+            }
+            
+            .nav-links a {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .user-info {
+                margin-right: 0;
+                margin-top: 0.5rem;
             }
             
             .page-header h1 {
                 font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-links a {
+                width: 200px;
+                justify-content: center;
             }
         }
     </style>
@@ -308,13 +382,56 @@
                 </a>
                 <div class="lab-title">Лабораторная работа 5</div>
                 <div class="nav-links">
-                    <a href="/">Главная</a>
+                    <a href="/">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a>
                     {% if session.get('login') %}
-                        <a href="/lab5/list"><i class="fas fa-book"></i> Мои статьи</a>
-                        <a href="/lab5/logout"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                        <div class="user-info">
+                            <i class="fas fa-user-circle"></i>
+                            <span>{{ session.get('login') }}</span>
+                        </div>
+                        <a href="/lab5/profile">
+                            <i class="fas fa-user-cog"></i>
+                            <span>Профиль</span>
+                        </a>
+                        <a href="/lab5/list">
+                            <i class="fas fa-book"></i>
+                            <span>Мои статьи</span>
+                        </a>
+                        <a href="/lab5/create">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Новая статья</span>
+                        </a>
+                        <a href="/lab5/users">
+                            <i class="fas fa-users"></i>
+                            <span>Пользователи</span>
+                        </a>
+                        <a href="/lab5/public">
+                            <i class="fas fa-globe"></i>
+                            <span>Публичные</span>
+                        </a>
+                        <a href="/lab5/logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Выйти</span>
+                        </a>
                     {% else %}
-                        <a href="/lab5/login"><i class="fas fa-sign-in-alt"></i> Войти</a>
-                        <a href="/lab5/register"><i class="fas fa-user-plus"></i> Регистрация</a>
+                        <a href="/lab5/login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Войти</span>
+                        </a>
+                        <a href="/lab5/register">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Регистрация</span>
+                        </a>
+                        <a href="/lab5/public">
+                            <i class="fas fa-globe"></i>
+                            <span>Публичные статьи</span>
+                        </a>
+                        <a href="/lab5/users">
+                            <i class="fas fa-users"></i>
+                            <span>Пользователи</span>
+                        </a>
                     {% endif %}
                 </div>
             </div>
@@ -346,6 +463,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const buttons = document.querySelectorAll('.btn');
             const cards = document.querySelectorAll('.card');
+            const navLinks = document.querySelectorAll('.nav-links a');
             
             buttons.forEach(btn => {
                 btn.addEventListener('mouseenter', function() {
@@ -364,6 +482,40 @@
                 
                 card.addEventListener('mouseleave', function() {
                     this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Анимация для навигационных ссылок
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.2)';
+                    }
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.style.transform = 'scale(1)';
+                    }
+                });
+            });
+
+            // Плавная прокрутка для внутренних ссылок
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
                 });
             });
         });

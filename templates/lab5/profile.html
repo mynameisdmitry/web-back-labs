@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block lab %}Профиль{% endblock %}
+
+{% block main %}
+<div class="page-header">
+    <h1><i class="fas fa-user-cog"></i> Настройки профиля</h1>
+    <p>Измените ваше имя и пароль</p>
+</div>
+
+<div class="card">
+    {% if error %}
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>
+            <strong>Ошибка!</strong> {{ error }}
+        </div>
+    </div>
+    {% endif %}
+
+    <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%); color: white; padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 2rem;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 50%;">
+                <i class="fas fa-user fa-2x"></i>
+            </div>
+            <div>
+                <h2 style="margin: 0; font-size: 1.5rem;">{{ login }}</h2>
+                {% if real_name %}
+                <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">
+                    <i class="fas fa-id-card"></i> {{ real_name }}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <form method="post" id="profileForm">
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-id-card"></i> Реальное имя
+            </label>
+            <input type="text" 
+                   name="real_name" 
+                   class="form-control" 
+                   value="{{ real_name }}"
+                   placeholder="Введите ваше реальное имя">
+            <div style="font-size: 0.85rem; color: var(--gray-color); margin-top: 0.25rem;">
+                <i class="fas fa-info-circle"></i> Будет отображаться в вашем профиле
+            </div>
+        </div>
+
+        <div style="margin: 2rem 0; padding: 1.5rem; background: var(--light-color); border-radius: var(--border-radius);">
+            <h3 style="margin-bottom: 1rem; color: var(--secondary-color);">
+                <i class="fas fa-lock"></i> Смена пароля
+            </h3>
+            <p style="color: var(--gray-color); margin-bottom: 1.5rem;">
+                Заполните эти поля только если хотите изменить пароль
+            </p>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-key"></i> Текущий пароль
+                </label>
+                <input type="password" 
+                       name="current_password" 
+                       class="form-control" 
+                       placeholder="Введите текущий пароль"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-key"></i> Новый пароль
+                </label>
+                <input type="password" 
+                       name="new_password" 
+                       id="newPassword"
+                       class="form-control" 
+                       placeholder="Введите новый пароль (минимум 6 символов)"
+                       pattern=".{6,}"
+                       title="Пароль должен содержать минимум 6 символов">
+                <div style="font-size: 0.85rem; color: var(--gray-color); margin-top: 0.25rem;">
+                    <i class="fas fa-info-circle"></i> Минимум 6 символов
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-key"></i> Подтверждение нового пароля
+                </label>
+                <input type="password" 
+                       name="confirm_password" 
+                       id="confirmPassword"
+                       class="form-control" 
+                       placeholder="Повторите новый пароль">
+                <div id="passwordMatch" style="font-size: 0.85rem; margin-top: 0.25rem;"></div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+            <button type="submit" class="btn" style="background: var(--success-color);">
+                <i class="fas fa-save"></i> Сохранить изменения
+            </button>
+            <a href="/lab5" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Отмена
+            </a>
+            <a href="/lab5/users" class="btn" style="background: var(--primary-color);">
+                <i class="fas fa-users"></i> Все пользователи
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+const newPasswordInput = document.getElementById('newPassword');
+const confirmInput = document.getElementById('confirmPassword');
+const matchIndicator = document.getElementById('passwordMatch');
+
+function checkPasswordMatch() {
+    if (!newPasswordInput.value || !confirmInput.value) {
+        matchIndicator.innerHTML = '';
+        confirmInput.style.borderColor = '';
+        confirmInput.style.boxShadow = '';
+        return;
+    }
+    
+    if (newPasswordInput.value === confirmInput.value) {
+        matchIndicator.innerHTML = '<i class="fas fa-check-circle" style="color: #2e7d32;"></i> Пароли совпадают';
+        confirmInput.style.borderColor = '#2e7d32';
+        confirmInput.style.boxShadow = '0 0 0 3px rgba(46, 125, 50, 0.15)';
+    } else {
+        matchIndicator.innerHTML = '<i class="fas fa-times-circle" style="color: #c53030;"></i> Пароли не совпадают';
+        confirmInput.style.borderColor = '#c53030';
+        confirmInput.style.boxShadow = '0 0 0 3px rgba(197, 48, 48, 0.15)';
+    }
+}
+
+newPasswordInput.addEventListener('input', checkPasswordMatch);
+confirmInput.addEventListener('input', checkPasswordMatch);
+
+document.getElementById('profileForm').addEventListener('submit', function(e) {
+    const newPassword = newPasswordInput.value;
+    const confirmPassword = confirmInput.value;
+    
+    if (newPassword && newPassword !== confirmPassword) {
+        e.preventDefault();
+        alert('Новый пароль и подтверждение не совпадают!');
+        confirmInput.focus();
+    }
+    
+    if (newPassword && newPassword.length < 6) {
+        e.preventDefault();
+        alert('Новый пароль должен содержать минимум 6 символов!');
+        newPasswordInput.focus();
+    }
+});
+</script>
+{% endblock %}

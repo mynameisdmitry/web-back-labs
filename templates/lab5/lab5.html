@@ -1,135 +1,102 @@
 {% extends "base.html" %}
 
-{% block lab %}Главная{% endblock %}
+{% block title %}Lab 5{% endblock %}
 
-{% block main %}
-<div class="page-header">
-    <h1><i class="fas fa-database"></i> База знаний</h1>
-    <p>Система управления персональными статьями и заметками</p>
-</div>
-
-<div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 2rem;">
-    <div style="display: flex; align-items: center; gap: 1rem;">
-        <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: var(--border-radius);">
-            <i class="fas fa-user fa-2x"></i>
-        </div>
-        <div>
-            <h2 style="margin: 0; font-size: 1.5rem;">Добро пожаловать, {{ username }}!</h2>
-            <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">
-                {% if username != 'Anonymous' %}
-                    Рады видеть вас снова! Управляйте своими статьями легко и удобно.
-                {% else %}
-                    Войдите в систему, чтобы получить доступ ко всем функциям базы знаний.
-                {% endif %}
-            </p>
-        </div>
-    </div>
-</div>
-
-<div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem;">
-    <div class="card" style="text-align: center;">
-        <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;">
-            <i class="fas fa-sign-in-alt"></i>
-        </div>
-        <h3 style="margin-bottom: 0.5rem;">Войти</h3>
-        <p style="color: var(--gray-color); margin-bottom: 1.5rem;">Авторизация в системе</p>
-        <a href="/lab5/login" class="btn" style="width: 100%;">
-            <i class="fas fa-arrow-right"></i> Перейти к входу
-        </a>
-    </div>
-
-    <div class="card" style="text-align: center;">
-        <div style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;">
-            <i class="fas fa-user-plus"></i>
-        </div>
-        <h3 style="margin-bottom: 0.5rem;">Регистрация</h3>
-        <p style="color: var(--gray-color); margin-bottom: 1.5rem;">Создание нового аккаунта</p>
-        <a href="/lab5/register" class="btn" style="width: 100%; background: var(--accent-color);">
-            <i class="fas fa-user-plus"></i> Зарегистрироваться
-        </a>
-    </div>
-
-    <div class="card" style="text-align: center;">
-        <div style="font-size: 3rem; color: var(--success-color); margin-bottom: 1rem;">
-            <i class="fas fa-book-open"></i>
-        </div>
-        <h3 style="margin-bottom: 0.5rem;">Мои статьи</h3>
-        <p style="color: var(--gray-color); margin-bottom: 1.5rem;">Просмотр всех ваших статей</p>
-        <a href="/lab5/list" class="btn" style="width: 100%; background: var(--success-color);">
-            <i class="fas fa-eye"></i> Просмотреть
-        </a>
-    </div>
-
-    <div class="card" style="text-align: center;">
-        <div style="font-size: 3rem; color: var(--warning-color); margin-bottom: 1rem;">
-            <i class="fas fa-plus-circle"></i>
-        </div>
-        <h3 style="margin-bottom: 0.5rem;">Новая статья</h3>
-        <p style="color: var(--gray-color); margin-bottom: 1.5rem;">Создание новой статьи</p>
-        <a href="/lab5/create" class="btn" style="width: 100%; background: var(--warning-color);">
-            <i class="fas fa-plus"></i> Создать
-        </a>
-    </div>
-
-    <div class="card" style="text-align: center;">
-        <div style="font-size: 3rem; color: var(--danger-color); margin-bottom: 1rem;">
-            <i class="fas fa-sign-out-alt"></i>
-        </div>
-        <h3 style="margin-bottom: 0.5rem;">Выйти</h3>
-        <p style="color: var(--gray-color); margin-bottom: 1.5rem;">Завершение текущей сессии</p>
-        <a href="/lab5/logout" class="btn" style="width: 100%; background: var(--danger-color);">
-            <i class="fas fa-sign-out-alt"></i> Выход
-        </a>
-    </div>
-</div>
-
-<div class="stats-card" style="margin-top: 3rem;">
-    <div class="card">
-        <h3 style="margin-bottom: 1rem; color: var(--secondary-color);">
-            <i class="fas fa-chart-line"></i> О системе
-        </h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--primary-color); font-weight: bold;">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <div style="font-size: 0.9rem; color: var(--gray-color);">Статьи</div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--success-color); font-weight: bold;">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div style="font-size: 0.9rem; color: var(--gray-color);">Пользователи</div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--accent-color); font-weight: bold;">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <div style="font-size: 0.9rem; color: var(--gray-color);">Безопасность</div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--warning-color); font-weight: bold;">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <div style="font-size: 0.9rem; color: var(--gray-color);">Производительность</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-    .features-grid .card {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Lab 5 - Управление системой</h1>
     
-    .features-grid .card .btn {
-        margin-top: auto;
-    }
-    
-    .features-grid .card:hover {
-        transform: translateY(-10px);
-    }
-</style>
+    <div class="row">
+        <!-- Карточка "Пробить" -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">
+                        <i class="fas fa-search me-2"></i>Пробить
+                    </h5>
+                    <p class="card-text">Изменение имени и кармы пользователя</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-right me-1"></i>Перейти
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка "Пользователи" -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-success">
+                        <i class="fas fa-users me-2"></i>Пользователи
+                    </h5>
+                    <p class="card-text">Список всех пользователей системы</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-success">
+                            <i class="fas fa-eye me-1"></i>Просмотреть
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка "Публичные статьи" -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">
+                        <i class="fas fa-newspaper me-2"></i>Публичные статьи
+                    </h5>
+                    <p class="card-text">Статьи доступные всем пользователям</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-warning">
+                            <i class="fas fa-eye me-1"></i>Просмотреть
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Дополнительная информация -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Информация о разделе
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">
+                        В этом разделе вы можете управлять основными компонентами системы: 
+                        редактировать данные пользователей, просматривать список пользователей 
+                        и управлять публичными статьями.
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!-- Дополнительные скрипты для этой страницы, если нужны -->
+<script>
+    // Пример JavaScript для этой страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Lab 5 page loaded');
+        
+        // Можно добавить обработчики событий для кнопок
+        document.querySelectorAll('.card .btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const cardTitle = this.closest('.card').querySelector('.card-title').textContent;
+                console.log(`Нажата кнопка в карточке: ${cardTitle}`);
+            });
+        });
+    });
+</script>
 {% endblock %}

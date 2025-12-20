@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block lab %}Пользователи{% endblock %}
+
+{% block main %}
+<div class="page-header">
+    <h1><i class="fas fa-users"></i> Зарегистрированные пользователи</h1>
+    <p>Список всех пользователей системы</p>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <a href="/lab5" class="btn btn-secondary">
+                <i class="fas fa-home"></i> На главную
+            </a>
+            <a href="/lab5/public" class="btn" style="background: var(--accent-color);">
+                <i class="fas fa-globe"></i> Публичные статьи
+            </a>
+        </div>
+        <div style="color: var(--gray-color);">
+            <i class="fas fa-info-circle"></i> Всего пользователей: {{ users|length }}
+        </div>
+    </div>
+
+    {% if not users %}
+    <div style="text-align: center; padding: 3rem;">
+        <div style="font-size: 4rem; color: #e0e0e0; margin-bottom: 1rem;">
+            <i class="fas fa-users"></i>
+        </div>
+        <h2 style="color: var(--gray-color);">Пользователей пока нет</h2>
+    </div>
+    {% else %}
+    <div class="users-table" style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: var(--light-color);">
+                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">
+                        <i class="fas fa-hashtag"></i> ID
+                    </th>
+                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">
+                        <i class="fas fa-user"></i> Логин
+                    </th>
+                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">
+                        <i class="fas fa-id-card"></i> Реальное имя
+                    </th>
+                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">
+                        <i class="fas fa-calendar-alt"></i> Дата регистрации
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr style="border-bottom: 1px solid #e1e5eb; transition: background-color 0.3s ease;">
+                    <td style="padding: 1rem;">
+                        <span style="background: var(--light-color); padding: 0.25rem 0.5rem; border-radius: 4px; font-family: monospace;">
+                            {{ user['id'] }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem; font-weight: 500;">
+                        <i class="fas fa-user-circle" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                        {{ user['login'] }}
+                    </td>
+                    <td style="padding: 1rem;">
+                        {% if user['real_name'] %}
+                            <span style="color: var(--dark-color);">
+                                <i class="fas fa-check-circle" style="color: var(--success-color); margin-right: 0.5rem;"></i>
+                                {{ user['real_name'] }}
+                            </span>
+                        {% else %}
+                            <span style="color: var(--gray-color); font-style: italic;">
+                                <i class="fas fa-minus-circle" style="color: var(--gray-color); margin-right: 0.5rem;"></i>
+                                Не указано
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1rem; color: var(--gray-color); font-size: 0.9rem;">
+                        <i class="fas fa-clock"></i> Недавно
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e1e5eb; text-align: center;">
+        <div style="display: inline-flex; align-items: center; gap: 1rem; background: var(--light-color); padding: 1rem 1.5rem; border-radius: var(--border-radius);">
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">{{ users|length }}</div>
+                <div style="font-size: 0.9rem; color: var(--gray-color);">Пользователей</div>
+            </div>
+            <div style="height: 40px; width: 1px; background: #e1e5eb;"></div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold; color: var(--success-color);">
+                    {{ users|selectattr('real_name')|list|length }}
+                </div>
+                <div style="font-size: 0.9rem; color: var(--gray-color);">С указанным именем</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.users-table tr:hover {
+    background-color: var(--light-color);
+}
+
+.users-table table {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.users-table th:first-child {
+    border-top-left-radius: var(--border-radius);
+}
+
+.users-table th:last-child {
+    border-top-right-radius: var(--border-radius);
+}
+</style>
+{% endblock %}
