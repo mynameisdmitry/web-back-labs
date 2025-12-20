@@ -435,6 +435,9 @@ def index():
 <html lang="ru">
     <head>
         <meta charset="utf-8">
+        <link rel="icon" type="image/x-icon" href="/static/fav/favicon.ico">
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/fav/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/fav/favicon-16x16.png">
         <title>НГТУ, ФБ, Лабораторные работы</title>
         {COMMON_STYLES}
     </head>
