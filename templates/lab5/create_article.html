@@ -4,30 +4,29 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<h1 class="page-title">Создание статьи</h1>
+<div class="card">
+  <h1 class="h1">Создание статьи</h1>
+  <p class="p">Заполните поля и сохраните статью. Она будет доступна только вам.</p>
 
-{% if error %}
-  <div class="alert alert--error">{{ error }}</div>
-{% endif %}
+  {% if error %}
+    <div class="alert alert--error">{{ error }}</div>
+  {% endif %}
 
-<form class="form" method="post">
+  <form class="form" method="post">
     <div class="form__row">
-        <label class="label">
-            Название статьи:
-            <input class="input" type="text" name="title" maxlength="50" required>
-        </label>
+      <label class="label" for="title">Название статьи</label>
+      <input class="input" id="title" type="text" name="title" maxlength="50" placeholder="Например: Конспект по теме..." required>
     </div>
 
     <div class="form__row">
-        <label class="label">
-            Текст статьи:
-            <textarea class="textarea" name="article_text" rows="10" required></textarea>
-        </label>
+      <label class="label" for="article_text">Текст статьи</label>
+      <textarea class="textarea" id="article_text" name="article_text" rows="10" placeholder="Введите текст статьи..." required></textarea>
     </div>
 
     <div class="form__actions">
-        <button class="btn" type="submit">Готово</button>
-        <a class="btn btn--secondary" href="{{ url_for('lab5.list_articles') }}">Назад</a>
+      <button class="btn btn--primary" type="submit">Сохранить</button>
+      <a class="btn" href="{{ url_for('lab5.list_articles') }}">К списку статей</a>
     </div>
-</form>
+  </form>
+</div>
 {% endblock %}

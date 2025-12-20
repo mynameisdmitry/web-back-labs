@@ -4,30 +4,29 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<h1 class="page-title">Регистрация</h1>
+<div class="card">
+  <h1 class="h1">Регистрация</h1>
+  <p class="p">Создайте учётную запись. После регистрации вы сможете создавать статьи.</p>
 
-{% if error %}
-  <div class="alert alert--error">{{ error }}</div>
-{% endif %}
+  {% if error %}
+    <div class="alert alert--error">{{ error }}</div>
+  {% endif %}
 
-<form class="form" action="{{ url_for('lab5.register') }}" method="post">
+  <form class="form" action="{{ url_for('lab5.register') }}" method="post">
     <div class="form__row">
-        <label class="label">
-            Логин:
-            <input class="input" type="text" name="login" required>
-        </label>
+      <label class="label" for="login">Логин</label>
+      <input class="input" id="login" type="text" name="login" placeholder="Придумайте логин" required>
     </div>
 
     <div class="form__row">
-        <label class="label">
-            Пароль:
-            <input class="input" type="password" name="password" required>
-        </label>
+      <label class="label" for="password">Пароль</label>
+      <input class="input" id="password" type="password" name="password" placeholder="Придумайте пароль" required>
     </div>
 
     <div class="form__actions">
-        <button class="btn" type="submit">Зарегистрироваться</button>
-        <a class="btn btn--secondary" href="{{ url_for('lab5.lab') }}">Назад</a>
+      <button class="btn btn--primary" type="submit">Зарегистрироваться</button>
+      <a class="btn" href="{{ url_for('lab5.login') }}">Уже есть аккаунт</a>
     </div>
-</form>
+  </form>
+</div>
 {% endblock %}

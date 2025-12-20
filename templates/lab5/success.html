@@ -4,19 +4,14 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<div class="success-wrapper">
-    <div class="success-card">
-        <div class="success-icon">✓</div>
+<div class="card center">
+  <h1 class="h1">Регистрация завершена</h1>
+  <p class="p">Аккаунт создан. Теперь можно войти и начать работать со статьями.</p>
 
-        <h1 class="success-title">Регистрация успешно завершена</h1>
-
-        <p class="success-text">
-            Ваша учётная запись была создана.
-            Теперь вы можете получить доступ ко всем материалам базы знаний.
-        </p>
-
-        <a href="/lab5" class="btn">Перейти к базе знаний</a>
-    </div>
+  <div class="card__actions" style="justify-content:center;">
+    <a class="btn btn--primary" href="{{ url_for('lab5.login') }}">Перейти ко входу</a>
+    <a class="btn" href="{{ url_for('lab5.lab') }}">Главная ЛР-5</a>
+  </div>
 </div>
 
 

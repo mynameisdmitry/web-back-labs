@@ -4,36 +4,50 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<h1 class="page-title">Мои статьи</h1>
+<div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+    <div>
+      <h1 class="h1" style="margin-bottom:6px;">Мои статьи</h1>
+      <p class="p" style="margin-bottom:0;">Здесь отображаются только статьи текущего пользователя.</p>
+    </div>
+    <div class="card__actions" style="margin-top:0;">
+      <a class="btn btn--primary" href="{{ url_for('lab5.create') }}">Создать статью</a>
+      <a class="btn btn--ghost" href="{{ url_for('lab5.lab') }}">На главную ЛР-5</a>
+    </div>
+  </div>
+</div>
+
+<div class="spacer-12"></div>
 
 {% if not articles %}
-  <div class="card">
-      <div class="muted" style="text-align:center;">
-          У вас пока нет ни одной статьи.
-      </div>
-      <div class="form__actions" style="justify-content:center; margin-top: 12px;">
-          <a class="btn" href="{{ url_for('lab5.create') }}">Создать первую статью</a>
-          <a class="btn btn--secondary" href="{{ url_for('lab5.lab') }}">Назад</a>
-      </div>
+  <div class="card center">
+    <h2 class="h2">Пока пусто</h2>
+    <p class="p">У вас нет статей. Создайте первую — это займёт меньше минуты.</p>
+    <div class="card__actions" style="justify-content:center;">
+      <a class="btn btn--primary" href="{{ url_for('lab5.create') }}">Создать первую статью</a>
+    </div>
   </div>
 {% else %}
   {% for article in articles %}
     <div class="card">
-        <h2 class="card__title">{{ article['title'] }}</h2>
-
-        <blockquote class="article-text">{{ article['article_text'] }}</blockquote>
-
-        <div class="card__actions">
-            <a class="btn" href="{{ url_for('lab5.edit_article', article_id=article['id']) }}">
-                Редактировать
-            </a>
-
-            <a class="btn btn--danger"
-               href="{{ url_for('lab5.delete_article', article_id=article['id']) }}"
-               onclick="return confirm('Удалить статью?')">
-                Удалить
-            </a>
+      <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:flex-start;">
+        <div>
+          <div class="card__title">{{ article['title'] }}</div>
+          <div class="card__sub">ID: {{ article['id'] }}</div>
         </div>
+
+        <div class="card__actions" style="margin-top:0;">
+          <a class="btn" href="{{ url_for('lab5.edit_article', article_id=article['id']) }}">Редактировать</a>
+          <a class="btn btn--danger"
+             href="{{ url_for('lab5.delete_article', article_id=article['id']) }}"
+             onclick="return confirm('Удалить статью?')">
+            Удалить
+          </a>
+        </div>
+      </div>
+
+      <div class="spacer-8"></div>
+      <blockquote class="article">{{ article['article_text'] }}</blockquote>
     </div>
   {% endfor %}
 {% endif %}

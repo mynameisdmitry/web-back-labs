@@ -4,18 +4,14 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<div class="success-wrapper">
-    <div class="success-card">
-        <div class="success-icon">✓</div>
+<div class="card center">
+  <h1 class="h1">Вход выполнен</h1>
+  <p class="p">Добро пожаловать, <strong>{{ login }}</strong>. Перейдите к статьям или создайте новую.</p>
 
-        <h1 class="success-title">Вход выполнен успешно</h1>
-
-        <p class="success-text">
-            Добро пожаловать, <strong>{{ login }}</strong>.
-        </p>
-
-        <a href="/lab5" class="btn">Перейти к базе знаний</a>
-    </div>
+  <div class="card__actions" style="justify-content:center;">
+    <a class="btn btn--primary" href="{{ url_for('lab5.list_articles') }}">Открыть статьи</a>
+    <a class="btn" href="{{ url_for('lab5.create') }}">Создать статью</a>
+  </div>
 </div>
 
 

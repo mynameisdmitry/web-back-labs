@@ -1,40 +1,64 @@
 <!-- templates/lab5/lab5.html -->
 {% extends "base.html" %}
-
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<h1 class="page-title">База знаний</h1>
-
-<div class="info-box">
-    <div class="section-title">Пользователь: {{ username }}</div>
-    <div class="muted">Работа с аккаунтом и статьями</div>
-</div>
-
-<div class="menu-grid">
-    <div class="menu-item">
-        <a class="menu-item__link" href="/lab5/login">Войти</a>
-        <p class="menu-item__desc">Авторизация в системе</p>
+<div class="hero">
+  <div class="hero__top">
+    <div>
+      <h1 class="h1">База знаний</h1>
+      <p class="p">Управляйте статьями: создавайте, редактируйте и удаляйте. Доступ — только к вашим материалам.</p>
     </div>
 
-    <div class="menu-item">
-        <a class="menu-item__link" href="/lab5/register">Зарегистрироваться</a>
-        <p class="menu-item__desc">Создание нового аккаунта</p>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi__label">Текущий пользователь</div>
+        <div class="kpi__value">{{ username }}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Режим</div>
+        <div class="kpi__value">{% if session.get('login') %}Авторизован{% else %}Гость{% endif %}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer-12"></div>
+
+  <div class="grid">
+    <div class="grid__col-6">
+      <div class="card">
+        <div class="card__title">Работа со статьями</div>
+        <div class="card__sub">Список ваших статей и создание новой.</div>
+        <div class="card__actions">
+          <a class="btn btn--primary" href="{{ url_for('lab5.list_articles') }}">Открыть статьи</a>
+          <a class="btn" href="{{ url_for('lab5.create') }}">Создать статью</a>
+        </div>
+      </div>
     </div>
 
-    <div class="menu-item">
-        <a class="menu-item__link" href="/lab5/list">Список статей</a>
-        <p class="menu-item__desc">Просмотр ваших статей</p>
+    <div class="grid__col-6">
+      <div class="card">
+        <div class="card__title">Аккаунт</div>
+        <div class="card__sub">Авторизация и управление сессией.</div>
+        <div class="card__actions">
+          {% if session.get('login') %}
+            <a class="btn btn--danger" href="{{ url_for('lab5.logout') }}">Выйти</a>
+          {% else %}
+            <a class="btn btn--primary" href="{{ url_for('lab5.login') }}">Войти</a>
+            <a class="btn" href="{{ url_for('lab5.register') }}">Регистрация</a>
+          {% endif %}
+        </div>
+      </div>
     </div>
 
-    <div class="menu-item">
-        <a class="menu-item__link" href="/lab5/create">Создать статью</a>
-        <p class="menu-item__desc">Добавление новой статьи</p>
+    <div class="grid__col-12">
+      <div class="card">
+        <div class="card__title">Подсказка</div>
+        <div class="card__sub">
+          Если вы не вошли в систему, доступ к созданию/редактированию статей будет перенаправлять на страницу входа.
+        </div>
+      </div>
     </div>
-
-    <div class="menu-item">
-        <a class="menu-item__link" href="/lab5/logout">Выйти</a>
-        <p class="menu-item__desc">Завершить сессию</p>
-    </div>
+  </div>
 </div>
 {% endblock %}
