@@ -1,55 +1,163 @@
-<!-- templates/lab5/articles.html -->
+
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Мои статьи{% endblock %}
 
 {% block main %}
-<div class="card">
-  <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
-    <div>
-      <h1 class="h1" style="margin-bottom:6px;">Мои статьи</h1>
-      <p class="p" style="margin-bottom:0;">Здесь отображаются только статьи текущего пользователя.</p>
-    </div>
-    <div class="card__actions" style="margin-top:0;">
-      <a class="btn btn--primary" href="{{ url_for('lab5.create') }}">Создать статью</a>
-      <a class="btn btn--ghost" href="{{ url_for('lab5.lab') }}">На главную ЛР-5</a>
-    </div>
-  </div>
+<div class="page-header">
+    <h1><i class="fas fa-book"></i> Мои статьи</h1>
+    <p>Здесь вы можете управлять всеми вашими статьями</p>
 </div>
 
-<div class="spacer-12"></div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <a href="/lab5/create" class="btn" style="background: var(--primary-color);">
+            <i class="fas fa-plus"></i> Новая статья
+        </a>
+        <a href="/lab5" class="btn btn-secondary">
+            <i class="fas fa-home"></i> На главную
+        </a>
+    </div>
+    <div style="color: var(--gray-color);">
+        <i class="fas fa-info-circle"></i> Всего статей: {{ articles|length if articles else 0 }}
+    </div>
+</div>
+
+
 
 {% if not articles %}
-  <div class="card center">
-    <h2 class="h2">Пока пусто</h2>
-    <p class="p">У вас нет статей. Создайте первую — это займёт меньше минуты.</p>
-    <div class="card__actions" style="justify-content:center;">
-      <a class="btn btn--primary" href="{{ url_for('lab5.create') }}">Создать первую статью</a>
+<div class="card" style="text-align: center; padding: 4rem 2rem;">
+    <div style="font-size: 5rem; color: #e0e0e0; margin-bottom: 1rem;">
+        <i class="fas fa-file-alt"></i>
     </div>
-  </div>
+    <h2 style="color: var(--gray-color); margin-bottom: 1rem;">Статей пока нет</h2>
+    <p style="color: var(--gray-color); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+        Создайте свою первую статью, чтобы начать работу с базой знаний
+    </p>
+    <a href="/lab5/create" class="btn" style="background: var(--primary-color);">
+        <i class="fas fa-plus"></i> Создать первую статью
+    </a>
+</div>
 {% else %}
-  {% for article in articles %}
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:flex-start;">
-        <div>
-          <div class="card__title">{{ article['title'] }}</div>
-          <div class="card__sub">ID: {{ article['id'] }}</div>
+<div class="articles-list">
+    {% for article in articles %}
+    <div class="card article-card" style="margin-bottom: 1.5rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <h2 style="margin: 0; color: var(--secondary-color);">
+                    <i class="fas fa-file-alt" style="color: var(--primary-color);"></i>
+                    {{ article['title'] }}
+                </h2>
+                <div style="color: var(--gray-color); font-size: 0.9rem; margin-top: 0.25rem;">
+                    <i class="fas fa-calendar"></i> Создана недавно
+                </div>
+            </div>
+            <div style="background: var(--light-color); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                ID: {{ article['id'] }}
+            </div>
         </div>
-
-        <div class="card__actions" style="margin-top:0;">
-          <a class="btn" href="{{ url_for('lab5.edit_article', article_id=article['id']) }}">Редактировать</a>
-          <a class="btn btn--danger"
-             href="{{ url_for('lab5.delete_article', article_id=article['id']) }}"
-             onclick="return confirm('Удалить статью?')">
-            Удалить
-          </a>
+        
+        <div style="background: var(--light-color); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 1.5rem; border-left: 4px solid var(--primary-color);">
+            <div style="white-space: pre-wrap; line-height: 1.6;">
+                {{ article['article_text']|truncate(300) }}
+                {% if article['article_text']|length > 300 %}
+                <span style="color: var(--primary-color); font-weight: 600;">...</span>
+                {% endif %}
+            </div>
         </div>
-      </div>
-
-      <div class="spacer-8"></div>
-      <blockquote class="article">{{ article['article_text'] }}</blockquote>
+        
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="{{ url_for('lab5.edit_article', article_id=article['id']) }}" class="btn" style="background: var(--success-color);">
+                <i class="fas fa-edit"></i> Редактировать
+            </a>
+            <a href="{{ url_for('lab5.delete_article', article_id=article['id']) }}" 
+               class="btn btn-danger"
+               onclick="return deleteArticle(this)">
+                <i class="fas fa-trash"></i> Удалить
+            </a>
+            <div style="margin-left: auto; color: var(--gray-color); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-ruler-combined"></i>
+                {{ article['article_text']|length }} символов
+            </div>
+        </div>
     </div>
-  {% endfor %}
+    {% endfor %}
+</div>
 {% endif %}
 
+<script>
+function deleteArticle(link) {
+    // Находим родительскую карточку статьи
+    const articleCard = link.closest('.article-card');
+    
+    // Находим заголовок в карточке
+    const titleElement = articleCard.querySelector('h2');
+    
+    // Получаем чистый заголовок (убираем иконку)
+    let title = '';
+    if (titleElement) {
+        // Получаем все текстовые узлы внутри h2
+        const textNodes = [];
+        titleElement.childNodes.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                textNodes.push(node.textContent.trim());
+            }
+        });
+        
+        // Объединяем текстовые узлы
+        title = textNodes.filter(text => text.length > 0).join(' ');
+        
+        // Если заголовок не найден, берем весь текст
+        if (!title) {
+            title = titleElement.textContent.trim();
+            
+            // Убираем символы иконки (если есть)
+            const iconIndex = title.indexOf(' ');
+            if (iconIndex > 0) {
+                title = title.substring(iconIndex + 1).trim();
+            }
+        }
+    }
+    
+    // Если заголовок все еще пустой, используем заглушку
+    if (!title) {
+        title = 'эту статью';
+    }
+    
+    const message = "Вы уверены, что хотите удалить статью \"" + title + "\"?\n\nЭто действие невозможно отменить.";
+    
+    if (confirm(message)) {
+        return true;
+    }
+    
+    // Отменяем переход по ссылке
+    return false;
+}
+</script>
+
+<style>
+.article-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.articles-list {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
 {% endblock %}

@@ -1,18 +1,141 @@
-<!-- templates/lab5/success.html -->
+
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Успешная регистрация{% endblock %}
 
 {% block main %}
-<div class="card center">
-  <h1 class="h1">Регистрация завершена</h1>
-  <p class="p">Аккаунт создан. Теперь можно войти и начать работать со статьями.</p>
-
-  <div class="card__actions" style="justify-content:center;">
-    <a class="btn btn--primary" href="{{ url_for('lab5.login') }}">Перейти ко входу</a>
-    <a class="btn" href="{{ url_for('lab5.lab') }}">Главная ЛР-5</a>
-  </div>
+<div class="success-wrapper">
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        
+        <h1 class="success-title">Регистрация успешно завершена!</h1>
+        
+        <p class="success-text">
+            Добро пожаловать, <strong>{{ login }}</strong>!<br>
+            Ваша учетная запись была успешно создана.
+        </p>
+        
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: var(--border-radius); margin: 2rem 0;">
+            <h3 style="margin: 0 0 1rem 0; color: var(--secondary-color);">
+                <i class="fas fa-rocket"></i> Что дальше?
+            </h3>
+            <ul style="text-align: left; padding-left: 1.5rem; margin: 0;">
+                <li>Создайте свою первую статью</li>
+                <li>Изучите все возможности системы</li>
+                <li>Настройте свой профиль</li>
+            </ul>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/lab5" class="btn" style="background: var(--primary-color);">
+                <i class="fas fa-home"></i> На главную
+            </a>
+            <a href="/lab5/create" class="btn" style="background: var(--success-color);">
+                <i class="fas fa-plus"></i> Создать статью
+            </a>
+            <a href="/lab5/list" class="btn" style="background: var(--accent-color);">
+                <i class="fas fa-book"></i> К статьям
+            </a>
+        </div>
+        
+        <div style="margin-top: 2rem; color: var(--gray-color); font-size: 0.9rem;">
+            <i class="fas fa-clock"></i> Вы будете перенаправлены на главную через <span id="countdown">10</span> секунд
+        </div>
+    </div>
 </div>
 
+<script>
+let countdown = 10;
+const countdownElement = document.getElementById('countdown');
 
+const timer = setInterval(() => {
+    countdown--;
+    countdownElement.textContent = countdown;
+    
+    if (countdown <= 0) {
+        clearInterval(timer);
+        window.location.href = '/lab5';
+    }
+}, 1000);
+
+// Ускоренная переадресация по клику
+document.querySelector('.success-card').addEventListener('click', function() {
+    clearInterval(timer);
+    window.location.href = '/lab5';
+});
+</script>
+
+<style>
+.success-wrapper {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.success-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 3rem 2rem;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    animation: successAppear 0.8s ease;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+    color: white;
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: iconPulse 2s infinite;
+}
+
+.success-title {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.success-text {
+    font-size: 1.1rem;
+    color: var(--gray-color);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+@keyframes successAppear {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes iconPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(46, 125, 50, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(46, 125, 50, 0);
+    }
+}
+</style>
 {% endblock %}

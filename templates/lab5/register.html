@@ -1,32 +1,172 @@
-<!-- templates/lab5/register.html -->
+
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Регистрация{% endblock %}
 
 {% block main %}
-<div class="card">
-  <h1 class="h1">Регистрация</h1>
-  <p class="p">Создайте учётную запись. После регистрации вы сможете создавать статьи.</p>
+<div class="auth-container" style="max-width: 500px; margin: 0 auto;">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 4rem; color: var(--accent-color); margin-bottom: 1rem;">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        
+        <h1 style="margin-bottom: 0.5rem; color: var(--secondary-color);">Регистрация</h1>
+        <p style="color: var(--gray-color); margin-bottom: 2rem;">
+            Создайте новый аккаунт для доступа ко всем функциям базы знаний
+        </p>
 
-  {% if error %}
-    <div class="alert alert--error">{{ error }}</div>
-  {% endif %}
+        {% if error %}
+        <div class="alert alert-danger" style="text-align: left;">
+            <i class="fas fa-exclamation-circle"></i>
+            <div>
+                <strong>Ошибка регистрации</strong><br>
+                {{ error }}
+            </div>
+        </div>
+        {% endif %}
 
-  <form class="form" action="{{ url_for('lab5.register') }}" method="post">
-    <div class="form__row">
-      <label class="label" for="login">Логин</label>
-      <input class="input" id="login" type="text" name="login" placeholder="Придумайте логин" required>
+        <form action="{{ url_for('lab5.register') }}" method="post" id="registerForm">
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-user"></i> Логин
+                </label>
+                <input type="text" 
+                       name="login" 
+                       class="form-control" 
+                       placeholder="Придумайте уникальный логин"
+                       required
+                       pattern=".{3,20}"
+                       title="Логин должен содержать от 3 до 20 символов">
+                <div style="font-size: 0.85rem; color: var(--gray-color); margin-top: 0.25rem;">
+                    <i class="fas fa-info-circle"></i> От 3 до 20 символов
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i> Пароль
+                </label>
+                <input type="password" 
+                       name="password" 
+                       id="password"
+                       class="form-control" 
+                       placeholder="Придумайте надежный пароль"
+                       required
+                       pattern=".{6,}"
+                       title="Пароль должен содержать минимум 6 символов">
+                <div style="font-size: 0.85rem; color: var(--gray-color); margin-top: 0.25rem;">
+                    <i class="fas fa-info-circle"></i> Минимум 6 символов
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i> Подтверждение пароля
+                </label>
+                <input type="password" 
+                       id="confirmPassword"
+                       class="form-control" 
+                       placeholder="Повторите пароль"
+                       required>
+                <div id="passwordMatch" style="font-size: 0.85rem; margin-top: 0.25rem;"></div>
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+                <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" required style="margin-top: 0.25rem;">
+                    <div>
+                        <div style="font-weight: 600;">Согласие с условиями</div>
+                        <div style="font-size: 0.9rem; color: var(--gray-color);">
+                            Я согласен с <a href="#" style="color: var(--primary-color);">политикой конфиденциальности</a> 
+                            и <a href="#" style="color: var(--primary-color);">правилами использования</a>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; background: var(--accent-color); margin-top: 1rem;">
+                <i class="fas fa-user-check"></i> Зарегистрироваться
+            </button>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e1e5eb;">
+            <p style="color: var(--gray-color); margin-bottom: 1rem;">
+                Уже есть аккаунт?
+            </p>
+            <a href="/lab5/login" class="btn" style="width: 100%; background: var(--primary-color);">
+                <i class="fas fa-sign-in-alt"></i> Войти в систему
+            </a>
+        </div>
     </div>
 
-    <div class="form__row">
-      <label class="label" for="password">Пароль</label>
-      <input class="input" id="password" type="password" name="password" placeholder="Придумайте пароль" required>
+    <div class="card" style="margin-top: 1.5rem;">
+        <h3 style="margin-bottom: 1rem; color: var(--secondary-color);">
+            <i class="fas fa-star"></i> Преимущества регистрации
+        </h3>
+        <ul style="list-style: none; padding: 0;">
+            <li style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <div style="background: #e6f4ea; color: #2e7d32; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 600;">Безопасное хранение</div>
+                    <div style="font-size: 0.9rem; color: var(--gray-color);">Все статьи защищены и доступны только вам</div>
+                </div>
+            </li>
+            <li style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <div style="background: #e6f4ea; color: #2e7d32; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 600;">Неограниченное количество</div>
+                    <div style="font-size: 0.9rem; color: var(--gray-color);">Создавайте сколько угодно статей</div>
+                </div>
+            </li>
+            <li style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="background: #e6f4ea; color: #2e7d32; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 600;">Доступ с любых устройств</div>
+                    <div style="font-size: 0.9rem; color: var(--gray-color);">Работайте с любого устройства с интернетом</div>
+                </div>
+            </li>
+        </ul>
     </div>
 
-    <div class="form__actions">
-      <button class="btn btn--primary" type="submit">Зарегистрироваться</button>
-      <a class="btn" href="{{ url_for('lab5.login') }}">Уже есть аккаунт</a>
-    </div>
-  </form>
 </div>
+
+<script>
+const passwordInput = document.getElementById('password');
+const confirmInput = document.getElementById('confirmPassword');
+const matchIndicator = document.getElementById('passwordMatch');
+
+function checkPasswordMatch() {
+    if (!passwordInput.value || !confirmInput.value) {
+        matchIndicator.innerHTML = '';
+        return;
+    }
+    
+    if (passwordInput.value === confirmInput.value) {
+        matchIndicator.innerHTML = '<i class="fas fa-check-circle" style="color: #2e7d32;"></i> Пароли совпадают';
+        confirmInput.style.borderColor = '#2e7d32';
+        confirmInput.style.boxShadow = '0 0 0 3px rgba(46, 125, 50, 0.15)';
+    } else {
+        matchIndicator.innerHTML = '<i class="fas fa-times-circle" style="color: #c53030;"></i> Пароли не совпадают';
+        confirmInput.style.borderColor = '#c53030';
+        confirmInput.style.boxShadow = '0 0 0 3px rgba(197, 48, 48, 0.15)';
+    }
+}
+
+passwordInput.addEventListener('input', checkPasswordMatch);
+confirmInput.addEventListener('input', checkPasswordMatch);
+
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    if (passwordInput.value !== confirmInput.value) {
+        e.preventDefault();
+        alert('Пароли не совпадают! Пожалуйста, проверьте введенные пароли.');
+        confirmInput.focus();
+    }
+});
+</script>
 {% endblock %}

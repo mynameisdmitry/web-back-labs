@@ -1,73 +1,373 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Дмитрий Игуменшев. {% block lab %}{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База знаний | {% block lab %}{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Основные стили -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #7209b7;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #f8961e;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}?v=3.0">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <!-- favicon: положите файл в /static/favicon.ico -->
-  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark-color);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
 
-  <meta name="theme-color" content="#0b1020">
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-  <!-- Cookie overrides (в HEAD, чтобы VS Code не ругался на inline style у body) -->
-  <style>
-    body{
-      {% if request.cookies.get('color') %}color: {{ request.cookies.get('color') }};{% endif %}
-      {% if request.cookies.get('background_color') %}background-color: {{ request.cookies.get('background_color') }};{% endif %}
-      {% if request.cookies.get('font_size') %}font-size: {{ request.cookies.get('font_size') }}px;{% endif %}
-      {% if request.cookies.get('font_family') %}font-family: {{ request.cookies.get('font_family') }};{% endif %}
-    }
-  </style>
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .lab-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Main content */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--success-color);
+            transform: translateY(-3px);
+        }
+
+        /* Утилиты */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background: #d1144a;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background: #3ab4d8;
+        }
+
+        .btn-secondary {
+            background: var(--gray-color);
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5eb;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-danger {
+            background: #fde8e8;
+            color: #c53030;
+            border-left: 4px solid #f56565;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .page-header p {
+            color: var(--gray-color);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <header class="site-header">
-    <div class="container site-header__inner">
-      <div class="brand">
-        <div class="brand__top">
-          <div class="brand__logo" aria-hidden="true"></div>
-          <div class="brand__title">WEB-программирование, часть 2. {{ self.lab() }}</div>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/lab5" class="logo">
+                    <i class="fas fa-database"></i>
+                    <span>База знаний</span>
+                </a>
+                <div class="lab-title">Лабораторная работа 5</div>
+                <div class="nav-links">
+                    <a href="/">Главная</a>
+                    {% if session.get('login') %}
+                        <a href="/lab5/list"><i class="fas fa-book"></i> Мои статьи</a>
+                        <a href="/lab5/logout"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                    {% else %}
+                        <a href="/lab5/login"><i class="fas fa-sign-in-alt"></i> Войти</a>
+                        <a href="/lab5/register"><i class="fas fa-user-plus"></i> Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="brand__subtitle">ЛР-5 — база знаний (CRUD + авторизация)</div>
-      </div>
+    </header>
 
-      <nav class="nav">
-        <a class="nav__link" href="/">Главная</a>
-        <a class="nav__link" href="{{ url_for('lab5.lab') }}">ЛР-5</a>
-        <a class="nav__link" href="{{ url_for('lab5.list_articles') }}">Статьи</a>
+    <main>
+        <div class="container">
+            {% block main %}{% endblock %}
+        </div>
+    </main>
 
-        {% if session.get('login') %}
-          <span class="badge" title="Вы авторизованы">
-            <span class="badge__dot" aria-hidden="true"></span>
-            {{ session.get('login') }}
-          </span>
-          <a class="nav__link" href="{{ url_for('lab5.logout') }}">Выйти</a>
-        {% else %}
-          <a class="nav__link" href="{{ url_for('lab5.login') }}">Войти</a>
-          <a class="nav__link" href="{{ url_for('lab5.register') }}">Регистрация</a>
-        {% endif %}
-      </nav>
-    </div>
-  </header>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                </div>
+                <p>&copy; 2025 Дмитрий Игуменшев. ФБИ-33, 3 курс. Лабораторная работа 5</p>
+                <p>База знаний - система управления статьями</p>
+            </div>
+        </div>
+    </footer>
 
-  <div class="page">
-    <div class="container">
-      <div class="shell">
-        <main class="main">
-          {% block main %}{% endblock %}
-        </main>
-
-        <footer class="footer">
-          <div>&copy; Дмитрий Игуменшев, ФБИ-33, 3 курс, 2025</div>
-          <div>Лабораторная работа 5</div>
-        </footer>
-      </div>
-    </div>
-  </div>
+    <script>
+        // Анимация для кнопок и карточек
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.btn');
+            const cards = document.querySelectorAll('.card');
+            
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>

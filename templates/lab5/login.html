@@ -1,32 +1,117 @@
-<!-- templates/lab5/login.html -->
+
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Вход в систему{% endblock %}
 
 {% block main %}
-<div class="card">
-  <h1 class="h1">Вход</h1>
-  <p class="p">Введите логин и пароль для доступа к вашим статьям.</p>
+<div class="auth-container" style="max-width: 500px; margin: 0 auto;">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;">
+            <i class="fas fa-sign-in-alt"></i>
+        </div>
+        
+        <h1 style="margin-bottom: 0.5rem; color: var(--secondary-color);">Вход в систему</h1>
+        <p style="color: var(--gray-color); margin-bottom: 2rem;">
+            Введите ваши учетные данные для доступа к базе знаний
+        </p>
 
-  {% if error %}
-    <div class="alert alert--error">{{ error }}</div>
-  {% endif %}
+        {% if error %}
+        <div class="alert alert-danger" style="text-align: left;">
+            <i class="fas fa-exclamation-circle"></i>
+            <div>
+                <strong>Ошибка авторизации</strong><br>
+                {{ error }}
+            </div>
+        </div>
+        {% endif %}
 
-  <form class="form" action="{{ url_for('lab5.login') }}" method="post">
-    <div class="form__row">
-      <label class="label" for="login">Логин</label>
-      <input class="input" id="login" type="text" name="login" placeholder="Введите логин" required>
+        <form action="/lab5/login" method="post">
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-user"></i> Логин
+                </label>
+                <input type="text" 
+                       name="login" 
+                       class="form-control" 
+                       placeholder="Введите ваш логин"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i> Пароль
+                </label>
+                <input type="password" 
+                       name="password" 
+                       class="form-control" 
+                       placeholder="Введите ваш пароль"
+                       required>
+                <div style="text-align: right; margin-top: 0.25rem;">
+                    <a href="#" style="font-size: 0.85rem; color: var(--primary-color); text-decoration: none;">
+                        <i class="fas fa-question-circle"></i> Забыли пароль?
+                    </a>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; background: var(--primary-color); margin-top: 1rem;">
+                <i class="fas fa-sign-in-alt"></i> Войти в систему
+            </button>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e1e5eb;">
+            <p style="color: var(--gray-color); margin-bottom: 1rem;">
+                Еще нет аккаунта?
+            </p>
+            <a href="/lab5/register" class="btn" style="width: 100%; background: var(--accent-color);">
+                <i class="fas fa-user-plus"></i> Зарегистрироваться
+            </a>
+        </div>
+
+        <div style="margin-top: 2rem; color: var(--gray-color); font-size: 0.9rem;">
+            <i class="fas fa-shield-alt"></i> Ваши данные защищены
+        </div>
     </div>
 
-    <div class="form__row">
-      <label class="label" for="password">Пароль</label>
-      <input class="input" id="password" type="password" name="password" placeholder="Введите пароль" required>
+    <div class="card" style="margin-top: 1.5rem; text-align: center;">
+        <h3 style="margin-bottom: 1rem; color: var(--secondary-color);">
+            <i class="fas fa-lightbulb"></i> Преимущества системы
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+            <div style="background: #f0f8ff; padding: 1rem; border-radius: var(--border-radius);">
+                <i class="fas fa-lock" style="color: var(--success-color);"></i>
+                <div style="font-weight: 600; margin-top: 0.5rem;">Безопасность</div>
+            </div>
+            <div style="background: #f0f8ff; padding: 1rem; border-radius: var(--border-radius);">
+                <i class="fas fa-bolt" style="color: var(--warning-color);"></i>
+                <div style="font-weight: 600; margin-top: 0.5rem;">Скорость</div>
+            </div>
+            <div style="background: #f0f8ff; padding: 1rem; border-radius: var(--border-radius);">
+                <i class="fas fa-sync" style="color: var(--primary-color);"></i>
+                <div style="font-weight: 600; margin-top: 0.5rem;">Синхронизация</div>
+            </div>
+            <div style="background: #f0f8ff; padding: 1rem; border-radius: var(--border-radius);">
+                <i class="fas fa-cloud" style="color: var(--accent-color);"></i>
+                <div style="font-weight: 600; margin-top: 0.5rem;">Облако</div>
+            </div>
+        </div>
     </div>
 
-    <div class="form__actions">
-      <button class="btn btn--primary" type="submit">Войти</button>
-      <a class="btn" href="{{ url_for('lab5.register') }}">Регистрация</a>
-    </div>
-  </form>
 </div>
+
+<style>
+.auth-container .card {
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
 {% endblock %}

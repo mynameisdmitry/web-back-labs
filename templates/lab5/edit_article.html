@@ -1,32 +1,161 @@
-<!-- templates/lab5/edit_article.html -->
+
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Редактирование статьи{% endblock %}
 
 {% block main %}
-<div class="card">
-  <h1 class="h1">Редактирование статьи</h1>
-  <p class="p">Измените поля и сохраните. Доступ ограничен владельцем.</p>
-
-  {% if error %}
-    <div class="alert alert--error">{{ error }}</div>
-  {% endif %}
-
-  <form class="form" method="post" action="{{ url_for('lab5.edit_article', article_id=article['id']) }}">
-    <div class="form__row">
-      <label class="label" for="title">Название</label>
-      <input class="input" id="title" type="text" name="title" maxlength="50" value="{{ article['title'] }}" required>
-    </div>
-
-    <div class="form__row">
-      <label class="label" for="article_text">Текст</label>
-      <textarea class="textarea" id="article_text" name="article_text" rows="10" required>{{ article['article_text'] }}</textarea>
-    </div>
-
-    <div class="form__actions">
-      <button type="submit" class="btn btn--primary">Сохранить</button>
-      <a class="btn" href="{{ url_for('lab5.list_articles') }}">Назад</a>
-    </div>
-  </form>
+<div class="page-header">
+    <h1><i class="fas fa-edit"></i> Редактирование статьи</h1>
+    <p>Внесите изменения в статью "{{ article['title'] }}"</p>
 </div>
+
+<div class="card">
+    {% if error %}
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>
+            <strong>Ошибка!</strong> {{ error }}
+        </div>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('lab5.edit_article', article_id=article['id']) }}" id="editForm">
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-heading"></i> Название статьи
+            </label>
+            <input type="text" 
+                   name="title" 
+                   maxlength="50" 
+                   class="form-control" 
+                   value="{{ article['title'] }}"
+                   required>
+            <div style="font-size: 0.85rem; color: var(--gray-color); margin-top: 0.25rem;">
+                <i class="fas fa-info-circle"></i> {{ 50 - article['title']|length }} символов осталось
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-align-left"></i> Текст статьи
+            </label>
+            <textarea name="article_text" 
+                      rows="12" 
+                      class="form-control" 
+                      required
+                      style="resize: vertical; min-height: 250px; font-family: 'Inter', sans-serif;">{{ article['article_text'] }}</textarea>
+            <div style="font-size: 0.85rem; color: var(--gray-color); margin-top: 0.25rem;">
+                <i class="fas fa-info-circle"></i> {{ article['article_text']|length }} символов
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+            <button type="submit" class="btn" style="background: var(--success-color);">
+                <i class="fas fa-save"></i> Сохранить изменения
+            </button>
+            <a href="/lab5/list" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Отмена
+            </a>
+            <button type="button" class="btn" style="background: var(--primary-color);" onclick="showHistory()">
+                <i class="fas fa-history"></i> История
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- История изменений -->
+<div id="historyModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+    <div class="card" style="width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="margin: 0; color: var(--secondary-color);">
+                <i class="fas fa-history"></i> История статьи
+            </h2>
+            <button onclick="closeHistory()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-color);">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div style="background: var(--light-color); padding: 1.5rem; border-radius: var(--border-radius);">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div style="background: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 600;">{{ article['title'] }}</div>
+                    <div style="font-size: 0.9rem; color: var(--gray-color);">ID: {{ article['id'] }}</div>
+                </div>
+            </div>
+            
+            <div style="border-left: 3px solid var(--primary-color); padding-left: 1.5rem; margin-left: 20px;">
+                <div style="margin-bottom: 1.5rem; position: relative;">
+                    <div style="position: absolute; left: -26px; top: 0; background: var(--primary-color); width: 12px; height: 12px; border-radius: 50%;"></div>
+                    <div style="font-weight: 600; color: var(--secondary-color);">Создание</div>
+                    <div style="font-size: 0.9rem; color: var(--gray-color);">Статья была создана</div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem; position: relative;">
+                    <div style="position: absolute; left: -26px; top: 0; background: var(--success-color); width: 12px; height: 12px; border-radius: 50%;"></div>
+                    <div style="font-weight: 600; color: var(--secondary-color);">Последнее редактирование</div>
+                    <div style="font-size: 0.9rem; color: var(--gray-color);">Вы редактируете статью сейчас</div>
+                </div>
+                
+                <div style="position: relative;">
+                    <div style="position: absolute; left: -26px; top: 0; background: var(--accent-color); width: 12px; height: 12px; border-radius: 50%;"></div>
+                    <div style="font-weight: 600; color: var(--secondary-color);">Статистика</div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 0.5rem;">
+                        <div style="background: white; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">
+                                {{ article['article_text']|length }}
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--gray-color);">символов</div>
+                        </div>
+                        <div style="background: white; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--success-color);">
+                                {{ article['title']|length }}/50
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--gray-color);">заголовок</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <button onclick="closeHistory()" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Закрыть
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function showHistory() {
+    document.getElementById('historyModal').style.display = 'flex';
+}
+
+function closeHistory() {
+    document.getElementById('historyModal').style.display = 'none';
+}
+
+// Закрытие модального окна по клику вне его
+document.getElementById('historyModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeHistory();
+    }
+});
+
+// Подсчет символов в реальном времени
+document.querySelector('textarea[name="article_text"]').addEventListener('input', function() {
+    const charCount = this.value.length;
+    const counter = this.parentElement.querySelector('.fa-info-circle').parentElement;
+    counter.innerHTML = `<i class="fas fa-info-circle"></i> ${charCount} символов`;
+});
+
+document.querySelector('input[name="title"]').addEventListener('input', function() {
+    const remaining = 50 - this.value.length;
+    const counter = this.parentElement.querySelector('.fa-info-circle').parentElement;
+    counter.innerHTML = `<i class="fas fa-info-circle"></i> ${remaining} символов осталось`;
+});
+</script>
 {% endblock %}

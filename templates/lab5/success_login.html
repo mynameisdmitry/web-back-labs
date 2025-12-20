@@ -1,18 +1,135 @@
-<!-- templates/lab5/success_login.html -->
+
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Успешный вход{% endblock %}
 
 {% block main %}
-<div class="card center">
-  <h1 class="h1">Вход выполнен</h1>
-  <p class="p">Добро пожаловать, <strong>{{ login }}</strong>. Перейдите к статьям или создайте новую.</p>
-
-  <div class="card__actions" style="justify-content:center;">
-    <a class="btn btn--primary" href="{{ url_for('lab5.list_articles') }}">Открыть статьи</a>
-    <a class="btn" href="{{ url_for('lab5.create') }}">Создать статью</a>
-  </div>
+<div class="success-wrapper">
+    <div class="success-card">
+        <div class="success-icon" style="background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);">
+            <i class="fas fa-user-check"></i>
+        </div>
+        
+        <h1 class="success-title">Вход выполнен успешно!</h1>
+        
+        <p class="success-text">
+            Добро пожаловать обратно, <strong>{{ login }}</strong>!<br>
+            Мы рады видеть вас снова в системе.
+        </p>
+        
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: var(--border-radius); margin: 2rem 0;">
+            <h3 style="margin: 0 0 1rem 0; color: var(--secondary-color);">
+                <i class="fas fa-tachometer-alt"></i> Ваша активность
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">0</div>
+                    <div style="font-size: 0.85rem; color: var(--gray-color);">Статей сегодня</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: var(--success-color);">0</div>
+                    <div style="font-size: 0.85rem; color: var(--gray-color);">Всего статей</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-color);">1</div>
+                    <div style="font-size: 0.85rem; color: var(--gray-color);">Дней в системе</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
+            <a href="/lab5" class="btn" style="background: var(--primary-color);">
+                <i class="fas fa-database"></i> К базе знаний
+            </a>
+            <a href="/lab5/list" class="btn" style="background: var(--success-color);">
+                <i class="fas fa-book-open"></i> Мои статьи
+            </a>
+            <a href="/lab5/create" class="btn" style="background: var(--warning-color);">
+                <i class="fas fa-plus-circle"></i> Новая статья
+            </a>
+        </div>
+        
+        <div style="color: var(--gray-color); font-size: 0.9rem;">
+            <i class="fas fa-shield-alt"></i> Ваша сессия защищена
+        </div>
+    </div>
 </div>
 
+<script>
+// Автоматическая переадресация через 5 секунд
+setTimeout(() => {
+    window.location.href = '/lab5';
+}, 5000);
+</script>
 
+<style>
+.success-wrapper {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.success-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 3rem 2rem;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    animation: successAppear 0.8s ease;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    color: white;
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: iconPulse 2s infinite;
+}
+
+.success-title {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.success-text {
+    font-size: 1.1rem;
+    color: var(--gray-color);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+@keyframes successAppear {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes iconPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(67, 97, 238, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(67, 97, 238, 0);
+    }
+}
+</style>
 {% endblock %}
