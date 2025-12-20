@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, redirect, abort, render_template, session
+from flask import Flask, url_for, request, redirect, abort, render_template
 from lab1 import lab1
 from lab2 import lab2
 from lab3 import lab3
@@ -10,22 +10,11 @@ import os
 
 app = Flask(__name__)
 
-# Важные настройки для PythonAnywhere
-app.config.update(
-    SECRET_KEY=os.environ.get('SECRET_KEY', 'секретно-секретный-секрет'),
-    # Настройки для сессий на PythonAnywhere
-    SESSION_COOKIE_NAME='flask_session',
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SECURE=False,  # True если используете HTTPS
-    SESSION_COOKIE_SAMESITE='Lax',
-    PERMANENT_SESSION_LIFETIME=3600,  # 1 час
-    # Важно для PythonAnywhere
-    APPLICATION_ROOT='/'
-)
 
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'секретно-секретный секрет')
 app.secret_key = app.config['SECRET_KEY']
 
-app.config['DB_TYPE'] = os.environ.get('DB_TYPE', 'sqlite')  # По умолчанию SQLite для PA
+app.config['DB_TYPE'] = os.environ.get('DB_TYPE', 'postgres')
 
 
 app.register_blueprint(lab1)
