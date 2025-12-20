@@ -290,7 +290,7 @@ def edit_article(article_id):
         text = (request.form.get('article_text') or '').strip()
 
         if not title or not text:
-
+            
             db_close(conn, cur)
             return render_template(
                 'lab5/edit_article.html',

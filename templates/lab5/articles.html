@@ -1,37 +1,41 @@
+<!-- templates/lab5/articles.html -->
 {% extends "base.html" %}
 
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-<h1>Мои статьи</h1>
+<h1 class="page-title">Мои статьи</h1>
 
 {% if not articles %}
-    <p style="text-align: center; color: #777; margin-top: 30px;">
-        У вас пока нет ни одной статьи.
-    </p>
+  <div class="card">
+      <div class="muted" style="text-align:center;">
+          У вас пока нет ни одной статьи.
+      </div>
+      <div class="form__actions" style="justify-content:center; margin-top: 12px;">
+          <a class="btn" href="{{ url_for('lab5.create') }}">Создать первую статью</a>
+          <a class="btn btn--secondary" href="{{ url_for('lab5.lab') }}">Назад</a>
+      </div>
+  </div>
 {% else %}
-    {% for article in articles %}
-        <div style="margin-bottom: 30px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px;">
-            <h2 style="margin-bottom: 10px;">{{ article['title'] }}</h2>
+  {% for article in articles %}
+    <div class="card">
+        <h2 class="card__title">{{ article['title'] }}</h2>
 
-            <blockquote style="margin: 0; padding: 10px; background: #f8f9fa; border-left: 4px solid #2c3e50;">
-                {{ article['article_text'] }}
-            </blockquote>
+        <blockquote class="article-text">{{ article['article_text'] }}</blockquote>
 
-            <div style="margin-top: 12px;">
-                <a class="button" href="{{ url_for('lab5.edit_article', article_id=article['id']) }}">
-                    Редактировать
-                </a>
+        <div class="card__actions">
+            <a class="btn" href="{{ url_for('lab5.edit_article', article_id=article['id']) }}">
+                Редактировать
+            </a>
 
-                <a class="button" href="{{ url_for('lab5.delete_article', article_id=article['id']) }}"
-                   onclick="return confirm('Удалить статью?')"
-                   style="background:#c0392b;">
-                    Удалить
-                </a>
-            </div>
-            
+            <a class="btn btn--danger"
+               href="{{ url_for('lab5.delete_article', article_id=article['id']) }}"
+               onclick="return confirm('Удалить статью?')">
+                Удалить
+            </a>
         </div>
-    {% endfor %}
+    </div>
+  {% endfor %}
 {% endif %}
 
 {% endblock %}

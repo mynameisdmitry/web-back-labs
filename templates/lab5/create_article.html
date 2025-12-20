@@ -1,34 +1,33 @@
+<!-- templates/lab5/create_article.html -->
 {% extends "base.html" %}
 
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-    <h1>Создание статьи</h1>
+<h1 class="page-title">Создание статьи</h1>
 
-    {% if error %}
-        <div style="color: rgb(185, 5, 5); background-color: #c2acac; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-            {{ error }}
-        </div>
-    {% endif %}
+{% if error %}
+  <div class="alert alert--error">{{ error }}</div>
+{% endif %}
 
-    <form method="post">
-        <div>
-            <label>
-                Название статьи:
-                <input type="text" name="title" maxlength="50">
-            </label>
-        </div>
+<form class="form" method="post">
+    <div class="form__row">
+        <label class="label">
+            Название статьи:
+            <input class="input" type="text" name="title" maxlength="50" required>
+        </label>
+    </div>
 
-        <div style="margin-top: 15px;">
-            <label>
-                Текст статьи:
-                <br>
-                <textarea name="article_text" rows="10" cols="60"></textarea>
-            </label>
-        </div>
+    <div class="form__row">
+        <label class="label">
+            Текст статьи:
+            <textarea class="textarea" name="article_text" rows="10" required></textarea>
+        </label>
+    </div>
 
-        <div style="margin-top: 15px;">
-            <button type="submit">Готово</button>
-        </div>
-    </form>
+    <div class="form__actions">
+        <button class="btn" type="submit">Готово</button>
+        <a class="btn btn--secondary" href="{{ url_for('lab5.list_articles') }}">Назад</a>
+    </div>
+</form>
 {% endblock %}
