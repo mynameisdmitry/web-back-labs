@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, session, redirect, current_app, url_for
+from flask import Blueprint, render_template, request, session, redirect, current_app, url_for, make_response
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import sqlite3
 from os import path
 import os
+import time
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -38,11 +39,10 @@ def db_connect():
                 port=5432
             )
             cur = conn.cursor(cursor_factory=RealDictCursor)
-            print("Подключение к PostgreSQL")
+            
             return conn, cur
         except Exception as e:
-            print(f"Ошибка подключения к PostgreSQL: {e}. Пробуем SQLite...")
-            # Падаем обратно на SQLite
+            print(f"Ошибка PostgreSQL: {e}. Пробуем SQLite...")
     
     # sqlite (для PythonAnywhere и как fallback)
     try:
@@ -54,14 +54,14 @@ def db_connect():
             # Локально
             dir_path = path.dirname(path.realpath(__file__))
             db_path = path.join(dir_path, "database.db")
+
         
-        print(f"Подключение к SQLite: {db_path}")
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         return conn, cur
     except Exception as e:
-        print(f"Ошибка подключения к SQLite: {e}")
+        print(f"Ошибка SQLite: {e}")
         raise
     
 
@@ -73,7 +73,13 @@ def db_close(conn, cur):
 
 def get_login_id():
     """Возвращает (login_value, user_id, real_name). user_id — это users.id."""
+    # На PythonAnywhere session может не работать, поэтому проверяем куки
     login_value = session.get('login')
+    
+    # Если в сессии нет, проверяем куки напрямую
+    if not login_value:
+        login_value = request.cookies.get('user_login')
+    
     if not login_value:
         return None, None, None
     
@@ -88,8 +94,7 @@ def get_login_id():
             return login_value, None, None
         
         return login_value, row['id'], row.get('real_name', '')
-    except Exception as e:
-        print(f"Ошибка в get_login_id: {e}")
+    except Exception:
         if conn and cur:
             try:
                 db_close(conn, cur)
@@ -105,6 +110,10 @@ def get_login_id():
 @lab5.route('/')
 def lab():
     username = session.get('login') or 'Anonymous'
+    # Также проверяем куки
+    if not username or username == 'Anonymous':
+        username = request.cookies.get('user_login', 'Anonymous')
+    
     login_value, user_id, real_name = get_login_id()
     
     # Если пользователь авторизован, показываем его реальное имя
@@ -120,7 +129,11 @@ def lab():
 @lab5.route('/logout')
 def logout():
     session.pop('login', None)
-    return redirect(url_for('lab5.lab'))
+    # Удаляем куки при выходе
+    resp = make_response(redirect(url_for('lab5.lab')))
+    resp.set_cookie('user_login', '', expires=0)
+    resp.set_cookie('user_id', '', expires=0)
+    return resp
 
 # -------------------------
 # FORGOT PASSWORD
@@ -205,7 +218,7 @@ def register():
     
 
 # -------------------------
-# LOGIN
+# LOGIN (обновленная с куками)
 # -------------------------
 @lab5.route('/login', methods=['GET', 'POST'])
 def login():
@@ -228,9 +241,16 @@ def login():
             db_close(conn, cur)
             return render_template('lab5/login.html', error='Логин или пароль неверны')
         
+        # Сохраняем в сессии
         session['login'] = login_value
+        
+        # Также сохраняем в куках для надежности
+        resp = make_response(render_template('lab5/success_login.html', login=login_value))
+        resp.set_cookie('user_login', login_value, max_age=60*60*24*7)  # 7 дней
+        resp.set_cookie('user_id', str(user['id']), max_age=60*60*24*7)
+        
         db_close(conn, cur)
-        return render_template('lab5/success_login.html', login=login_value)
+        return resp
     
     except Exception as e:
         if conn and cur:
@@ -248,7 +268,7 @@ def login():
 def create():
     login_value, user_id, real_name = get_login_id()
     if not login_value or not user_id:
-        session.pop('login', None)
+        # Если нет в сессиях/куках, перенаправляем на вход
         return redirect('/lab5/login')
     
     if request.method == 'GET':
@@ -346,7 +366,7 @@ def list_articles():
 def edit_article(article_id):
     login_value, user_id, real_name = get_login_id()
     if not login_value or not user_id:
-        session.pop('login', None)
+
         return redirect('/lab5/login')
     
     conn = cur = None
@@ -373,7 +393,7 @@ def edit_article(article_id):
         is_public = request.form.get('is_public') == 'on'
         
         if not title or not text:
-            
+
             db_close(conn, cur)
             return render_template(
                 'lab5/edit_article.html',
@@ -405,7 +425,7 @@ def edit_article(article_id):
 def delete_article(article_id):
     login_value, user_id, real_name = get_login_id()
     if not login_value or not user_id:
-        session.pop('login', None)
+
         return redirect('/lab5/login')
     
     conn = cur = None
@@ -435,22 +455,20 @@ def list_users():
     conn = cur = None
     try:
         conn, cur = db_connect()
-        print("DEBUG: Подключение к базе для /users")
+
         
         cur.execute(
             sql("SELECT id, login, real_name FROM users ORDER BY login")
         )
         users = cur.fetchall()
         
-        print(f"DEBUG: Найдено {len(users)} пользователей")
-        for user in users:
-            print(f"DEBUG: Пользователь - ID: {user['id']}, Логин: {user['login']}")
-        
+
+
         db_close(conn, cur)
         
         return render_template('lab5/users.html', users=users)
     except Exception as e:
-        print(f"ERROR в list_users: {e}")
+
         if conn and cur:
             try:
                 db_close(conn, cur)
@@ -465,13 +483,12 @@ def list_users():
 def profile():
     login_value, user_id, real_name = get_login_id()
     if not login_value or not user_id:
-        session.pop('login', None)
+
         return redirect('/lab5/login')
     
     if request.method == 'GET':
         return render_template('lab5/profile.html', real_name=real_name or '', login=login_value)
     
-
     new_real_name = (request.form.get('real_name') or '').strip()
     current_password = (request.form.get('current_password') or '').strip()
     new_password = (request.form.get('new_password') or '').strip()
@@ -491,7 +508,6 @@ def profile():
                                  login=login_value,
                                  error='Неверный текущий пароль')
         
-
         if new_password:
             if new_password != confirm_password:
                 db_close(conn, cur)
@@ -507,10 +523,8 @@ def profile():
                                      login=login_value,
                                      error='Новый пароль должен содержать минимум 6 символов')
             
-
             new_password_hash = generate_password_hash(new_password)
             
-
             cur.execute(
                 sql("UPDATE users SET real_name=%s, password=%s WHERE id=%s"),
                 (new_real_name, new_password_hash, user_id)
