@@ -5,6 +5,7 @@ from lab3 import lab3
 from lab4 import lab4
 from lab5 import lab5
 from lab6 import lab6
+from lab7 import lab7
 from functools import wraps
 import datetime
 import os
@@ -41,6 +42,7 @@ app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 app.register_blueprint(lab5)
 app.register_blueprint(lab6)
+app.register_blueprint(lab7)
 
 access_log = []
 
@@ -506,8 +508,12 @@ def index():
                 <p>API JSON-RPC</p>
                 <a href="/lab6" class="button">Перейти к работе</a>
             </div>
+            <div class="info-card">
+                <h3>Лабораторная работа 7</h3>
+                <p>API REST</p>
+                <a href="/lab7" class="button">Перейти к работе</a>
+            </div>
         </div>
-    </div>
 
     {FOOTER}
 </body>
