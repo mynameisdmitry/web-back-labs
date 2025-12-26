@@ -26,7 +26,14 @@ app.config.update(
 
 app.secret_key = app.config['SECRET_KEY']
 
-app.config['DB_TYPE'] = os.environ.get('DB_TYPE', 'sqlite')  # По умолчанию SQLite для PA
+# Определяем окружение
+IS_PYTHONANYWHERE = bool(os.environ.get('PYTHONANYWHERE_DOMAIN'))
+
+# Позволяем переопределять явно через переменную окружения DB_TYPE,
+# но по умолчанию: локально Postgres, на PythonAnywhere SQLite
+default_db = 'sqlite' if IS_PYTHONANYWHERE else 'postgres'
+app.config['DB_TYPE'] = os.environ.get('DB_TYPE', default_db)
+
 
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)

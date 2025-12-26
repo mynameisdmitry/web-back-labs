@@ -40,7 +40,7 @@ def db_connect():
             cur = conn.cursor(cursor_factory=RealDictCursor)
             return conn, cur
         except Exception as e:
-            print(f"Ошибка PostgreSQL: {e}. Пробуем SQLite...")
+             raise Exception(f"Ошибка PostgreSQL подключения: {e}")
     
     # sqlite (для PythonAnywhere и как fallback)
     try:
