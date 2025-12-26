@@ -12,6 +12,8 @@ import os
 
 app = Flask(__name__)
 
+app.json.ensure_ascii = False
+
 # Важные настройки для PythonAnywhere
 app.config.update(
     SECRET_KEY=os.environ.get('SECRET_KEY', 'секретно-секретный-секрет'),

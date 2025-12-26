@@ -2,13 +2,40 @@
 
 {% block lab %}Лабораторная работа 7{% endblock %}
 
-{% block script %}
-{% endblock %}
+
 
 {% block main %}
 <div class="card">
     <div class="page-header">
         <h1>Лабораторная работа 7</h1>
+        <p>REST API: получение списка фильмов и информации об отдельном фильме.</p>
+    </div>
+
+    <div class="highlight" style="margin-top: 18px;">
+        <p><strong>Доступные эндпоинты:</strong></p>
+        <ul style="margin-top: 10px;">
+            <li>
+                <span class="route-path">GET /lab7/rest-api/films/</span>
+                <span class="route-desc">— получить список всех фильмов</span>
+            </li>
+            <li>
+                <span class="route-path">GET /lab7/rest-api/films/&lt;id&gt;</span>
+                <span class="route-desc">— получить фильм по индексу (нумерация с 0)</span>
+            </li>
+        </ul>
+    </div>
+
+    <div style="margin-top: 18px;">
+        <a class="btn" href="/lab7/rest-api/films/" target="_blank">Открыть список фильмов (JSON)</a>
+        <a class="btn" href="/lab7/rest-api/films/0" target="_blank">Открыть фильм #0</a>
+        <a class="btn" href="/lab7/rest-api/films/10" target="_blank">Проверка 404</a>
+    </div>
+
+    <div class="highlight" style="margin-top: 18px;">
+        <p>
+            Если запросить индекс за пределами списка (например, 10), сервер вернёт <strong>404</strong>,
+            как требуется по заданию.
+        </p>
     </div>
 </div>
 {% endblock %}
