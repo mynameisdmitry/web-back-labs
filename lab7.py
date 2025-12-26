@@ -1,55 +1,63 @@
-from flask import Blueprint, render_template, jsonify, abort
+from flask import Blueprint, render_template, jsonify, abort, request
 
 lab7 = Blueprint("lab7", __name__)
 
-# Список фильмов в памяти (минимум 5)
+
 films = [
     {
         "title": "The Matrix",
         "title_ru": "Матрица",
         "year": 1999,
-        "description": (
-            "Программист Нео узнаёт, что привычный мир — цифровая симуляция. "
-            "Он становится ключевой фигурой в борьбе людей против машин, контролирующих реальность."
-        ),
-    },
-    {
-        "title": "The Lord of the Rings: The Fellowship of the Ring",
-        "title_ru": "Властелин колец: Братство Кольца",
-        "year": 2001,
-        "description": (
-            "Хоббит Фродо получает Кольцо Всевластия и отправляется в опасный путь, "
-            "чтобы уничтожить его и предотвратить возвращение тьмы в Средиземье."
-        ),
+        "description": "Программист Нео узнаёт, что привычный мир — цифровая симуляция.",
     },
     {
         "title": "Gladiator",
         "title_ru": "Гладиатор",
         "year": 2000,
-        "description": (
-            "Римский полководец Максимус теряет всё из-за дворцового переворота и становится гладиатором. "
-            "Он ищет справедливость и шанс изменить судьбу империи."
-        ),
+        "description": "Римский полководец Максимус теряет всё и становится гладиатором.",
     },
     {
         "title": "Se7en",
         "title_ru": "Семь",
         "year": 1995,
-        "description": (
-            "Два детектива расследуют серию убийств, связанных с семью смертными грехами. "
-            "Дело превращается в психологический поединок с преступником, который тщательно продумал каждую деталь."
-        ),
+        "description": "Два детектива расследуют серию убийств, связанных с семью смертными грехами.",
     },
     {
         "title": "Whiplash",
         "title_ru": "Одержимость",
         "year": 2014,
-        "description": (
-            "Молодой барабанщик поступает в престижную музыкальную школу и попадает к жесткому преподавателю. "
-            "Их противостояние проверяет границы таланта, дисциплины и цены успеха."
-        ),
+        "description": "Молодой барабанщик сталкивается с жестким преподавателем и ценой успеха.",
+    },
+    {
+        "title": "Arrival",
+        "title_ru": "Прибытие",
+        "year": 2016,
+        "description": "Лингвист пытается понять язык пришельцев, чтобы предотвратить глобальный конфликт.",
     },
 ]
+
+
+def _check_id(id: int) -> None:
+    if id < 0 or id >= len(films):
+        abort(404)
+
+
+def _validate_film_payload(data):
+    """Минимальная валидация структуры фильма."""
+    if not isinstance(data, dict):
+        return False, "Expected JSON object"
+
+    required = ["title", "title_ru", "year", "description"]
+    for k in required:
+        if k not in data:
+            return False, f"Missing field: {k}"
+
+    try:
+        data["year"] = int(data["year"])
+    except Exception:
+        return False, "Field 'year' must be an integer"
+
+    return True, ""
 
 
 @lab7.route("/lab7/")
@@ -57,25 +65,47 @@ def index():
     return render_template("lab7/index.html")
 
 
-# GET: вернуть все фильмы
+
 @lab7.route("/lab7/rest-api/films/", methods=["GET"])
 def get_films():
     return jsonify(films)
 
 
-# GET: вернуть один фильм по индексу (нумерация с 0)
+
 @lab7.route("/lab7/rest-api/films/<int:id>", methods=["GET"])
 def get_film(id: int):
-    if id < 0 or id >= len(films):
-        abort(404)
+    _check_id(id)
     return jsonify(films[id])
 
 
-# DELETE: удалить фильм по индексу и вернуть 204 No Content
+@lab7.route("/lab7/rest-api/films/", methods=["POST"])
+def add_film():
+    data = request.get_json(silent=True)
+    ok, err = _validate_film_payload(data)
+    if not ok:
+        return jsonify({"error": err}), 400
+
+    films.append(data)
+    # возвращаем добавленный объект (как часто делают в REST)
+    return jsonify(data), 201
+
+
+@lab7.route("/lab7/rest-api/films/<int:id>", methods=["PUT"])
+def put_film(id: int):
+    _check_id(id)
+
+    data = request.get_json(silent=True)
+    ok, err = _validate_film_payload(data)
+    if not ok:
+        return jsonify({"error": err}), 400
+
+    films[id] = data
+    return jsonify(films[id])
+
+
+
 @lab7.route("/lab7/rest-api/films/<int:id>", methods=["DELETE"])
 def del_film(id: int):
-    if id < 0 or id >= len(films):
-        abort(404)
-
+    _check_id(id)
     del films[id]
     return "", 204

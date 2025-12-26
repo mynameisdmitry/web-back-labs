@@ -7,54 +7,59 @@
 {% block main %}
 <div class="card">
     <div class="page-header">
-        <h1>Лабораторная работа 7</h1>
-        <p>REST API: получение списка фильмов, получение одного фильма и удаление фильма (DELETE).</p>
+        <h1>Лабораторная работа 7 — REST API</h1>
+        <p>Получение, добавление, редактирование и удаление фильмов через fetch.</p>
+    </div>
+
+    <div class="highlight">
+        <p><strong>Список фильмов:</strong></p>
+        <div id="films-list"></div>
     </div>
 
     <div class="highlight" style="margin-top: 18px;">
-        <p><strong>Эндпоинты:</strong></p>
-        <ul style="margin-top: 10px;">
-            <li>
-                <span class="route-path">GET /lab7/rest-api/films/</span>
-                <span class="route-desc">— получить список всех фильмов</span>
-            </li>
-            <li>
-                <span class="route-path">GET /lab7/rest-api/films/&lt;id&gt;</span>
-                <span class="route-desc">— получить фильм по индексу (нумерация с 0)</span>
-            </li>
-            <li>
-                <span class="route-path">DELETE /lab7/rest-api/films/&lt;id&gt;</span>
-                <span class="route-desc">— удалить фильм по индексу (ответ 204 No Content)</span>
-            </li>
-        </ul>
-    </div>
+        <p><strong>Форма фильма</strong> (для добавления или редактирования):</p>
 
-    <div style="margin-top: 18px;">
-        <a class="btn" href="/lab7/rest-api/films/" target="_blank">Открыть список фильмов (JSON)</a>
-        <a class="btn" href="/lab7/rest-api/films/0" target="_blank">Открыть фильм #0</a>
+        <!-- id: если пусто — добавляем; если число — редактируем (PUT) -->
+        <div style="display:grid; gap:12px; grid-template-columns: 1fr 1fr; margin-top: 12px;">
+            <div>
+                <label>Id (для редактирования)</label>
+                <input id="id" type="number" placeholder="например, 0" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
+            </div>
 
-    </div>
+            <div>
+                <label>Год</label>
+                <input id="year" type="number" placeholder="например, 2016" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
+            </div>
 
-    <div class="highlight" style="margin-top: 18px;">
-        <p><strong>Как проверить DELETE:</strong></p>
-        <p>
-            Через адресную строку браузера DELETE не отправить. Откройте DevTools → Console
-            (важно: находясь на странице вашего сайта, например <span class="route-path">/lab7</span>),
-            и выполните команду:
-        </p>
+            <div>
+                <label>Название (англ.)</label>
+                <input id="title" type="text" placeholder="title" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
+            </div>
 
-        <div class="code">fetch('/lab7/rest-api/films/0', { method: 'DELETE' })</div>
+            <div>
+                <label>Название (рус.)</label>
+                <input id="title-ru" type="text" placeholder="title_ru" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
+            </div>
 
-        <p>
-            Должен вернуться ответ со статусом <strong>204</strong> и без тела.
-            После этого обновите список:
-        </p>
+            <div style="grid-column: 1 / -1;">
+                <label>Описание</label>
+                <textarea id="description" rows="4" placeholder="description" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;"></textarea>
+            </div>
+        </div>
 
-        <div class="code">fetch('/lab7/rest-api/films/').then(r =&gt; r.json()).then(console.log)</div>
+        <div style="margin-top: 14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" onclick="sendFilm()">Сохранить (POST/PUT)</button>
+            <button class="btn" onclick="clearForm()">Очистить форму</button>
+            <button class="btn" onclick="loadFilms()">Обновить список</button>
+        </div>
 
-        <p>
-            Если попытаться удалить несуществующий индекс (например, 87), сервер вернёт <strong>404</strong>.
-        </p>
+        <div class="code" style="margin-top: 14px;">
+            Подсказка: если поле id пустое → добавление (POST). Если id указан → редактирование (PUT).
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='lab7/films.js') }}"></script>
 {% endblock %}
