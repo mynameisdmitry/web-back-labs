@@ -65,47 +65,49 @@ def index():
     return render_template("lab7/index.html")
 
 
-
+# GET: все фильмы
 @lab7.route("/lab7/rest-api/films/", methods=["GET"])
 def get_films():
     return jsonify(films)
 
 
-
+# GET: один фильм
 @lab7.route("/lab7/rest-api/films/<int:id>", methods=["GET"])
 def get_film(id: int):
     _check_id(id)
     return jsonify(films[id])
 
 
-@lab7.route("/lab7/rest-api/films/", methods=["POST"])
-def add_film():
-    data = request.get_json(silent=True)
-    ok, err = _validate_film_payload(data)
-    if not ok:
-        return jsonify({"error": err}), 400
-
-    films.append(data)
-    # возвращаем добавленный объект (как часто делают в REST)
-    return jsonify(data), 201
-
-
-@lab7.route("/lab7/rest-api/films/<int:id>", methods=["PUT"])
-def put_film(id: int):
-    _check_id(id)
-
-    data = request.get_json(silent=True)
-    ok, err = _validate_film_payload(data)
-    if not ok:
-        return jsonify({"error": err}), 400
-
-    films[id] = data
-    return jsonify(films[id])
-
-
-
+# DELETE: удалить фильм, ответ 204
 @lab7.route("/lab7/rest-api/films/<int:id>", methods=["DELETE"])
 def del_film(id: int):
     _check_id(id)
     del films[id]
     return "", 204
+
+
+# PUT: заменить фильм целиком, вернуть обновлённый фильм
+@lab7.route("/lab7/rest-api/films/<int:id>", methods=["PUT"])
+def put_film(id: int):
+    _check_id(id)
+
+    film = request.get_json(silent=True)
+    ok, err = _validate_film_payload(film)
+    if not ok:
+        return jsonify({"error": err}), 400
+
+    films[id] = film
+    return jsonify(films[id])
+
+
+# POST: добавить новый фильм, вернуть индекс нового элемента (как в методичке)
+@lab7.route("/lab7/rest-api/films/", methods=["POST"])
+def add_film():
+    film = request.get_json(silent=True)
+    ok, err = _validate_film_payload(film)
+    if not ok:
+        return jsonify({"error": err}), 400
+
+    films.append(film)
+    new_id = len(films) - 1
+    return jsonify({"id": new_id})
