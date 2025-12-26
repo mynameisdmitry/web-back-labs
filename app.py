@@ -4,6 +4,7 @@ from lab2 import lab2
 from lab3 import lab3
 from lab4 import lab4
 from lab5 import lab5
+from lab6 import lab6
 from functools import wraps
 import datetime
 import os
@@ -32,6 +33,7 @@ app.register_blueprint(lab2)
 app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 app.register_blueprint(lab5)
+app.register_blueprint(lab6)
 
 access_log = []
 
@@ -444,54 +446,67 @@ def index():
     return f"""
 <!doctype html>
 <html lang="ru">
-    <head>
-        <meta charset="utf-8">
-        <link rel="icon" type="image/x-icon" href="/static/fav/favicon.ico">
-        <link rel="icon" type="image/png" sizes="32x32" href="/static/fav/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/static/fav/favicon-16x16.png">
-        <title>НГТУ, ФБ, Лабораторные работы</title>
-        {COMMON_STYLES}
-    </head>
-    <body>
-        <div class="container">
-            <h1>НГТУ, ФБ, WEB-программирование, часть 2</h1>
-            <h2>Список лабораторных работ</h2>
-            
-            <div class="highlight">
-                <p>Добро пожаловать на платформу для выполнения лабораторных работ по WEB-программированию!</p>
-            </div>
-            
-            <div class="info-grid">
-                <div class="info-card">
-                    <h3>Лабораторная работа 1</h3>
-                    <p>Знакомство с Flask и создание базового веб-приложения</p>
-                    <a href="/lab1" class="button">Перейти к работе</a>
-                </div>
-                <div class="info-card">
-                    <h3>Лабораторная работа 2</h3>
-                    <p>Работа с шаблонами и маршрутизацией</p>
-                    <a href="/lab2" class="button">Перейти к работе</a>
-                </div>
-                <div class="info-card">
-                    <h3>Лабораторная работа 3</h3>
-                    <p>Работа с cookies и сессиями</p>
-                    <a href="/lab3" class="button">Перейти к работе</a>
-                </div>
-                <div class="info-card">
-                    <h3>Лабораторная работа 4</h3>
-                    <p>Формы (POST), сессии</p>
-                    <a href="/lab4" class="button">Перейти к работе</a>
-                <div>
-                    <h3>Лабораторная работа 5</h3>
-                    <p>Flask и БД</p>
-                    <a href="/lab5" class="button">Перейти к работе</a>
-            </div>
-            
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="/static/fav/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/fav/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/fav/favicon-16x16.png">
+    <title>НГТУ, ФБ, Лабораторные работы</title>
+    {COMMON_STYLES}
+</head>
+<body>
+    <div class="container">
+        <h1>НГТУ, ФБ, WEB-программирование, часть 2</h1>
+        <h2>Список лабораторных работ</h2>
 
-        {FOOTER}
-    </body>
+        <div class="highlight">
+            <p>Добро пожаловать на платформу для выполнения лабораторных работ по WEB-программированию!</p>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Лабораторная работа 1</h3>
+                <p>Знакомство с Flask и создание базового веб-приложения</p>
+                <a href="/lab1" class="button">Перейти к работе</a>
+            </div>
+
+            <div class="info-card">
+                <h3>Лабораторная работа 2</h3>
+                <p>Работа с шаблонами и маршрутизацией</p>
+                <a href="/lab2" class="button">Перейти к работе</a>
+            </div>
+
+            <div class="info-card">
+                <h3>Лабораторная работа 3</h3>
+                <p>Работа с cookies и сессиями</p>
+                <a href="/lab3" class="button">Перейти к работе</a>
+            </div>
+
+            <div class="info-card">
+                <h3>Лабораторная работа 4</h3>
+                <p>Формы (POST), сессии</p>
+                <a href="/lab4" class="button">Перейти к работе</a>
+            </div>
+
+            <div class="info-card">
+                <h3>Лабораторная работа 5</h3>
+                <p>Flask и БД</p>
+                <a href="/lab5" class="button">Перейти к работе</a>
+            </div>
+
+            <div class="info-card">
+                <h3>Лабораторная работа 6</h3>
+                <p>API JSON-RPC</p>
+                <a href="/lab6" class="button">Перейти к работе</a>
+            </div>
+        </div>
+    </div>
+
+    {FOOTER}
+</body>
 </html>
 """
+
 
 
 
