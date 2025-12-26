@@ -14,6 +14,8 @@
     </h3>
 
     <ul id="office-list" style="list-style: none; padding-left: 0; display: grid; gap: 12px;"></ul>
+
+    <div id="total-price" style="margin-top: 1rem; font-weight: 700; text-align: right;"></div>
 </div>
 
 <script>
@@ -48,7 +50,7 @@
                 alert('Офис уже арендуется');
                 break;
             case 3:
-                alert('Офис не арендован / не найден');
+                alert('Офис не арендован');
                 break;
             case 4:
                 alert('Нельзя снять чужую аренду');
@@ -68,11 +70,16 @@
         const ul = document.getElementById('office-list');
         ul.innerHTML = '';
 
-        
         const currentLogin = "{{ session.get('login', '') }}";
+
+        let totalPrice = 0; // общая стоимость арендованных офисов
 
         for (let i = 0; i < officeList.length; i++) {
             const office = officeList[i];
+
+            if (office.tenant) {
+                totalPrice += office.price;
+            }
 
             const li = document.createElement('li');
             li.className = 'card';
@@ -93,7 +100,9 @@
 
             const status = document.createElement('div');
             status.style.color = 'var(--gray-color)';
-            status.innerText = office.tenant ? `Арендатор: ${office.tenant}` : 'Свободен';
+            status.innerText = office.tenant
+                ? `Арендатор: ${office.tenant} • ${office.price} ₽`
+                : `Свободен • ${office.price} ₽`;
 
             left.appendChild(title);
             left.appendChild(status);
@@ -104,7 +113,7 @@
             right.style.alignItems = 'center';
 
             if (!office.tenant) {
-
+                
                 const bookingButton = document.createElement('button');
                 bookingButton.className = 'btn';
                 bookingButton.innerText = 'забронировать';
@@ -132,42 +141,41 @@
             li.appendChild(right);
             ul.appendChild(li);
         }
+
+        document.getElementById('total-price').innerText =
+            `Общая стоимость аренды: ${totalPrice} ₽`;
     }
 
     function getOfficeList() {
-        rpc('info')
-            .then(function (data) {
-                if (data.error) {
-                    handleError(data);
-                } else {
-                    renderOffices(data.result);
-                }
-            });
+        rpc('info').then(function (data) {
+            if (data.error) {
+                handleError(data);
+            } else {
+                renderOffices(data.result);
+            }
+        });
     }
 
     function booking(officeNumber) {
-        rpc('booking', officeNumber)
-            .then(function (data) {
-                if (data.error) {
-                    handleError(data);
-                } else {
-
-                    document.getElementById('office-list').innerHTML = '';
-                    getOfficeList();
-                }
-            });
+        rpc('booking', officeNumber).then(function (data) {
+            if (data.error) {
+                handleError(data);
+            } else {
+                document.getElementById('office-list').innerHTML = '';
+                getOfficeList();
+            }
+        });
     }
 
     function cancellation(officeNumber) {
-        rpc('cancellation', officeNumber)
-            .then(function (data) {
-                if (data.error) {
-                    handleError(data);
-                } else {
-                    document.getElementById('office-list').innerHTML = '';
-                    getOfficeList();
-                }
-            });
+        rpc('cancellation', officeNumber).then(function (data) {
+            if (data.error) {
+                handleError(data);
+            } else {
+                document.getElementById('office-list').innerHTML = '';
+                getOfficeList();
+            }
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function () {

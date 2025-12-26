@@ -3,7 +3,11 @@ from flask import Blueprint, render_template, request, session
 lab6 = Blueprint('lab6', __name__)
 
 # 10 офисов: tenant == '' -> свободен
-offices = [{"number": i, "tenant": ""} for i in range(1, 11)]
+# price: пример разной стоимости (как в методичке)
+offices = [
+    {"number": i, "tenant": "", "price": 900 + i * 3}
+    for i in range(1, 11)
+]
 
 
 @lab6.route('/lab6/')
@@ -19,7 +23,7 @@ def api():
     method = data.get('method')
     params = data.get('params')
     req_id = data.get('id')
-
+    
 
     def err(code: int, message: str):
         return {
@@ -36,7 +40,7 @@ def api():
             "id": req_id
         }
 
-    # INFO (без авторизации)
+    # info (без авторизации)
     if method == 'info':
         return ok(offices)
 
@@ -45,7 +49,7 @@ def api():
     if not login:
         return err(1, "Unauthorized")
 
-    # BOOKING
+    # booking
     if method == 'booking':
         office_number = params
 
@@ -56,25 +60,25 @@ def api():
                 office["tenant"] = login
                 return ok("success")
 
-        return err(3, "Office not found")
+        return err(5, "Office not found")
 
-    # CANCELLATION
+    # cancellation
     if method == 'cancellation':
         office_number = params
 
         for office in offices:
             if office["number"] == office_number:
-                # офис не арендован
+
                 if office["tenant"] == "":
                     return err(3, "Office is not rented")
-                # аренда чужая
+                
                 if office["tenant"] != login:
                     return err(4, "Not your office")
-                # снимаем аренду
+                
                 office["tenant"] = ""
                 return ok("success")
 
         return err(5, "Office not found")
 
-    # Method not found
+    # method not found
     return err(-32601, "Method not found")
