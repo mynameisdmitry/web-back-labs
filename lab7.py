@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, jsonify, abort
 
 lab7 = Blueprint("lab7", __name__)
 
-# Список фильмов в памяти (минимум 5, другие фильмы)
+# Список фильмов в памяти (минимум 5)
 films = [
     {
         "title": "The Matrix",
@@ -63,9 +63,19 @@ def get_films():
     return jsonify(films)
 
 
-# GET: вернуть фильм по индексу (нумерация с 0)
+# GET: вернуть один фильм по индексу (нумерация с 0)
 @lab7.route("/lab7/rest-api/films/<int:id>", methods=["GET"])
 def get_film(id: int):
     if id < 0 or id >= len(films):
         abort(404)
     return jsonify(films[id])
+
+
+# DELETE: удалить фильм по индексу и вернуть 204 No Content
+@lab7.route("/lab7/rest-api/films/<int:id>", methods=["DELETE"])
+def del_film(id: int):
+    if id < 0 or id >= len(films):
+        abort(404)
+
+    del films[id]
+    return "", 204
