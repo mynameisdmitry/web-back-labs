@@ -35,13 +35,26 @@
     }
 
     function handleError(data) {
-        // как на рис. 31–32: switch/case
+        if (!data || !data.error) {
+            alert('Ошибка');
+            return;
+        }
+
         switch (data.error.code) {
             case 1:
                 alert('Вы не авторизованы, пожалуйста, авторизуйтесь');
                 break;
             case 2:
                 alert('Офис уже арендуется');
+                break;
+            case 3:
+                alert('Офис не арендован / не найден');
+                break;
+            case 4:
+                alert('Нельзя снять чужую аренду');
+                break;
+            case 5:
+                alert('Офис не найден');
                 break;
             case -32601:
                 alert('Странная ошибка');
@@ -55,7 +68,7 @@
         const ul = document.getElementById('office-list');
         ul.innerHTML = '';
 
-        // логин текущего пользователя (если есть) — чтобы показывать кнопку "снять бронь"
+        
         const currentLogin = "{{ session.get('login', '') }}";
 
         for (let i = 0; i < officeList.length; i++) {
@@ -91,21 +104,23 @@
             right.style.alignItems = 'center';
 
             if (!office.tenant) {
-                // как в методичке: кнопка "забронировать"
+
                 const bookingButton = document.createElement('button');
                 bookingButton.className = 'btn';
                 bookingButton.innerText = 'забронировать';
                 bookingButton.onclick = function () { booking(office.number); };
                 right.appendChild(bookingButton);
+
             } else if (currentLogin && office.tenant === currentLogin) {
-                // если офис забронирован текущим пользователем — даем "снять бронь"
+
                 const cancelButton = document.createElement('button');
                 cancelButton.className = 'btn btn-secondary';
-                cancelButton.innerText = 'снять бронь';
+                cancelButton.innerText = 'освободить';
                 cancelButton.onclick = function () { cancellation(office.number); };
                 right.appendChild(cancelButton);
+
             } else {
-                // занято другим пользователем
+
                 const busy = document.createElement('span');
                 busy.style.fontWeight = '600';
                 busy.style.color = 'var(--danger-color)';
@@ -136,7 +151,7 @@
                 if (data.error) {
                     handleError(data);
                 } else {
-                    // как на рис. 26: очистить список и перерисовать
+
                     document.getElementById('office-list').innerHTML = '';
                     getOfficeList();
                 }

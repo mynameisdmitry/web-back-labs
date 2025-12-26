@@ -2,8 +2,7 @@ from flask import Blueprint, render_template, request, session
 
 lab6 = Blueprint('lab6', __name__)
 
-# Глобальный список офисов (10 офисов)
-# tenant == '' -> свободен
+# 10 офисов: tenant == '' -> свободен
 offices = [{"number": i, "tenant": ""} for i in range(1, 11)]
 
 
@@ -21,7 +20,7 @@ def api():
     params = data.get('params')
     req_id = data.get('id')
 
-    # helper: ошибка
+
     def err(code: int, message: str):
         return {
             "jsonrpc": jsonrpc,
@@ -29,7 +28,7 @@ def api():
             "id": req_id
         }
 
-    # helper: успех
+
     def ok(result):
         return {
             "jsonrpc": jsonrpc,
@@ -37,16 +36,16 @@ def api():
             "id": req_id
         }
 
-    # 1) info
+    # INFO (без авторизации)
     if method == 'info':
         return ok(offices)
 
-    # Ниже методы, требующие авторизацию
+    # дальше нужна авторизация
     login = session.get('login')
     if not login:
         return err(1, "Unauthorized")
 
-    # 2) booking
+    # BOOKING
     if method == 'booking':
         office_number = params
 
@@ -59,20 +58,23 @@ def api():
 
         return err(3, "Office not found")
 
-    # 3) cancellation
+    # CANCELLATION
     if method == 'cancellation':
         office_number = params
 
         for office in offices:
             if office["number"] == office_number:
+                # офис не арендован
                 if office["tenant"] == "":
-                    return err(4, "Not booked")
+                    return err(3, "Office is not rented")
+                # аренда чужая
                 if office["tenant"] != login:
-                    return err(5, "Forbidden")
+                    return err(4, "Not your office")
+                # снимаем аренду
                 office["tenant"] = ""
                 return ok("success")
 
-        return err(3, "Office not found")
+        return err(5, "Office not found")
 
-    # method not found
+    # Method not found
     return err(-32601, "Method not found")
