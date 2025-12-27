@@ -1,8 +1,12 @@
 """
 Flask Application Factory
 """
-from flask import Flask, render_template, request
 import datetime
+import os
+from os import path
+from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
+from db import db
 
 
 def create_app(config_name='default'):
@@ -12,10 +16,32 @@ def create_app(config_name='default'):
     # Загрузка конфигурации из config.py
     from config import config
     app.config.from_object(config[config_name])
-    
+
+    # DB: настроим SQLALCHEMY_DATABASE_URI в зависимости от DB_TYPE
+    db_type = app.config.get('DB_TYPE', 'postgres')
+    if not app.config.get('SQLALCHEMY_DATABASE_URI'):
+        if db_type == 'postgres':
+            db_name = app.config.get('DB_NAME')
+            db_user = app.config.get('DB_USER')
+            db_password = app.config.get('DB_PASSWORD')
+            host_ip = app.config.get('DB_HOST')
+            host_port = app.config.get('DB_PORT')
+            app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{db_user}:{db_password}@{host_ip}:{host_port}/{db_name}"
+        else:
+            # sqlite
+            dir_path = path.dirname(path.realpath(__file__))
+            db_path = path.join(dir_path, 'database.db')
+            app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
+
+    # SQLAlchemy settings
+    app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
+
     # JSON настройки
     app.json.ensure_ascii = False
     
+    # Инициализируем SQLAlchemy
+    db.init_app(app)
+
     # Регистрация blueprints
     from app.blueprints import lab1, lab2, lab3, lab4, lab5, lab6, lab7, lab8
     
