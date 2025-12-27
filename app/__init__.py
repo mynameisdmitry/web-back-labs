@@ -42,6 +42,21 @@ def create_app(config_name='default'):
     # Инициализируем SQLAlchemy
     db.init_app(app)
 
+    # Инициализируем LoginManager
+    try:
+        from flask_login import LoginManager
+        from db.models import Users
+        login_manager = LoginManager()
+        login_manager.login_view = 'lab8.lab8_login'
+        login_manager.init_app(app)
+
+        @login_manager.user_loader
+        def load_user(user_id):
+            return Users.query.get(int(user_id))
+    except Exception:
+        # flask-login не установлен или модель Users недоступна в момент импорта
+        pass
+
     # Регистрация blueprints
     from app.blueprints import lab1, lab2, lab3, lab4, lab5, lab6, lab7, lab8
     

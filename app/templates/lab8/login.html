@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block lab %}Вход — База знаний{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h2>Вход</h2>
+    {% if error %}
+        <div class="form-error">{{ error }}</div>
+    {% endif %}
+    <form method="post" action="/lab8/login">
+        <div class="form-group">
+            <label class="form-label">Логин</label>
+            <input name="login" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Пароль</label>
+            <input name="password" class="form-control" type="password">
+        </div>
+        <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='/lab8/'">Отмена</button>
+            <button class="btn" type="submit">Войти</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
