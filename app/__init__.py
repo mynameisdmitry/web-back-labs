@@ -66,7 +66,7 @@ def create_app(config_name='default'):
         pass
 
     # Регистрация blueprints
-    from app.blueprints import lab1, lab2, lab3, lab4, lab5, lab6, lab7, lab8
+    from app.blueprints import lab1, lab2, lab3, lab4, lab5, lab6, lab7, lab8, lab9
     
     app.register_blueprint(lab1)
     app.register_blueprint(lab2)
@@ -76,6 +76,7 @@ def create_app(config_name='default'):
     app.register_blueprint(lab6)
     app.register_blueprint(lab7)
     app.register_blueprint(lab8)
+    app.register_blueprint(lab9)
     
     # Журнал доступа для страницы 404
     access_log = []
