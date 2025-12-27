@@ -417,6 +417,16 @@ body {
 }
 
 /* Стили для таблицы фильмов */
+/* Ошибки в модальном окне: делаем правило специфичным, чтобы оно не переопределялось */
+.modal .form-error {
+    padding: 10px 12px;
+    background: #ffecec !important;
+    color: #c53030 !important;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border-left: 4px solid #f56565 !important;
+}
+
 .films-table td {
     padding: 8px 10px;
     vertical-align: middle;
