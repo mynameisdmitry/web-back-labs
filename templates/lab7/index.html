@@ -20,7 +20,35 @@
     </table>
 
     <div style="margin-top: 14px;">
-        <button class="btn" onclick="addFilm()">Добавить фильм</button>
+        <button class="btn" id="add-film-btn">Добавить фильм</button>
+    </div>
+
+    <!-- Форма добавления (модал) -->
+    <div id="add-film-modal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <h3>Добавить фильм</h3>
+            <div id="add-film-error" class="form-error" style="display:none;"></div>
+            <div class="form-group">
+                <label class="form-label">Название (оригинал)</label>
+                <input id="film-title" class="form-control" type="text" maxlength="200">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Название (рус.)</label>
+                <input id="film-title-ru" class="form-control" type="text" maxlength="200">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Год</label>
+                <input id="film-year" class="form-control" type="number" min="1800" max="2100" value="2020">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Описание</label>
+                <textarea id="film-description" class="form-control" rows="3"></textarea>
+            </div>
+            <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn btn-secondary" id="add-film-cancel">Отмена</button>
+                <button class="btn" id="add-film-submit">Сохранить</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

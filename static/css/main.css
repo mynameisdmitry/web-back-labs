@@ -394,3 +394,33 @@ body {
         padding: 10px 20px;
     }
 }
+
+/* Стили для модального окна добавления фильма */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none; /* скрыто по умолчанию */
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.4);
+    z-index: 10000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--box-shadow);
+}
+
+.form-error {
+    padding: 10px 12px;
+    background: #ffecec;
+    color: #c53030;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border-left: 4px solid #f56565;
+}
