@@ -40,10 +40,11 @@ def create_app(config_name='default'):
     app.json.ensure_ascii = False
     app.config['JSON_AS_ASCII'] = False
     
-    # Настройка кодировки для ответов
+    # Настройка кодировки для HTML ответов
     @app.after_request
     def after_request(response):
-        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        if 'text/html' in response.content_type:
+            response.headers['Content-Type'] = 'text/html; charset=utf-8'
         return response
     
     # Инициализируем SQLAlchemy
@@ -116,7 +117,3 @@ def create_app(config_name='default'):
         return render_template('index.html')
     
     return app
-
-
-# Создаём экземпляр приложения для WSGI серверов (PythonAnywhere и др.)
-app = create_app()
