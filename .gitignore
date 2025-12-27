@@ -2,4 +2,3 @@ venv
 __pycache__/
 .env
 database.db
-ivan_ivanov_orm.db
