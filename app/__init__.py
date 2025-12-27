@@ -116,3 +116,7 @@ def create_app(config_name='default'):
         return render_template('index.html')
     
     return app
+
+
+# Создаём экземпляр приложения для WSGI серверов (PythonAnywhere и др.)
+app = create_app()
