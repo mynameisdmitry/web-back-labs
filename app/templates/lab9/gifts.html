@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block lab %}Новогодние подарки — Лабораторная работа 9{% endblock %}
+
+{% block main %}
+<style>
+    .gifts-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .gifts-header {
+        text-align: center;
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 40px 20px;
+        border-radius: 12px;
+        color: white;
+    }
+    
+    .gifts-header h1 {
+        margin: 0 0 15px 0;
+        font-size: 2.5em;
+    }
+    
+    .status-bar {
+        background: white;
+        color: #333;
+        padding: 15px 25px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-top: 15px;
+        font-weight: 600;
+    }
+    
+    .gifts-grid {
+        position: relative;
+        min-height: 700px;
+        margin: 30px 0;
+        background: linear-gradient(135deg, #e3f2fd 0%, #fce4ec 50%, #f3e5f5 100%);
+        border-radius: 20px;
+        padding: 60px;
+        overflow: hidden;
+    }
+    
+    /* Снежинки фон */
+    .gifts-grid::before {
+        content: '❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        font-size: 2em;
+        opacity: 0.1;
+        pointer-events: none;
+        line-height: 2;
+        word-spacing: 50px;
+    }
+    
+    .gift-box {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+        transition: transform 0.3s, filter 0.3s;
+        z-index: 10;
+    }
+    
+    .gift-box:not(.opened):not(.disabled):hover {
+        transform: scale(1.2) !important;
+        filter: brightness(1.1) drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+        z-index: 100;
+    }
+    
+    .gift-box.disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        filter: grayscale(50%);
+    }
+    
+    .gift-box.opened {
+        opacity: 0.3;
+        cursor: not-allowed;
+        filter: grayscale(100%);
+    }
+    
+    .gift-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+    }
+    
+    .gift-number {
+        position: absolute;
+        bottom: -10px;
+        right: -10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 0.9em;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        border: 3px solid white;
+        z-index: 15;
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        animation: fadeIn 0.3s;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .modal-content {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 10% auto;
+        padding: 40px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        text-align: center;
+        color: white;
+        animation: slideDown 0.4s;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    @keyframes slideDown {
+        from {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .modal-emoji {
+        font-size: 5em;
+        margin-bottom: 20px;
+        animation: bounce 1s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    .modal-message {
+        font-size: 1.3em;
+        line-height: 1.6;
+        margin: 20px 0;
+    }
+    
+    .close-modal {
+        background: white;
+        color: #667eea;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: transform 0.2s;
+    }
+    
+    .close-modal:hover {
+        transform: scale(1.05);
+    }
+    
+    .error-modal .modal-content {
+        background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    }
+    
+    .gift-lock {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 1.5em;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        pointer-events: none;
+    }
+    
+    .reset-button, .santa-button {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s;
+    }
+    
+    .santa-button {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+    }
+    
+    .reset-button:hover {
+        background: #5a6268;
+    }
+    
+    .santa-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+    }
+    
+    .info-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 4px solid #667eea;
+    }
+    
+    .info-box h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+    }
+    
+    .info-box ul {
+        margin: 10px 0;
+        padding-left: 20px;
+        color: #666;
+    }
+</style>
+
+<div class="gifts-container">
+    <div class="gifts-header">
+        <h1>🎄 Новогодние подарки 🎁</h1>
+        <p style="font-size: 1.2em; margin: 10px 0;">Выберите до 3 подарков и получите новогоднее поздравление!</p>
+        
+        {% if current_user.is_authenticated %}
+        <div style="background: rgba(255, 255, 255, 0.2); padding: 10px 20px; border-radius: 8px; margin-top: 15px; display: inline-block;">
+            👤 <strong>{{ current_user.login }}</strong> | 
+            <a href="/lab9/logout" style="color: white; text-decoration: underline; margin-left: 10px;">Выход</a>
+        </div>
+        {% else %}
+        <div style="background: rgba(255, 255, 255, 0.2); padding: 10px 20px; border-radius: 8px; margin-top: 15px; display: inline-block;">
+            🔒 <a href="/lab9/login" style="color: white; font-weight: 600; text-decoration: underline;">Войти</a> или 
+            <a href="/lab9/register" style="color: white; font-weight: 600; text-decoration: underline;">Зарегистрироваться</a>
+        </div>
+        {% endif %}
+        
+        <div class="status-bar">
+            <span id="opened-count">Открыто: 0 / 3</span>
+            <span style="margin: 0 15px;">|</span>
+            <span id="available-count">Доступно: 10</span>
+        </div>
+    </div>
+    
+
+    
+    <div class="gifts-grid" id="gifts-grid">
+        <!-- Подарки будут добавлены через JavaScript -->
+    </div>
+    
+    
+    <div style="text-align: center;">
+        {% if is_authenticated %}
+        <button class="santa-button" onclick="callSanta()">🎅 Дед Мороз</button>
+        {% else %}
+        <p style="color: #666; margin: 20px 0;">🔒 Некоторые подарки доступны только для авторизованных пользователей</p>
+        {% endif %}
+    </div>
+
+        <div class="info-box">
+        <h3>📜 Правила:</h3>
+        <ul>
+            <li>На странице отображается не менее 10 подарков в виде коробок</li>
+            <li>При клике на коробку появляется поздравление</li>
+            <li>В каждой коробке уникальное поздравление без повторов</li>
+            <li>Информация о том, какие коробки уже пусты, хранится на бэкенде</li>
+            <li>Пользователь может открыть не более 3 коробок</li>
+            <li>При попытке открыть 4-ю коробку выдаётся сообщение и коробка не открывается</li>
+            <li>Количество открытых коробок хранится в сессии</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Модальное окно для поздравлений -->
+<div id="gift-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-emoji" id="modal-emoji">🎁</div>
+        <div class="modal-message" id="modal-message">С Новым Годом!</div>
+        <button class="close-modal" onclick="closeModal()">Закрыть</button>
+    </div>
+</div>
+
+<!-- Модальное окно для ошибок -->
+<div id="error-modal" class="modal error-modal">
+    <div class="modal-content">
+        <div class="modal-emoji">⚠️</div>
+        <div class="modal-message" id="error-message">Ошибка!</div>
+        <button class="close-modal" onclick="closeErrorModal()">Закрыть</button>
+    </div>
+</div>
+
+<!-- Подключаем внешний JavaScript файл -->
+<script src="{{ url_for('static', filename='lab9/gifts.js') }}"></script>
+<script>
+    // Передаем позиции подарков из сервера и инициализируем
+    initGifts(
+        {{ gift_positions | tojson | safe }},
+        {{ auth_gifts | tojson | safe }},
+        {{ is_authenticated | tojson | safe }}
+    );
+</script>
+{% endblock %}
