@@ -1,44 +1,47 @@
-document.addEventListener('DOMContentLoaded', () => { loadFilms(); initAddFilmForm(); });
+document.addEventListener('DOMContentLoaded', () => { initAddFilmForm(); });
 
-async function loadFilms() {
-    const list = document.getElementById('film-list');
-    if (!list) return;
+function fillFilmList() {
+    fetch('/lab7/rest-api/films/')
+        .then(function(data) {
+            return data.json();
+        })
+        .then(function(films) {
+            let tbody = document.getElementById('film-list');
+            tbody.innerHTML = '';
 
-    try {
-        const res = await fetch('/lab7/rest-api/films/');
-        if (!res.ok) throw new Error('Network response was not ok');
-        const films = await res.json();
-
-        list.innerHTML = '';
-
-        if (films.length === 0) {
-            const tr = document.createElement('tr');
-            tr.innerHTML = '<td colspan="4" style="padding:16px; text-align:center; color:#666;">Список пуст</td>';
-            list.appendChild(tr);
-            return;
-        }
-
-        films.forEach((f, i) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="width:80px; padding:10px;"><img src="/static/lab7/poster.svg" alt="poster" style="width:60px; height:auto; border-radius:6px;"></td>
-                <td style="padding:10px;"><strong>${escapeHtml(f.title_ru)}</strong><div style="color:#666">${escapeHtml(f.title)}</div></td>
-                <td style="padding:10px;">${escapeHtml(String(f.year))}</td>
-                <td style="padding:10px;"><button class="btn btn-danger" data-id="${i}">Удалить</button></td>
-            `;
-            list.appendChild(tr);
+            for (let i = 0; i < films.length; i++) {
+                let tr = document.createElement('tr');
+                
+                let tdTitle = document.createElement('td');
+                let tdTitleRus = document.createElement('td');
+                let tdYear = document.createElement('td');
+                let tdActions = document.createElement('td');
+                
+                tdTitle.innerText = films[i].title;
+                tdTitleRus.innerText = films[i].title_ru;
+                tdYear.innerText = films[i].year;
+                
+                let editBtn = document.createElement('button');
+                editBtn.innerText = 'Редактировать';
+                editBtn.className = 'btn';
+                editBtn.style.marginRight = '5px';
+                
+                let delBtn = document.createElement('button');
+                delBtn.innerText = 'Удалить';
+                delBtn.className = 'btn btn-danger';
+                delBtn.onclick = function() { deleteFilm(i); };
+                
+                tdActions.appendChild(editBtn);
+                tdActions.appendChild(delBtn);
+                
+                tr.appendChild(tdTitle);
+                tr.appendChild(tdTitleRus);
+                tr.appendChild(tdYear);
+                tr.appendChild(tdActions);
+                
+                tbody.appendChild(tr);
+            }
         });
-
-        // attach delete handlers
-        document.querySelectorAll('#film-list .btn-danger').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = Number(btn.getAttribute('data-id'));
-                deleteFilm(id);
-            });
-        });
-    } catch (err) {
-        console.error('Ошибка при загрузке фильмов:', err);
-    }
 }
 
 function escapeHtml(s) {
@@ -126,7 +129,7 @@ async function submitAddForm() {
         }
 
         closeAddForm();
-        loadFilms();
+        fillFilmList();
     } catch (err) {
         console.error('Ошибка при добавлении фильма:', err);
         showFormError('Ошибка при добавлении фильма');
@@ -145,7 +148,7 @@ async function deleteFilm(id) {
     try {
         const res = await fetch('/lab7/rest-api/films/' + id, { method: 'DELETE' });
         if (res.status === 204) {
-            loadFilms();
+            fillFilmList();
         } else {
             alert('Ошибка удаления');
         }
