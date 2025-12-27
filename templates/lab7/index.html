@@ -6,56 +6,21 @@
 
 {% block main %}
 <div class="card">
-    <div class="page-header">
-        <h1>Лабораторная работа 7 — REST API</h1>
-        <p>Получение, добавление, редактирование и удаление фильмов через fetch.</p>
-    </div>
+    <h1>Список фильмов</h1>
 
-    <div class="highlight">
-        <p><strong>Список фильмов:</strong></p>
-        <div id="films-list"></div>
-    </div>
+    <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <thead>
+            <tr>
+                <th colspan="2" style="text-align:left; padding: 10px; border-bottom: 1px solid #ddd;">Название</th>
+                <th style="text-align:left; padding: 10px; border-bottom: 1px solid #ddd;">Год</th>
+                <th style="text-align:left; padding: 10px; border-bottom: 1px solid #ddd;">Действие</th>
+            </tr>
+        </thead>
+        <tbody id="film-list"></tbody>
+    </table>
 
-    <div class="highlight" style="margin-top: 18px;">
-        <p><strong>Форма фильма</strong> (для добавления или редактирования):</p>
-
-        <!-- id: если пусто — добавляем; если число — редактируем (PUT) -->
-        <div style="display:grid; gap:12px; grid-template-columns: 1fr 1fr; margin-top: 12px;">
-            <div>
-                <label>Id (для редактирования)</label>
-                <input id="id" type="number" placeholder="например, 0" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
-            </div>
-
-            <div>
-                <label>Год</label>
-                <input id="year" type="number" placeholder="например, 2016" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
-            </div>
-
-            <div>
-                <label>Название (англ.)</label>
-                <input id="title" type="text" placeholder="title" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
-            </div>
-
-            <div>
-                <label>Название (рус.)</label>
-                <input id="title-ru" type="text" placeholder="title_ru" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
-            </div>
-
-            <div style="grid-column: 1 / -1;">
-                <label>Описание</label>
-                <textarea id="description" rows="4" placeholder="description" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;"></textarea>
-            </div>
-        </div>
-
-        <div style="margin-top: 14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn" onclick="sendFilm()">Сохранить (POST/PUT)</button>
-            <button class="btn" onclick="clearForm()">Очистить форму</button>
-            <button class="btn" onclick="loadFilms()">Обновить список</button>
-        </div>
-
-        <div class="code" style="margin-top: 14px;">
-            Подсказка: если поле id пустое → добавление (POST). Если id указан → редактирование (PUT).
-        </div>
+    <div style="margin-top: 14px;">
+        <button class="btn" onclick="addFilm()">Добавить фильм</button>
     </div>
 </div>
 {% endblock %}
