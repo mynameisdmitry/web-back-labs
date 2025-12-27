@@ -43,21 +43,30 @@ def _check_id(id: int) -> None:
 
 
 def _validate_film_payload(data):
-    """Минимальная валидация структуры фильма."""
+    """Минимальная валидация структуры фильма.
+
+    Возвращаем (ok, error). Если есть ошибки по полям, error может быть dict
+    с ключами полей, например: {"description": "Заполните описание"}.
+    """
     if not isinstance(data, dict):
-        return False, "Expected JSON object"
+        return False, {"_general": "Expected JSON object"}
 
     required = ["title", "title_ru", "year", "description"]
     for k in required:
         if k not in data:
-            return False, f"Missing field: {k}"
+            return False, {"_general": f"Missing field: {k}"}
 
     try:
         data["year"] = int(data["year"])
     except Exception:
-        return False, "Field 'year' must be an integer"
+        return False, {"year": "Field 'year' must be an integer"}
 
-    return True, ""
+    # Поле description не должно быть пустым
+    if not str(data.get("description", "")).strip():
+        return False, {"description": "Заполните описание"}
+
+    return True, {}
+
 
 
 @lab7.route("/lab7/")
@@ -94,7 +103,7 @@ def put_film(id: int):
     film = request.get_json(silent=True)
     ok, err = _validate_film_payload(film)
     if not ok:
-        return jsonify({"error": err}), 400
+        return jsonify(err), 400
 
     films[id] = film
     return jsonify(films[id])
@@ -106,7 +115,7 @@ def add_film():
     film = request.get_json(silent=True)
     ok, err = _validate_film_payload(film)
     if not ok:
-        return jsonify({"error": err}), 400
+        return jsonify(err), 400
 
     films.append(film)
     new_id = len(films) - 1

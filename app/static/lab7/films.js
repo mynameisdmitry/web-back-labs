@@ -74,6 +74,7 @@ function initAddFilmForm() {
 function openAddForm() {
     const modal = document.getElementById('add-film-modal');
     const errorBox = document.getElementById('add-film-error');
+    const descErr = document.getElementById('description-error');
     if (!modal) return;
     // если задан id, переключим заголовок на редактирование
     const idEl = document.getElementById('film-id');
@@ -85,7 +86,9 @@ function openAddForm() {
     }
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
+    // очистка ошибок
     errorBox && (errorBox.style.display = 'none');
+    if (descErr) descErr.innerText = '';
 }
 
 function closeAddForm() {
@@ -103,6 +106,11 @@ function closeAddForm() {
     if (idEl) idEl.value = '';
     const titleEl = document.getElementById('modal-title');
     titleEl && (titleEl.innerText = 'Добавить фильм');
+    // очистить ошибки
+    const descErr = document.getElementById('description-error');
+    if (descErr) descErr.innerText = '';
+    const errorBox = document.getElementById('add-film-error');
+    if (errorBox) { errorBox.style.display = 'none'; errorBox.textContent = ''; }
 }
 
 async function submitAddForm() {
@@ -114,6 +122,7 @@ async function submitAddForm() {
     const yearEl = document.getElementById('film-year');
     const descEl = document.getElementById('film-description');
     const errorBox = document.getElementById('add-film-error');
+    const descErr = document.getElementById('description-error');
 
     const title = titleEl.value.trim();
     const title_ru = (titleRuEl.value.trim() || title);
@@ -130,6 +139,10 @@ async function submitAddForm() {
         return;
     }
 
+    // очистка ошибок перед отправкой
+    if (descErr) descErr.innerText = '';
+    if (errorBox) { errorBox.style.display = 'none'; errorBox.textContent = ''; }
+
     const payload = { title, title_ru, year, description };
 
     try {
@@ -142,16 +155,23 @@ async function submitAddForm() {
             body: JSON.stringify(payload)
         });
 
-        if (!res.ok) {
-            const data = await res.json().catch(() => ({}));
-            showFormError(data.error || 'Ошибка ' + res.status);
+        // Обработка ошибок и успеха по схеме: если успех — вернём пустой объект, иначе — JSON ошибок
+        const errors = res.ok ? (fillFilmList(), closeAddForm(), {}) : await res.json();
+
+        // Если пришли ошибки по полям — покажем их
+        if (errors && typeof errors === 'object' && Object.keys(errors).length) {
+            if (errors.description && descErr) {
+                descErr.innerText = errors.description;
+            }
+            if (errors._general && errorBox) {
+                showFormError(errors._general);
+            }
             return;
         }
 
         // очистим id при успешном сохранении
         if (idEl) idEl.value = '';
-        closeAddForm();
-        fillFilmList();
+
     } catch (err) {
         console.error('Ошибка при сохранении фильма:', err);
         showFormError('Ошибка при сохранении фильма');

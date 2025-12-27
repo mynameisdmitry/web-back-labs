@@ -45,7 +45,11 @@
         <div class="form-group">
             <label class="form-label">Описание</label>
             <textarea id="film-description" class="form-control" rows="3"></textarea>
+            <div id="description-error" class="error-message"></div>
         </div>
+        <style>
+            .error-message { color: #b10000; margin-top: 6px; min-height: 18px; font-size: 0.9em; }
+        </style>
         <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
             <button class="btn btn-secondary" id="add-film-cancel">Отмена</button>
             <button class="btn" id="add-film-submit">Сохранить</button>
