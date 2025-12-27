@@ -8,12 +8,12 @@
 <div class="card">
     <h1>Список фильмов</h1>
 
-    <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+    <table class="films-table" style="width:100%; border-collapse: collapse; margin-top: 16px;">
         <thead>
             <tr>
-                <th colspan="2" style="text-align:left; padding: 10px; border-bottom: 1px solid #ddd;">Название</th>
-                <th style="text-align:left; padding: 10px; border-bottom: 1px solid #ddd;">Год</th>
-                <th style="text-align:left; padding: 10px; border-bottom: 1px solid #ddd;">Действие</th>
+                <th colspan="2" style="text-align:left; border-bottom: 1px solid #ddd;">Название</th>
+                <th style="text-align:left; border-bottom: 1px solid #ddd;">Год</th>
+                <th style="text-align:left; border-bottom: 1px solid #ddd;">Действие</th>
             </tr>
         </thead>
         <tbody id="film-list"></tbody>
@@ -22,32 +22,33 @@
     <div style="margin-top: 14px;">
         <button class="btn" id="add-film-btn">Добавить фильм</button>
     </div>
+</div>
 
-    <!-- Форма добавления (модал) -->
-    <div id="add-film-modal" class="modal" aria-hidden="true">
-        <div class="modal-content">
-            <h3>Добавить фильм</h3>
-            <div id="add-film-error" class="form-error" style="display:none;"></div>
-            <div class="form-group">
-                <label class="form-label">Название (оригинал)</label>
-                <input id="film-title" class="form-control" type="text" maxlength="200">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Название (рус.)</label>
-                <input id="film-title-ru" class="form-control" type="text" maxlength="200">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Год</label>
-                <input id="film-year" class="form-control" type="number" min="1800" max="2100" value="2020">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Описание</label>
-                <textarea id="film-description" class="form-control" rows="3"></textarea>
-            </div>
-            <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
-                <button class="btn btn-secondary" id="add-film-cancel">Отмена</button>
-                <button class="btn" id="add-film-submit">Сохранить</button>
-            </div>
+<!-- Форма добавления (модал) -->
+<div id="add-film-modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+        <h3 id="modal-title">Добавить фильм</h3>
+        <input type="hidden" id="film-id">
+        <div id="add-film-error" class="form-error" style="display:none;"></div>
+        <div class="form-group">
+            <label class="form-label">Название (оригинал)</label>
+            <input id="film-title" class="form-control" type="text" maxlength="200">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Название (рус.)</label>
+            <input id="film-title-ru" class="form-control" type="text" maxlength="200">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Год</label>
+            <input id="film-year" class="form-control" type="number" min="1800" max="2100" value="2020">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Описание</label>
+            <textarea id="film-description" class="form-control" rows="3"></textarea>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
+            <button class="btn btn-secondary" id="add-film-cancel">Отмена</button>
+            <button class="btn" id="add-film-submit">Сохранить</button>
         </div>
     </div>
 </div>

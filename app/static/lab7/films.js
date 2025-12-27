@@ -24,7 +24,8 @@ function fillFilmList() {
                 let editBtn = document.createElement('button');
                 editBtn.innerText = 'Редактировать';
                 editBtn.className = 'btn';
-                editBtn.style.marginRight = '5px';
+                editBtn.style.cssText = 'margin-right: 10px !important;';
+                editBtn.onclick = function() { editFilm(i); };
                 
                 let delBtn = document.createElement('button');
                 delBtn.innerText = 'Удалить';
@@ -74,6 +75,14 @@ function openAddForm() {
     const modal = document.getElementById('add-film-modal');
     const errorBox = document.getElementById('add-film-error');
     if (!modal) return;
+    // если задан id, переключим заголовок на редактирование
+    const idEl = document.getElementById('film-id');
+    const titleEl = document.getElementById('modal-title');
+    if (idEl && idEl.value) {
+        titleEl && (titleEl.innerText = 'Редактировать фильм');
+    } else {
+        titleEl && (titleEl.innerText = 'Добавить фильм');
+    }
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
     errorBox && (errorBox.style.display = 'none');
@@ -89,9 +98,17 @@ function closeAddForm() {
     document.getElementById('film-title-ru').value = '';
     document.getElementById('film-year').value = '2020';
     document.getElementById('film-description').value = '';
+    // очистить id и заголовок
+    const idEl = document.getElementById('film-id');
+    if (idEl) idEl.value = '';
+    const titleEl = document.getElementById('modal-title');
+    titleEl && (titleEl.innerText = 'Добавить фильм');
 }
 
 async function submitAddForm() {
+    const idEl = document.getElementById('film-id');
+    const id = idEl ? idEl.value : '';
+
     const titleEl = document.getElementById('film-title');
     const titleRuEl = document.getElementById('film-title-ru');
     const yearEl = document.getElementById('film-year');
@@ -116,8 +133,11 @@ async function submitAddForm() {
     const payload = { title, title_ru, year, description };
 
     try {
-        const res = await fetch('/lab7/rest-api/films/', {
-            method: 'POST',
+        const url = id ? ('/lab7/rest-api/films/' + id) : '/lab7/rest-api/films/';
+        const method = id ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+            method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
@@ -128,11 +148,34 @@ async function submitAddForm() {
             return;
         }
 
+        // очистим id при успешном сохранении
+        if (idEl) idEl.value = '';
         closeAddForm();
         fillFilmList();
     } catch (err) {
-        console.error('Ошибка при добавлении фильма:', err);
-        showFormError('Ошибка при добавлении фильма');
+        console.error('Ошибка при сохранении фильма:', err);
+        showFormError('Ошибка при сохранении фильма');
+    }
+}
+
+// Редактирование фильма
+async function editFilm(id) {
+    try {
+        const res = await fetch('/lab7/rest-api/films/' + id);
+        if (!res.ok) {
+            alert('Не удалось получить данные фильма');
+            return;
+        }
+        const film = await res.json();
+        document.getElementById('film-id').value = id;
+        document.getElementById('film-title').value = film.title || '';
+        document.getElementById('film-title-ru').value = film.title_ru || film.title || '';
+        document.getElementById('film-year').value = film.year || '2020';
+        document.getElementById('film-description').value = film.description || '';
+        openAddForm();
+    } catch (err) {
+        console.error('Ошибка при загрузке фильма:', err);
+        alert('Ошибка при загрузке фильма');
     }
 }
 
