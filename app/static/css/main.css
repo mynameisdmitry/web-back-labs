@@ -452,8 +452,8 @@ body {
     cursor: pointer;
 }
 
-.btn:hover { opacity: 0.95; }    padding: 10px;
-}
+.btn:hover { opacity: 0.95; }    
+
 
 .form-error {
     padding: 10px 12px;

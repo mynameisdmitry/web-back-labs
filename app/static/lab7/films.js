@@ -10,6 +10,9 @@ function fillFilmList() {
             tbody.innerHTML = '';
 
             for (let i = 0; i < films.length; i++) {
+                const film = films[i];
+                const fid = film.id;
+
                 let tr = document.createElement('tr');
                 
                 let tdTitle = document.createElement('td');
@@ -18,20 +21,20 @@ function fillFilmList() {
                 let tdActions = document.createElement('td');
                 
                 // Показываем русское название в первом столбце, оригинал — вторым курсивом в скобках
-                tdTitle.innerText = films[i].title_ru || films[i].title || '';
-                tdTitleRus.innerHTML = '<span class="original-text">(' + escapeHtml(films[i].title || '') + ')</span>';
-                tdYear.innerText = films[i].year;
+                tdTitle.innerText = film.title_ru || film.title || '';
+                tdTitleRus.innerHTML = '<span class="original-text">(' + escapeHtml(film.title || '') + ')</span>';
+                tdYear.innerText = film.year;
                 
                 let editBtn = document.createElement('button');
                 editBtn.innerText = 'Редактировать';
                 editBtn.className = 'btn';
                 editBtn.style.cssText = 'margin-right: 10px !important;';
-                editBtn.onclick = function() { editFilm(i); };
+                editBtn.onclick = function() { editFilm(fid); };
                 
                 let delBtn = document.createElement('button');
                 delBtn.innerText = 'Удалить';
                 delBtn.className = 'btn btn-danger';
-                delBtn.onclick = function() { deleteFilm(i); };
+                delBtn.onclick = function() { deleteFilm(fid); };
                 
                 tdActions.appendChild(editBtn);
                 tdActions.appendChild(delBtn);
@@ -76,6 +79,9 @@ function openAddForm() {
     const modal = document.getElementById('add-film-modal');
     const errorBox = document.getElementById('add-film-error');
     const descErr = document.getElementById('description-error');
+    const titleErr = document.getElementById('title-error');
+    const titleRuErr = document.getElementById('title-ru-error');
+    const yearErr = document.getElementById('year-error');
     if (!modal) return;
     // если задан id, переключим заголовок на редактирование
     const idEl = document.getElementById('film-id');
@@ -90,6 +96,9 @@ function openAddForm() {
     // очистка ошибок
     errorBox && (errorBox.style.display = 'none');
     if (descErr) descErr.innerText = '';
+    if (titleErr) titleErr.innerText = '';
+    if (titleRuErr) titleRuErr.innerText = '';
+    if (yearErr) yearErr.innerText = '';
 }
 
 function closeAddForm() {
@@ -124,11 +133,32 @@ async function submitAddForm() {
     const descEl = document.getElementById('film-description');
     const errorBox = document.getElementById('add-film-error');
     const descErr = document.getElementById('description-error');
+    const titleErr = document.getElementById('title-error');
+    const titleRuErr = document.getElementById('title-ru-error');
+    const yearErr = document.getElementById('year-error');
 
     let title = titleEl.value.trim();
     const title_ru = (titleRuEl.value.trim() || title);
     const year = parseInt(yearEl.value, 10);
     const description = descEl.value.trim();
+
+    // Если оригинальное название не задано, но есть русское — автоматически подставляем его
+    if (!title && title_ru) {
+        title = title_ru;
+        titleEl.value = title; // показать подстановку пользователю
+    }
+
+    // простая валидация
+    if (!title) {
+        if (titleErr) titleErr.innerText = 'Поле "Название" обязательно';
+        showFormError('Поле "Название" обязательно');
+        return;
+    }
+    if (!Number.isInteger(year) || year < 1895 || year > (new Date()).getFullYear()) {
+        if (yearErr) yearErr.innerText = 'Введите корректный год';
+        showFormError('Введите корректный год');
+        return;
+    }
 
     // Если оригинальное название не задано, но есть русское — автоматически подставляем его
     if (!title && title_ru) {
@@ -167,12 +197,12 @@ async function submitAddForm() {
 
         // Если пришли ошибки по полям — покажем их
         if (errors && typeof errors === 'object' && Object.keys(errors).length) {
-            if (errors.description && descErr) {
-                descErr.innerText = errors.description;
-            }
-            if (errors._general && errorBox) {
-                showFormError(errors._general);
-            }
+            // показываем ошибки полей если они есть
+            if (errors.title && titleErr) titleErr.innerText = errors.title;
+            if (errors.title_ru && titleRuErr) titleRuErr.innerText = errors.title_ru;
+            if (errors.year && yearErr) yearErr.innerText = errors.year;
+            if (errors.description && descErr) descErr.innerText = errors.description;
+            if (errors._general && errorBox) showFormError(errors._general);
             return;
         }
 
