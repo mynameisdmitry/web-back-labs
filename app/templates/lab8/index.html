@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block lab %}База знаний{% endblock %}
+
+{% block main %}
+<div class="card">
+    <div style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
+        <div style="display:flex; gap:10px; align-items:center;">
+            <a href="/lab8/articles" class="btn" style="background: #f0f3f5; color: #333; padding: 6px 10px; font-size: 0.95rem;">Список статей</a>
+            <a href="/lab8/create" class="btn" style="background: #f0f3f5; color: #333; padding: 6px 10px; font-size: 0.95rem;">Создать статью</a>
+            <a href="/lab8/login" class="btn" style="background: #f0f3f5; color: #333; padding: 6px 10px; font-size: 0.95rem;">Войти</a>
+            <a href="/lab8/register" class="btn" style="background: #f0f3f5; color: #333; padding: 6px 10px; font-size: 0.95rem;">Регистрация</a>
+        </div>
+        <div style="font-weight:600;">{{ username or 'Anonymous' }}</div>
+    </div>
+
+    <hr style="margin: 16px 0;">
+
+    <div style="min-height: 220px; display:flex; align-items:center; justify-content:center; color: var(--gray-color);">
+        <em>Пустая страница — содержимое появится позже</em>
+    </div>
+</div>
+{% endblock %}

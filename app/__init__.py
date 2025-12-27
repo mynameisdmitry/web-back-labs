@@ -17,7 +17,7 @@ def create_app(config_name='default'):
     app.json.ensure_ascii = False
     
     # Регистрация blueprints
-    from app.blueprints import lab1, lab2, lab3, lab4, lab5, lab6, lab7
+    from app.blueprints import lab1, lab2, lab3, lab4, lab5, lab6, lab7, lab8
     
     app.register_blueprint(lab1)
     app.register_blueprint(lab2)
@@ -26,6 +26,7 @@ def create_app(config_name='default'):
     app.register_blueprint(lab5)
     app.register_blueprint(lab6)
     app.register_blueprint(lab7)
+    app.register_blueprint(lab8)
     
     # Журнал доступа для страницы 404
     access_log = []
