@@ -19,5 +19,8 @@ class Articles(db.Model):
     is_public = db.Column(db.Boolean)
     lekes = db.Column(db.Integer, default=0)
 
+    # Relationship removed: use login_id to reference author explicitly when needed
+
     def __repr__(self):
-        return f'<Article {self.title} by {self.author.login}>'
+        # Avoid accessing related object directly in repr; use login_id for stability
+        return f'<Article {self.title} by user_id={self.login_id}>'

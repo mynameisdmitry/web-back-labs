@@ -36,8 +36,15 @@ def create_app(config_name='default'):
     # SQLAlchemy settings
     app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
 
-    # JSON настройки
+    # JSON настройки для поддержки UTF-8
     app.json.ensure_ascii = False
+    app.config['JSON_AS_ASCII'] = False
+    
+    # Настройка кодировки для ответов
+    @app.after_request
+    def after_request(response):
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        return response
     
     # Инициализируем SQLAlchemy
     db.init_app(app)

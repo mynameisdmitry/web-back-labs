@@ -18,6 +18,10 @@ class Config:
     PERMANENT_SESSION_LIFETIME = 3600
     APPLICATION_ROOT = '/'
     
+    # JSON и кодировка
+    JSON_AS_ASCII = False
+    JSON_SORT_KEYS = False
+    
     # Database
     IS_PYTHONANYWHERE = bool(os.environ.get('PYTHONANYWHERE_DOMAIN'))
     DB_TYPE = os.environ.get('DB_TYPE', 'sqlite' if IS_PYTHONANYWHERE else 'postgres')

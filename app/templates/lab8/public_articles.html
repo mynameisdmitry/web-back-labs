@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block lab %}Публичные статьи — База знаний{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h2>Публичные статьи</h2>
+    
+    <!-- Форма поиска -->
+    <form method="get" action="/lab8/public" style="margin-bottom: 25px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="flex: 1; position: relative;">
+                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.2em;">🔍</span>
+                <input name="search" class="form-control" type="text" placeholder="Поиск по статьям..." value="{{ search_query if search_query else '' }}" style="border: 2px solid #e1e4e8; border-radius: 6px; padding: 10px 10px 10px 38px; font-size: 1em; width: 100%;" onfocus="this.style.borderColor='#11998e'" onblur="this.style.borderColor='#e1e4e8'">
+            </div>
+            <button class="btn" type="submit" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; white-space: nowrap;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Найти</button>
+            {% if search_query %}
+                <a href="/lab8/public" class="btn" style="background: #6c757d; color: white; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; white-space: nowrap;" onmouseover="this.style.background='#5a6268'" onmouseout="this.style.background='#6c757d'">Сбросить</a>
+            {% endif %}
+        </div>
+    </form>
+    
+    {% if articles %}
+        <div style="display: grid; gap: 20px;">
+        {% for a in articles %}
+            <div style="background: white; border: 1px solid #e1e4e8; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.2s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'; this.style.borderColor='#11998e'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#e1e4e8'">
+                <div style="margin-bottom: 12px;">
+                    <h3 style="margin: 0 0 8px 0; color: #1a1a1a; font-size: 1.3em;">
+                        {{ a.title }}
+                        <span style="display: inline-block; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; font-size: 0.6em; padding: 3px 8px; border-radius: 4px; margin-left: 8px; font-weight: 500;">Публичная</span>
+                    </h3>
+                    <div style="color: #586069; font-size: 0.9em;">
+                        <span>👤 {{ a.author_login if a.author_login else ('user_id:' ~ a.login_id) }}</span>
+                    </div>
+                </div>
+                <p style="color: #586069; margin: 0; line-height: 1.6;">
+                    {{ a.article_text[:200] }}{% if a.article_text|length > 200 %}...{% endif %}
+                </p>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 60px 20px; color: #586069;">
+            <div style="font-size: 4em; margin-bottom: 20px; opacity: 0.5;">📭</div>
+            <p style="font-size: 1.2em; margin: 0;">{% if search_query %}По вашему запросу ничего не найдено.{% else %}Публичных статей пока нет.{% endif %}</p>
+        </div>
+    {% endif %}
+    
+    <p style="margin-top:12px;">
+        {% if current_user.is_authenticated %}
+            <a class="btn" href="/lab8/articles">Мои статьи</a>
+        {% else %}
+            <a class="btn" href="/lab8/login">Войти</a>
+        {% endif %}
+    </p>
+</div>
+{% endblock %}
