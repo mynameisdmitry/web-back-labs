@@ -3,32 +3,18 @@ Flask Application Factory
 """
 from flask import Flask, render_template, request
 import datetime
-import os
 
 
-def create_app(config=None):
+def create_app(config_name='default'):
     """Application factory pattern"""
     app = Flask(__name__)
     
-    # Конфигурация
+    # Загрузка конфигурации из config.py
+    from config import config
+    app.config.from_object(config[config_name])
+    
+    # JSON настройки
     app.json.ensure_ascii = False
-    
-    app.config.update(
-        SECRET_KEY=os.environ.get('SECRET_KEY', 'секретно-секретный-секрет'),
-        SESSION_COOKIE_NAME='flask_session',
-        SESSION_COOKIE_HTTPONLY=True,
-        SESSION_COOKIE_SECURE=False,
-        SESSION_COOKIE_SAMESITE='Lax',
-        PERMANENT_SESSION_LIFETIME=3600,
-        APPLICATION_ROOT='/'
-    )
-    
-    app.secret_key = app.config['SECRET_KEY']
-    
-    # Определяем окружение
-    IS_PYTHONANYWHERE = bool(os.environ.get('PYTHONANYWHERE_DOMAIN'))
-    default_db = 'sqlite' if IS_PYTHONANYWHERE else 'postgres'
-    app.config['DB_TYPE'] = os.environ.get('DB_TYPE', default_db)
     
     # Регистрация blueprints
     from app.blueprints import lab1, lab2, lab3, lab4, lab5, lab6, lab7

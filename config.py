@@ -2,6 +2,10 @@
 Configuration settings for Flask application
 """
 import os
+from dotenv import load_dotenv
+
+# Загрузка переменных из .env файла
+load_dotenv()
 
 
 class Config:
@@ -17,6 +21,13 @@ class Config:
     # Database
     IS_PYTHONANYWHERE = bool(os.environ.get('PYTHONANYWHERE_DOMAIN'))
     DB_TYPE = os.environ.get('DB_TYPE', 'sqlite' if IS_PYTHONANYWHERE else 'postgres')
+    
+    # PostgreSQL Configuration
+    DB_HOST = os.environ.get('DB_HOST', '127.0.0.1')
+    DB_PORT = int(os.environ.get('DB_PORT', '5432'))
+    DB_NAME = os.environ.get('DB_NAME', 'dmitry_igumenshev_knowledge_base')
+    DB_USER = os.environ.get('DB_USER', 'dmitry_igumenshev_knowledge_base')
+    DB_PASSWORD = os.environ.get('DB_PASSWORD', 'Dima2005')
 
 
 class DevelopmentConfig(Config):
