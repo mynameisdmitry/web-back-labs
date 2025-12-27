@@ -17,8 +17,9 @@ function fillFilmList() {
                 let tdYear = document.createElement('td');
                 let tdActions = document.createElement('td');
                 
-                tdTitle.innerText = films[i].title;
-                tdTitleRus.innerText = films[i].title_ru;
+                // Показываем русское название в первом столбце, оригинал — вторым курсивом в скобках
+                tdTitle.innerText = films[i].title_ru || films[i].title || '';
+                tdTitleRus.innerHTML = '<span class="original-text">(' + escapeHtml(films[i].title || '') + ')</span>';
                 tdYear.innerText = films[i].year;
                 
                 let editBtn = document.createElement('button');
@@ -124,10 +125,16 @@ async function submitAddForm() {
     const errorBox = document.getElementById('add-film-error');
     const descErr = document.getElementById('description-error');
 
-    const title = titleEl.value.trim();
+    let title = titleEl.value.trim();
     const title_ru = (titleRuEl.value.trim() || title);
     const year = parseInt(yearEl.value, 10);
     const description = descEl.value.trim();
+
+    // Если оригинальное название не задано, но есть русское — автоматически подставляем его
+    if (!title && title_ru) {
+        title = title_ru;
+        titleEl.value = title; // показать подстановку пользователю
+    }
 
     // простая валидация
     if (!title) {

@@ -101,6 +101,10 @@ def put_film(id: int):
     _check_id(id)
 
     film = request.get_json(silent=True)
+    # Если оригинальное название пусто, но есть русское — используем его
+    if isinstance(film, dict) and not str(film.get('title', '')).strip() and film.get('title_ru'):
+        film['title'] = film.get('title_ru')
+
     ok, err = _validate_film_payload(film)
     if not ok:
         return jsonify(err), 400
@@ -113,6 +117,10 @@ def put_film(id: int):
 @lab7.route("/lab7/rest-api/films/", methods=["POST"])
 def add_film():
     film = request.get_json(silent=True)
+    # Если оригинальное название пусто, но есть русское — используем его
+    if isinstance(film, dict) and not str(film.get('title', '')).strip() and film.get('title_ru'):
+        film['title'] = film.get('title_ru')
+
     ok, err = _validate_film_payload(film)
     if not ok:
         return jsonify(err), 400
