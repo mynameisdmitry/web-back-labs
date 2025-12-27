@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block lab %}500 - Ошибка сервера{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1 style="font-size: 3em; color: var(--danger-color); text-align: center;">500</h1>
+    <h2 style="text-align: center;">Внутренняя ошибка сервера</h2>
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <img style="max-width: 250px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" 
+             src="{{ url_for('static', filename='lab1/500.png') }}" 
+             alt="Ошибка сервера">
+    </div>
+    
+    <p>На сервере произошла непредвиденная ошибка. Наши инженеры уже работают над решением проблемы.</p>
+    
+    <div style="background: #fff5f5; padding: 20px; border-radius: 10px; border-left: 4px solid var(--danger-color); margin: 20px 0;">
+        <h3 style="margin-bottom: 10px;">Что произошло?</h3>
+        <p>Сервер столкнулся с внутренней ошибкой и не может выполнить ваш запрос.</p>
+        <p>Это может быть связано с временными техническими неполадками или ошибкой в коде.</p>
+    </div>
+    
+    <div style="font-style: italic; color: #7f8c8d; border-left: 4px solid var(--danger-color); padding-left: 15px; margin: 25px 0; text-align: center;">
+        "Даже у серверов бывают плохие дни... Но мы уже исправляем ситуацию!"
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/" class="btn">Вернуться на главную</a>
+        <a href="/lab1" class="btn">К лабораторным работам</a>
+    </div>
+</div>
+{% endblock %}

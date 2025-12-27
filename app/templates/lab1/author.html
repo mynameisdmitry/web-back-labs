@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block lab %}Об авторе{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1>Об авторе</h1>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #2c3e50;">
+            <h3 style="margin-bottom: 10px;">Личная информация</h3>
+            <p><strong>ФИО:</strong> Игуменшев Дмитрий Евгеньевич</p>
+            <p><strong>Группа:</strong> ФБИ-33</p>
+            <p><strong>Курс:</strong> 3 курс</p>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #2c3e50;">
+            <h3 style="margin-bottom: 10px;">Образование</h3>
+            <p><strong>Учебное заведение:</strong> НГТУ</p>
+            <p><strong>Факультет:</strong> ФБ</p>
+            <p><strong>Год:</strong> 2025</p>
+        </div>
+    </div>
+    
+    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #4a90e2;">
+        <p><strong>О проекте:</strong> Данный веб-сайт разработан в рамках изучения 
+        WEB-программирования с использованием фреймворка Flask. Цель проекта — освоение 
+        принципов работы веб-серверов и создание динамических веб-приложений.</p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/lab1" class="btn">Назад к лабораторной работе 1</a>
+        <a href="/" class="btn">На главную</a>
+    </div>
+</div>
+{% endblock %}

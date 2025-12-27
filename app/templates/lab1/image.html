@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block lab %}Океан{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1>Изображение океана</h1>
+    
+    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #4a90e2;">
+        <p>Эта страница демонстрирует работу со статическими файлами в Flask.</p>
+    </div>
+    
+    <img src="{{ url_for('static', filename='lab1/ocean.jpg') }}" alt="Великолепный океан" style="max-width: 100%; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 20px 0;">
+    
+    <p style="line-height: 1.6; margin: 15px 0;">Океан — это непрерывная водная оболочка Земли, окружающая материки и острова. 
+    Он играет crucial роль в формировании климата планеты и является домом для 
+    бесчисленного множества видов живых организмов.</p>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/lab1" class="btn">Назад к лабораторной работе 1</a>
+    </div>
+</div>
+{% endblock %}

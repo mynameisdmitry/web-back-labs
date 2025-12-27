@@ -2,7 +2,61 @@
 
 # Лабораторные работы по второй части курса "WEB-программирование"
 
-# Лабораторная работа 1. Введение во Flask
+## Структура проекта
+
+```
+wenby/
+├── app/                    # Пакет приложения
+│   ├── __init__.py        # Application factory
+│   ├── blueprints/        # Модули лабораторных работ
+│   │   ├── __init__.py
+│   │   ├── lab1.py        # Lab 1: Введение во Flask
+│   │   ├── lab2.py        # Lab 2: Шаблоны
+│   │   ├── lab3.py        # Lab 3: Формы (GET)
+│   │   ├── lab4.py        # Lab 4: Формы (POST), сессии
+│   │   ├── lab5.py        # Lab 5: Flask и БД
+│   │   ├── lab6.py        # Lab 6: API JSON-RPC
+│   │   └── lab7.py        # Lab 7: API REST
+│   ├── static/            # Статические файлы (CSS, изображения)
+│   └── templates/         # Шаблоны Jinja2
+│       ├── base.html      # Базовый шаблон
+│       ├── index.html     # Главная страница
+│       ├── 404.html       # Кастомная страница 404
+│       ├── 500.html       # Кастомная страница 500
+│       └── lab*/          # Шаблоны для каждой лабораторной
+├── migrations/            # SQL миграции
+├── config.py             # Конфигурация приложения
+├── run.py                # Точка входа
+├── requirements.txt      # Зависимости
+└── README.md
+```
+
+## Запуск
+
+```bash
+# Создать виртуальное окружение
+python -m venv venv
+
+# Активировать (Windows)
+venv\Scripts\activate
+
+# Установить зависимости
+pip install -r requirements.txt
+
+# Запустить сервер
+python run.py
+```
+
+Приложение будет доступно по адресу: http://127.0.0.1:5000
+
+## Технологии
+
+- Flask 3.1.2
+- PostgreSQL / SQLite
+- Jinja2 Templates
+- Werkzeug Security
+
+## Лабораторная работа 1. Введение во Flask
 
 *Дата 26.09.2025*
 

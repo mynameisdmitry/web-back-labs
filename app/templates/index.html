@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block lab %}НГТУ, ФБ, Лабораторные работы{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1>НГТУ, ФБ, WEB-программирование, часть 2</h1>
+    <h2>Список лабораторных работ</h2>
+
+    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid var(--primary-color);">
+        <p>Добро пожаловать на платформу для выполнения лабораторных работ по WEB-программированию!</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+        <div class="card" style="background: #f8f9fa; border-left: 4px solid var(--primary-color);">
+            <h3>Лабораторная работа 1</h3>
+            <p>Знакомство с Flask и создание базового веб-приложения</p>
+            <a href="/lab1" class="btn">Перейти к работе</a>
+        </div>
+
+        <div class="card" style="background: #f8f9fa; border-left: 4px solid var(--primary-color);">
+            <h3>Лабораторная работа 2</h3>
+            <p>Работа с шаблонами и маршрутизацией</p>
+            <a href="/lab2" class="btn">Перейти к работе</a>
+        </div>
+
+        <div class="card" style="background: #f8f9fa; border-left: 4px solid var(--primary-color);">
+            <h3>Лабораторная работа 3</h3>
+            <p>Работа с cookies и сессиями</p>
+            <a href="/lab3" class="btn">Перейти к работе</a>
+        </div>
+
+        <div class="card" style="background: #f8f9fa; border-left: 4px solid var(--primary-color);">
+            <h3>Лабораторная работа 4</h3>
+            <p>Формы (POST), сессии</p>
+            <a href="/lab4" class="btn">Перейти к работе</a>
+        </div>
+
+        <div class="card" style="background: #f8f9fa; border-left: 4px solid var(--primary-color);">
+            <h3>Лабораторная работа 5</h3>
+            <p>Flask и БД</p>
+            <a href="/lab5" class="btn">Перейти к работе</a>
+        </div>
+
+        <div class="card" style="background: #f8f9fa; border-left: 4px solid var(--primary-color);">
+            <h3>Лабораторная работа 6</h3>
+            <p>API JSON-RPC</p>
+            <a href="/lab6" class="btn">Перейти к работе</a>
+        </div>
+        
+        <div class="card" style="background: #f8f9fa; border-left: 4px solid var(--primary-color);">
+            <h3>Лабораторная работа 7</h3>
+            <p>API REST</p>
+            <a href="/lab7" class="btn">Перейти к работе</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
