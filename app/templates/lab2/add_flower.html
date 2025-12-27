@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block lab %}Цветок добавлен{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1>Цветок успешно добавлен!</h1>
+    
+    <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #2e7d32;">
+        <h2>Название нового цветка: <em>{{ flower_name }}</em></h2>
+        <p>Цветок был добавлен в коллекцию под ID: {{ flower_id }}</p>
+    </div>
+
+    <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3>Текущая коллекция цветов:</h3>
+        <p><strong>Всего цветов:</strong> {{ total_flowers }}</p>
+        <ol style="margin: 15px 0; padding-left: 30px;">
+            {% for flower in flowers %}
+            <li style="margin: 10px 0;">
+                {{ flower.name }}
+                {% if loop.index0 == flower_id %}
+                <strong>← новый!</strong>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/lab2/flowers" class="btn">Посмотреть все цветы</a>
+        <a href="/lab2/add_flower/роза" class="btn">Добавить ещё цветок</a>
+        <a href="/lab2" class="btn">Назад к лабораторной 2</a>
+    </div>
+</div>
+{% endblock %}

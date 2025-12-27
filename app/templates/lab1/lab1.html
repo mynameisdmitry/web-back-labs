@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная 1{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1>Лабораторная работа 1</h1>
+    
+    <div class="highlight" style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #4a90e2;">
+        <p><strong>Flask</strong> — фреймворк для создания веб-приложений на языке программирования Python,
+        использующий набор инструментов Werkzeug, а также шаблонизатор Jinja2.
+        Относится к категории так называемых микрофреймворков — минималистичных каркасов
+        веб-приложений, сознательно предоставляющих лишь самые базовые возможности.</p>
+    </div>
+    
+    <div style="text-align: center; margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+        <a href="/lab1/author" style="margin: 0 15px; font-size: 1.1em;">Author</a> |
+        <a href="/lab1/web" style="margin: 0 15px; font-size: 1.1em;">Web</a> |
+        <a href="/lab1/image" style="margin: 0 15px; font-size: 1.1em;">Image</a> |
+        <a href="/lab1/counter" style="margin: 0 15px; font-size: 1.1em;">Counter</a> |
+        <a href="/lab1/http_codes" style="margin: 0 15px; font-size: 1.1em;">HTTP коды</a> |
+        <a href="/lab1/server_error" style="margin: 0 15px; font-size: 1.1em;">Тест 500 ошибки</a>
+    </div>
+
+    <h2 style="margin: 25px 0 15px; font-size: 1.8em;">Список роутов</h2>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.4em;">Основные роуты лабораторной работы 1:</h3>
+        
+        {% for route in routes %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; margin: 8px 0; background: white; border-radius: 8px; border-left: 4px solid #4a90e2; transition: all 0.3s ease;">
+            <div>
+                <a href="{{ route.path }}" style="font-family: 'Courier New', monospace; font-weight: bold; color: #2c3e50;">{{ route.path }}</a>
+                <div style="color: #5a6c7d; font-size: 0.95em;">{{ route.description }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/" class="btn">На главную</a>
+    </div>
+</div>
+{% endblock %}

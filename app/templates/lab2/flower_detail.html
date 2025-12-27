@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block lab %}Цветок #{{ flower_id }}{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1>Информация о цветке</h1>
+    
+    <div style="background: linear-gradient(135deg, #ffebee, #fce4ec); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0;">
+        <div style="font-size: 2em; color: #d32f2f; margin: 20px 0;">{{ flower.name }}</div>
+        <p><strong>ID:</strong> {{ flower_id }}</p>
+        <p><strong>Цена:</strong> {{ flower.price }} руб.</p>
+        <p><strong>Позиция в списке:</strong> {{ flower_id + 1 }} из {{ total_flowers }}</p>
+    </div>
+
+    <div style="margin: 20px 0; text-align: center;">
+        {% if flower_id > 0 %}
+        <a href="/lab2/flowers/{{ flower_id - 1 }}" class="btn">← Предыдущий цветок</a>
+        {% endif %}
+        {% if flower_id < total_flowers - 1 %}
+        <a href="/lab2/flowers/{{ flower_id + 1 }}" class="btn">Следующий цветок →</a>
+        {% endif %}
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/lab2/flowers" class="btn">Посмотреть все цветы</a>
+        <a href="/lab2" class="btn">Назад к лабораторной 2</a>
+    </div>
+</div>
+{% endblock %}

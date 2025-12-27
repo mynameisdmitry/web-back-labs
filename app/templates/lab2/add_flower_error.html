@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block lab %}Ошибка{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1>Ошибка: не указано название цветка</h1>
+    
+    <div style="background: #ffebee; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid var(--danger-color);">
+        <p>Пожалуйста, укажите название цветка для добавления.</p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/lab2/flowers" class="btn">Вернуться к списку цветов</a>
+    </div>
+</div>
+{% endblock %}

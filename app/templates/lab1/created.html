@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block lab %}Создано успешно{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1>Создано успешно</h1>
+    
+    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #4a90e2;">
+        <p>Запрос был обработан успешно, и новый ресурс был создан.</p>
+    </div>
+    
+    <p style="font-style: italic; margin: 15px 0;">Что-то важное было создано...</p>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/" class="btn">На главную</a>
+    </div>
+</div>
+{% endblock %}

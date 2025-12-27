@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block lab %}404 - Страница не найдена{% endblock %}
+
+{% block main %}
+<div class="card">
+    <h1 style="font-size: 3em; color: var(--dark-color); text-align: center;">404</h1>
+    <h2 style="text-align: center;">Страница потерялась в лабиринте</h2>
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <img style="max-width: 250px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" 
+             src="{{ url_for('static', filename='lab1/404.png') }}" 
+             alt="Заблудившийся путешественник">
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid var(--primary-color); margin: 20px 0;">
+        <h3 style="margin-bottom: 10px;">Информация о вашем посещении:</h3>
+        <p><strong>Ваш IP-адрес:</strong> {{ client_ip }}</p>
+        <p><strong>Дата и время доступа:</strong> {{ access_date }}</p>
+        <p><strong>Запрошенный адрес:</strong> {{ requested_path }}</p>
+    </div>
+    
+    <p>Кажется, эта страница отправилась в собственное приключение и не может найти дорогу назад.</p>
+    
+    <div style="font-style: italic; color: #7f8c8d; border-left: 4px solid var(--primary-color); padding-left: 15px; margin: 25px 0; text-align: center;">
+        "Иногда заблудиться - значит найти нечто большее, чем искал"
+    </div>
+    
+    <p>Но не беспокойтесь! Пока страница ищет свой путь, вы можете вернуться в безопасную гавань главной страницы.</p>
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="/" class="btn">Вернуться на главную страницу</a>
+        <a href="/lab1" class="btn">К лабораторным работам</a>
+    </div>
+    
+    {% if access_log %}
+    <div style="background: var(--dark-color); color: #ecf0f1; padding: 20px; border-radius: 10px; margin: 25px 0; max-height: 400px; overflow-y: auto;">
+        <div style="color: #ecf0f1; text-align: center; margin-bottom: 15px; font-size: 1.3em; font-weight: 600;">
+            Журнал посещений (последние 50 записей)
+        </div>
+        {% for entry in access_log %}
+        <div style="padding: 10px; margin: 8px 0; background: #34495e; border-radius: 5px; border-left: 3px solid #ecf0f1; font-family: 'Courier New', monospace; font-size: 0.9em;">
+            <span style="color: #e74c3c; font-weight: bold;">[{{ entry.timestamp }}]</span> 
+            <span style="color: #2ecc71; font-weight: bold;">IP: {{ entry.ip }}</span> 
+            посетил <span style="color: #f39c12;">{{ entry.path }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
